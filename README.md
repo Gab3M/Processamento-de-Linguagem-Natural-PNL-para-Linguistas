@@ -125,5 +125,3 @@ Este repositório é uma tradução e adaptação independente. O material origi
 Todo o conteúdo deste repositório está licenciado sob a licença **[Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)**. 
 
 Isso significa que você é livre para compartilhar e adaptar este material, desde que dê os devidos créditos aos autores originais e não o utilize para fins comerciais. Veja o arquivo `LICENSE` para mais detalhes.
-```
->>>>>>> 5a9f7f6 (Versão final do curso)
