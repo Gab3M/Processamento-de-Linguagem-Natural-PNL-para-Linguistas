@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Processamento-de-Linguagem-Natural-PNL-para-Linguistas
-=======
 # Processamento de Linguagem Natural (PNL) para Linguistas 📚🐍
 
 Bem-vindo ao repositório do curso de Processamento de Linguagem Natural (PNL)! Este projeto reúne materiais didáticos, anotações e exemplos práticos traduzidos e adaptados para o português, com foco em ferramentas modernas de PNL no ecossistema Python.
