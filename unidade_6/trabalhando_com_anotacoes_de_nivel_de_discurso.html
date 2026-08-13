@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia" />
+  <title>Parte III: Processamento de Linguagem Natural para Linguistas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    /* centralização de figuras e tabelas */
+    figure {
+      margin: 1.5em 0;
+      text-align: center;
+    }
+    figure img {
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.85em;
+      color: #606060;
+      margin-top: 0.4em;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Parte III: Processamento de Linguagem Natural para Linguistas</h1>
+<p class="subtitle">Unidade 6 - Anotações de nível de discurso</p>
+<p class="author">CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia</p>
+<p class="date">Agosto de 2026</p>
+</header>
+<h1 id="trabalhando-com-anotações-de-nível-de-discurso">Trabalhando com anotações de nível de discurso</h1>
+<p>Nas seções anteriores, exploramos diversas técnicas de Processamento de Linguagem Natural (PLN) para gerar anotações linguísticas a partir de textos puros.</p>
+<p>Agora, o nosso foco será aprender a aproveitar anotações linguísticas que já estão prontas, dando atenção especial àquelas que analisam estruturas maiores do que uma simples oração (cláusula) — os chamados fenômenos de nível de discurso.</p>
+<p>Ao final desta seção, você deverá ser capaz de:</p>
+<ul>
+<li>Compreender o básico do formato de anotação CoNLL-U.</li>
+<li>Criar um objeto <em>Doc</em> do spaCy manualmente, a partir do zero.</li>
+<li>Anotar trechos de texto (<em>Spans</em>) dentro de um objeto <em>Doc</em> utilizando <em>SpanGroups</em>.</li>
+<li>Importar corpora com anotações no formato CoNLL-U para o ecossistema do spaCy.</li>
+</ul>
+<h2 id="o-formato-de-anotação-conll-u">O formato de anotação CoNLL-U</h2>
+<p>O CoNLL-X é um formato padrão para descrever características linguísticas em uma grande variedade de idiomas (Buchholz e Marsi <a href="https://www.aclweb.org/anthology/W06-2920">2006</a>). Ele foi criado, a princípio, para facilitar o compartilhamento de dados nas chamadas <em>shared tasks</em> (desafios computacionais abertos a pesquisadores) no campo do PLN (veja Nissim et al. <a href="https://doi.org/10.1162/COLI_a_00304">2017</a>).</p>
+<p>O <a href="https://universaldependencies.org/format.html">CoNLL-U</a> é a evolução desse formato, adaptado para suportar o modelo de Dependências Universais (<em>Universal Dependencies</em>), do qual falamos na Parte III. Hoje em dia, o CoNLL-U é amplamente usado para distribuir corpora textuais em projetos baseados no <em>Universal Dependencies</em>, mas também é o queridinho de vários outros projetos independentes de linguística computacional.</p>
+<p>Para se ter uma ideia da sua abrangência, existem arquivos CoNLL-U não só para <a href="https://universaldependencies.org/">inúmeras línguas modernas</a>, mas até mesmo para idiomas da antiguidade, como o Acádio (Luukko et al. <a href="https://www.aclweb.org/anthology/2020.tlt-1.11">2020</a>) e o Copta (Zeldes e Abrams <a href="https://www.aclweb.org/anthology/W18-6022">2018</a>).</p>
+<h3 id="como-o-conll-u-funciona-por-dentro">Como o CoNLL-U funciona por dentro</h3>
+<p>Os arquivos com as anotações CoNLL-U são sempre distribuídos como texto simples (texto puro, como vimos na Parte II).</p>
+<p>Ao abrir um desses arquivos, você notará três tipos de linhas: <strong>linhas de comentário</strong> (comment lines), <strong>linhas de palavra</strong> (word lines) e <strong>linhas em branco</strong> (blank lines).</p>
+<ul>
+<li>As <strong>linhas de comentário</strong> ficam antes do texto principal e começam com o símbolo da cerquilha (<code>#</code>). Elas guardam informações extras (metadados) sobre o trecho de texto que vem a seguir.</li>
+<li>As <strong>linhas de palavra</strong> carregam todas as anotações referentes a uma única palavra ou pontuação (token). As frases são formadas por uma sequência contínua dessas linhas de palavra.</li>
+</ul>
+<p>A estrutura dessas anotações obedece a uma organização rigorosa de colunas separadas pela tecla <em>Tab</em>, contendo 10 campos essenciais:</p>
+<pre class="text"><code>ID  FORM    LEMMA   UPOS    XPOS    FEATS   HEAD    DEPREL  DEPS    MISC</code></pre>
+<ol type="1">
+<li><code>ID</code>: A posição (índice) da palavra na frase.</li>
+<li><code>FORM</code>: Como a palavra (ou pontuação) aparece no texto original.</li>
+<li><code>LEMMA</code>: A forma base ou de dicionário da palavra (lema).</li>
+<li><code>UPOS</code>: A <a href="https://universaldependencies.org/u/pos/">categoria gramatical universal</a> (substantivo, verbo, etc.).</li>
+<li><code>XPOS</code>: Uma categoria gramatical mais detalhada, específica do idioma analisado.</li>
+<li><code>FEATS</code>: <a href="https://universaldependencies.org/u/feat/index.html">Atributos morfológicos</a> (gênero, número, tempo verbal, etc.).</li>
+<li><code>HEAD</code>: O ID da palavra que atua como o “chefe” sintático (núcleo) da palavra atual.</li>
+<li><code>DEPREL</code>: O tipo de relação de dependência sintática que a palavra tem com seu <code>HEAD</code>.</li>
+<li><code>DEPS</code>: <a href="https://universaldependencies.org/u/overview/enhanced-syntax.html">Relações de dependência aprimoradas</a>.</li>
+<li><code>MISC</code>: Informações adicionais de qualquer natureza (um campo coringa).</li>
+</ol>
+<p>Por fim, uma <strong>linha em branco</strong> aparece no final das linhas de palavras para sinalizar ao sistema que a frase terminou e outra vai começar.</p>
+<h3 id="trabalhando-com-conll-u-em-python">Trabalhando com CoNLL-U em Python</h3>
+<p>Para manipular esses arquivos de forma inteligente usando o Python, a nossa melhor amiga será a biblioteca <a href="https://github.com/EmilStenstrom/conllu/">conllu</a>. Ela é leve e muito competente para ler textos no formato CoNLL-U e transformá-los em estruturas nativas do Python, fáceis de processar.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Importa a biblioteca conllu</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="im">import</span> conllu</span></code></pre></div>
+<p>Para o nosso estudo, vamos usar um arquivo CoNLL-U extraído do <a href="https://corpling.uis.georgetown.edu/gum/">Georgetown University Multilayer Corpus</a> (GUM; veja Zeldes <a href="http://dx.doi.org/10.1007/s10579-016-9343-x">2017</a>). Vamos abrir o arquivo como texto puro, lê-lo com o método <code>read()</code> e salvar o texto na variável <code>annotations</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co"># Abre o arquivo de texto puro para leitura; atribui a &#39;data&#39;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&#39;data/GUM_whow_parachute.conllu&#39;</span>, mode<span class="op">=</span><span class="st">&quot;r&quot;</span>, encoding<span class="op">=</span><span class="st">&quot;utf-8&quot;</span>) <span class="im">as</span> data:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>    </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>    <span class="co"># Lê o conteúdo do arquivo e atribui a &#39;annotations&#39;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>    annotations <span class="op">=</span> data.read()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co"># Verifica o tipo do objeto resultante</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="bu">type</span>(annotations)</span></code></pre></div>
+<pre class="text"><code>str</code></pre>
+<p>O arquivo foi carregado na memória do computador como uma gigantesca string (texto contínuo). Podemos espiar os primeiros 1000 caracteres dela para ter uma noção:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Imprime os 1000 primeiros caracteres da string em &#39;annotations&#39;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="bu">print</span>(annotations[:<span class="dv">1000</span>])</span></code></pre></div>
+<pre class="text"><code># newdoc id = GUM_whow_parachute
+# sent_id = GUM_whow_parachute-1
+# text = How to Cope With a Double Parachute Failure
+# s_type = inf
+1   How how SCONJ   WRB PronType=Int    3   mark    _   Discourse=preparation:1-&gt;11
+2   to  to  PART    TO  _   3   mark    _   _
+3   Cope    Cope    VERB    VB  VerbForm=Inf    0   root    _   _
+4   With    with    ADP IN  _   8   case    _   _
+5   a   a   DET DT  Definite=Ind|PronType=Art   8   det _   Entity=(event-1
+6   Double  double  ADJ JJ  Degree=Pos  8   amod    _   _
+7   Parachute   parachute   NOUN    NN  Number=Sing 8   compound    _   Entity=(object-2)
+8   Failure failure NOUN    NN  Number=Sing 3   obl _   Entity=event-1)
+
+# sent_id = GUM_whow_parachute-2
+# text = While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity.
+# s_type = decl
+1   While   while   SCONJ   IN  _   2   mark    _   Discourse=circumstance:2-&gt;3
+2   skydiving   skydiving   NOUN    NN  Number=Sing 6   advcl   _   Entity=(event-3)|SpaceAfter=No
+3   ,   ,   PUNCT   ,   _   2   punct   _   _
+4   it  it  PRON    PRP Case=Nom|Gender=Neut|Num</code></pre>
+<p>Fica bem nítida a estrutura que descrevemos acima: as linhas comentadas com a cerquilha (<code>#</code>), logo seguidas por colunas super organizadas com os dados da palavra e suas análises linguísticas.</p>
+<p>O símbolo sublinhado (<code>_</code>) é usado quando uma das 10 colunas não tem uma anotação definida (valor ausente).</p>
+<p>Observe a décima coluna, a <code>MISC</code>. O corpus GUM costuma injetar campos como <code>Discourse</code> e <code>Entity</code> para marcar informações de nível superior sobre a estrutura do discurso e das entidades no texto (quem é quem na história, lugares, objetos, etc.).</p>
+<p>A grande questão agora é: como automatizar a leitura disso no Python sem nos perdermos nessa string gigante?</p>
+<p>Aqui entra a função <code>parse()</code> do módulo <code>conllu</code>. Ela faz exatamente o trabalho duro de “fatiar e traduzir” a string bruta em um formato legível.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co"># Usa a função parse() para analisar as anotações; armazena em &#39;sentences&#39;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>sentences <span class="op">=</span> conllu.parse(annotations)</span></code></pre></div>
+<p>O que a função <code>parse()</code> nos devolve é uma lista do Python recheada de objetos <em>TokenList</em>. O <em>TokenList</em> é a estrutura de dados chave criada pela própria biblioteca <code>conllu</code> para abrigar orações.</p>
+<p>Vamos verificar o que se esconde no primeiro item (<code>sentences[0]</code>).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>sentences[<span class="dv">0</span>]</span></code></pre></div>
+<pre class="text"><code>TokenList&lt;How, to, Cope, With, a, Double, Parachute, Failure, metadata={newdoc id: &quot;GUM_whow_parachute&quot;, sent_id: &quot;GUM_whow_parachute-1&quot;, text: &quot;How to Cope With a Double Parachute Failure&quot;, s_type: &quot;inf&quot;}&gt;</code></pre>
+<p>Maravilha, a biblioteca capturou os metadados (que estavam com <code>#</code>) e os disponibilizou sob a propriedade <code>metadata</code>. Vamos acessar esse dicionário de metadados diretamente:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="co"># Obtém os metadados do primeiro item da lista</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>sentences[<span class="dv">0</span>].metadata</span></code></pre></div>
+<pre class="text"><code>{&#39;newdoc id&#39;: &#39;GUM_whow_parachute&#39;,
+ &#39;sent_id&#39;: &#39;GUM_whow_parachute-1&#39;,
+ &#39;text&#39;: &#39;How to Cope With a Double Parachute Failure&#39;,
+ &#39;s_type&#39;: &#39;inf&#39;}</code></pre>
+<p>Isso nos revela como o projeto GUM costuma estruturar a papelada: ele usa <code>newdoc_id</code> para rotular o documento inteiro, <code>sent_id</code> para rotular cada sentença isolada, <code>text</code> com a frase original limpa, e <code>s_type</code> que categoriza a sentença sob um viés gramatical (afirmação, pergunta, imperativo etc). (Zeldes &amp; Simonson <a href="https://www.aclweb.org/anthology/W16-1709">2017</a>: 69).</p>
+<p>Embora o terminal retorne um formato que parece um simples dicionário, a estrutura por trás do <code>metadata</code> é um objeto especializado (chamado <em>Metadata</em>). No entanto, sua operação diária é idêntica a um dicionário nativo do Python: bastam chaves e valores.</p>
+<p>Portanto, se precisarmos apenas do modo verbal da oração (<code>s_type</code>), usamos a sintaxe clássica de dicionário:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Obtém o tipo de sentença sob a chave &#39;s_type&#39;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>sentences[<span class="dv">0</span>].metadata[<span class="st">&#39;s_type&#39;</span>]</span></code></pre></div>
+<pre class="text"><code>&#39;inf&#39;</code></pre>
+<p>Isso nos retornará a string <code>inf</code>, indicando que a frase está no modo infinitivo.</p>
+<p>E sobre as palavras individuais? Como o próprio nome aponta, o objeto <em>TokenList</em> é construído agrupando múltiplos <em>Tokens</em>.</p>
+<p>Acessar o primeiro <em>Token</em> do nosso primeiro <em>TokenList</em> é simples:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="co"># Obtém o primeiro token da primeira sentença</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>sentences[<span class="dv">0</span>][<span class="dv">0</span>]</span></code></pre></div>
+<pre class="text"><code>{&#39;id&#39;: 1,
+ &#39;form&#39;: &#39;How&#39;,
+ &#39;lemma&#39;: &#39;how&#39;,
+ &#39;upos&#39;: &#39;SCONJ&#39;,
+ &#39;xpos&#39;: &#39;WRB&#39;,
+ &#39;feats&#39;: {&#39;PronType&#39;: &#39;Int&#39;},
+ &#39;head&#39;: 3,
+ &#39;deprel&#39;: &#39;mark&#39;,
+ &#39;deps&#39;: None,
+ &#39;misc&#39;: {&#39;Discourse&#39;: &#39;preparation:1-&gt;11&#39;}}</code></pre>
+<p>Mais uma vez, recebemos as informações num arranjo que emula a estrutura de um dicionário.</p>
+<p>Note bem a chave <code>misc</code>. O dicionário embutido nela carrega anotações cruciais sobre as “relações de discurso”. Essas relações servem para amarrar ideias através de uma teoria gramatical profunda, chamada <a href="https://www.sfu.ca/rst">Teoria da Estrutura Retórica (RST - Rhetorical Structure Theory)</a> (Mann &amp; Thompson <a href="https://doi.org/10.1515/text.1.1988.8.3.243">1988</a>).</p>
+<p>De forma resumida, essa anotação nos diz que existe uma relação discursiva (do tipo <strong>preparation</strong>) ligando as partes “1” e “11” do texto.</p>
+<p>Porém, atenção: esses números não apontam para índices de palavras ou de sentenças soltas. Eles apontam para “Unidades Elementares do Discurso” (do inglês <em>Elementary Discourse Units</em>, ou EDU).</p>
+<p>A segmentação em EDUs cria uma lente de aumento na qual os analistas subdividem a narrativa em fragmentos básicos e avaliam de que forma eles formam o esqueleto da história.</p>
+<p>No molde clássico da Teoria da Estrutura Retórica (RST), as EDUs coincidem majoritariamente com cláusulas ou orações, mas não se trata de uma regra universal matemática.</p>
+<h2 id="levando-a-análise-de-discurso-para-objetos-doc-do-spacy">Levando a análise de discurso para objetos <em>Doc</em> do spaCy</h2>
+<p>Como verificamos anteriormente, os metadados embutidos no campo <code>misc</code> (como a anotação <code>Discourse</code>) sinalizam o exato momento onde uma nova EDU <strong>inicia</strong>.</p>
+<p>Se percorrermos a nossa sequência de <em>Tokens</em> rastreando o surgimento dessas anotações, seremos capazes de desenhar precisamente as fronteiras entre cada Unidade Elementar do Discurso — que muitas vezes cruzam o limite fixo das orações normais da nossa <em>TokenList</em>.</p>
+<p>A estratégia prática é varrer todos os <em>Tokens</em> criando uma contagem progressiva e anotar qual índice abriga o valioso carimbo <code>Discourse</code>.</p>
+<p>Vamos instanciar a variável de contagem (<code>counter</code>) e preparar o “terreno” (várias listas) para guardar com segurança as descobertas:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="co"># Cria uma variável com valor 0, que usaremos para contar</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="co"># os Tokens processados</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>counter <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="co"># Usamos estas listas para acompanhar as sentenças, as unidades de discurso</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a><span class="co"># e as relações que se mantêm entre elas.</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>discourse_units <span class="op">=</span> []</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a>sent_types <span class="op">=</span> []</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a>relations <span class="op">=</span> []</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a><span class="co"># Cria listas vazias para a informação que extrairemos das anotações</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a><span class="co"># CoNLL-U. Essas listas serão usadas para criar um objeto Doc do</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a><span class="co"># spaCy mais adiante.</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true"></a>words <span class="op">=</span> []</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true"></a>spaces <span class="op">=</span> []</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true"></a>sent_starts <span class="op">=</span> []</span></code></pre></div>
+<p>O bloco a seguir irá analisar, palavra por palavra de cada <code>sentence</code>, preenchendo as listas acima com todos os dados relevantes (marcando também onde iniciam os EDUs):</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="co"># Percorre cada objeto TokenList</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a><span class="cf">for</span> sentence <span class="kw">in</span> sentences:</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>    </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>    <span class="co"># Ao começar a percorrer uma nova sentença, define o valor da</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>    <span class="co"># variável &#39;is_start&#39; como True. Isso marca o início de uma</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a>    <span class="co"># sentença.</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a>    is_start <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>    </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a>    <span class="co"># Acrescenta o tipo da sentença atual à lista &#39;sent_types&#39;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a>    sent_types.append(sentence.metadata[<span class="st">&#39;s_type&#39;</span>])</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a>        </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a>    <span class="co"># Prossegue percorrendo os Tokens do TokenList atual</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true"></a>    <span class="cf">for</span> token <span class="kw">in</span> sentence:</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true"></a>        </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true"></a>        <span class="co"># Usa a chave &#39;form&#39; para recuperar a forma da palavra do Token</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true"></a>        <span class="co"># e a acrescenta à lista &#39;words&#39;.</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true"></a>        words.append(token[<span class="st">&#39;form&#39;</span>])</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true"></a>        </span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true"></a>        <span class="co"># Verifica se este Token inicia uma sentença, avaliando se a</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true"></a>        <span class="co"># variável &#39;is_start&#39; é True.</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true"></a>        <span class="cf">if</span> is_start:</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true"></a>            </span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true"></a>            <span class="co"># Se o Token inicia uma sentença, acrescenta o valor True à lista</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true"></a>            <span class="co"># &#39;sent_starts&#39;. Note a ausência de aspas: trata-se de um valor</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true"></a>            <span class="co"># booleano (True / False).</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true"></a>            sent_starts.append(<span class="va">True</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true"></a>            </span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true"></a>            <span class="co"># Define &#39;is_start&#39; como False até que a próxima sentença comece</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true"></a>            <span class="co"># e a variável seja novamente definida como True.</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true"></a>            is_start <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true"></a>        </span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true"></a>        <span class="co"># Se a variável &#39;is_start&#39; for False, executa o bloco abaixo</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true"></a>        <span class="cf">else</span>:</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true"></a>            </span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true"></a>            <span class="co"># Acrescenta o valor False à lista &#39;sent_starts&#39;</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true"></a>            sent_starts.append(<span class="va">False</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true"></a>        </span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true"></a>        <span class="co"># Verifica se a chave &#39;misc&#39; contém algo e se ela guarda o valor</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true"></a>        <span class="co"># &#39;Discourse&#39;; em caso afirmativo, executa o bloco abaixo.</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true"></a>        <span class="cf">if</span> token[<span class="st">&#39;misc&#39;</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="st">&#39;Discourse&#39;</span> <span class="kw">in</span> token[<span class="st">&#39;misc&#39;</span>]:</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true"></a>            </span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true"></a>            <span class="co"># A presença da chave &#39;Discourse&#39; indica o início de uma nova</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true"></a>            <span class="co"># unidade elementar de discurso; acrescenta seu índice à lista</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true"></a>            <span class="co"># &#39;discourse_units&#39;.</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true"></a>            discourse_units.append(counter)</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true"></a>            </span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true"></a>            <span class="co"># Desempacota a definição da relação; começa separando o nome da</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true"></a>            <span class="co"># relação das unidades elementares de discurso. Atribui os objetos</span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true"></a>            <span class="co"># resultantes a &#39;relation&#39; e &#39;edus&#39;.</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true"></a>            relation, edus <span class="op">=</span> token[<span class="st">&#39;misc&#39;</span>][<span class="st">&#39;Discourse&#39;</span>].split(<span class="st">&#39;:&#39;</span>)</span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true"></a>            </span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true"></a>            <span class="co"># Tenta dividir a anotação da relação em duas partes</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true"></a>            <span class="cf">try</span>:</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true"></a>                </span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true"></a>                <span class="co"># Divide na string &#39;-&gt;&#39; e atribui a &#39;source&#39;</span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true"></a>                <span class="co"># e &#39;target&#39;, respectivamente.</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true"></a>                source, target <span class="op">=</span> edus.split(<span class="st">&#39;-&gt;&#39;</span>)</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true"></a>                </span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true"></a>                <span class="co"># Subtrai 1 de &#39;source&#39; e de &#39;target&#39;, porque os identificadores</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true"></a>                <span class="co"># usados no corpus GUM não começam em zero, ao contrário dos</span></span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true"></a>                <span class="co"># nossos Spans do spaCy que correspondem às unidades elementares</span></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true"></a>                <span class="co"># de discurso. Também converte os números em inteiros</span></span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true"></a>                <span class="co"># (originalmente eles são strings!).</span></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true"></a>                source, target <span class="op">=</span> <span class="bu">int</span>(source) <span class="op">-</span> <span class="dv">1</span>, <span class="bu">int</span>(target) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true"></a>            </span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true"></a>            <span class="co"># O nó raiz da árvore RST não terá alvo, o que levanta um</span></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true"></a>            <span class="co"># ValueError, já que só existe um item.</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true"></a>            <span class="cf">except</span> <span class="pp">ValueError</span>:</span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true"></a>                </span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true"></a>                <span class="co"># Atribui o primeiro item de &#39;edus&#39; a &#39;source&#39; e define</span></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true"></a>                <span class="co"># &#39;target&#39; como None.</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true"></a>                source, target <span class="op">=</span> edus[<span class="dv">0</span>], <span class="va">None</span></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true"></a>                </span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true"></a>                <span class="co"># Subtrai 1 de &#39;source&#39;, conforme explicado acima.</span></span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true"></a>                source <span class="op">=</span> <span class="bu">int</span>(source) <span class="op">-</span> <span class="dv">1</span> </span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true"></a>                </span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true"></a>            <span class="co"># Compila a definição da relação em uma tripla e a acrescenta</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true"></a>            <span class="co"># à lista &#39;relations&#39;.</span></span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true"></a>            relations.append((relation, source, target))</span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true"></a>            </span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true"></a>        <span class="co"># Verifica se o Token atual é seguido por um espaço. Quando não é o</span></span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true"></a>        <span class="co"># caso — por exemplo, no Token ao final de um TokenList —, essa</span></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true"></a>        <span class="co"># informação está disponível na chave &#39;misc&#39;.</span></span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true"></a>        <span class="cf">if</span> token[<span class="st">&#39;misc&#39;</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="st">&#39;SpaceAfter&#39;</span> <span class="kw">in</span> token[<span class="st">&#39;misc&#39;</span>]:</span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true"></a>            </span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true"></a>            <span class="co"># Se a chave &#39;misc&#39; guarda um dicionário com a chave &#39;SpaceAfter&#39;</span></span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true"></a>            <span class="co"># com o valor &#39;No&#39;, executa o bloco abaixo</span></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true"></a>            <span class="cf">if</span> token[<span class="st">&#39;misc&#39;</span>][<span class="st">&#39;SpaceAfter&#39;</span>] <span class="op">==</span> <span class="st">&#39;No&#39;</span>:</span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true"></a>                </span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true"></a>                <span class="co"># Acrescenta o valor booleano False à lista &#39;spaces&#39;.</span></span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true"></a>                spaces.append(<span class="va">False</span>)</span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true"></a>            </span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true"></a>        <span class="co"># Se a chave &#39;SpaceAfter&#39; não for encontrada em &#39;misc&#39;, o token é</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true"></a>        <span class="co"># seguido por um espaço.</span></span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true"></a>        <span class="cf">else</span>:</span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true"></a></span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true"></a>            <span class="co"># Acrescenta True à lista de espaços</span></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true"></a>            spaces.append(<span class="va">True</span>)</span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true"></a>        </span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true"></a>        <span class="co"># Atualiza o contador ao terminar de processar um objeto Token,</span></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true"></a>        <span class="co"># somando 1 ao seu valor.</span></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true"></a>        counter <span class="op">+=</span> <span class="dv">1</span></span></code></pre></div>
+<p>O código acima é uma rotina clássica de “garimpo”. Varrer um dicionário estruturado na unha para separar todos os grãos essenciais que, mais na frente, ajudarão a moldar um objeto <em>Doc</em> limpo, mantendo viva a bagagem de informações aprofundadas do documento original.</p>
+<p>Como você notou, processar arquivos baseados num esquema rico (como o CoNLL-U) não admite aventureiros. Entender exatamente as engrenagens de cada modelo (aqui, a forma como o corpus GUM acondiciona regras linguísticas dentro da coluna livre <code>misc</code>) exige leitura do manual, para garantir que as fatias não derretem no final do trajeto.</p>
+<p>Na vida normal de programadores de PLN, injetar texto simples no funil do <code>Language</code> object para que o spaCy entregue, do outro lado, um arquivo rico em morfologia e marcações estruturais é rotineiro, algo que batemos o martelo na Parte II.</p>
+<p>Entretanto, esse atalho <strong>não serve para a missão atual</strong>. E o porquê disso é elementar: caso deixássemos a inteligência do spaCy fragmentar a nosso texto de forma nativa e automática (ou seja, tokenizando do seu próprio jeito), correríamos o perigo real do spaCy tomar liberdades divergentes da estrutura em “pedras fundamentais” exigidas pelo CoNLL-U e nosso meticuloso rastreio cair por terra. Perderíamos a sincronia geométrica das anotações discursivas!</p>
+<p>A via correta passa pela “fabricação artesanal” do objeto <em>Doc</em>. Carregaremos os construtores na unha a partir da módulo matricial <code>tokens</code>, somando, é claro, a bagagem intelectual (o idioma de vocabulário) presente num clássico modelo inglês simplificado (o modesto, mas competente, <code>en_core_web_sm</code>).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="co"># Importa a classe Doc e a biblioteca spaCy</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="im">from</span> spacy.tokens <span class="im">import</span> Doc</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="im">import</span> spacy</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a><span class="co"># Carrega um modelo de linguagem pequeno para o inglês; armazena em &#39;nlp&#39;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a>nlp <span class="op">=</span> spacy.load(<span class="st">&#39;en_core_web_sm&#39;</span>)</span></code></pre></div>
+<p>Com o arcabouço pronto, injetaremos no objeto as matrizes que laboriosamente resgatamos antes: a listagem das palavras (<code>words</code>), seus indícios delimitadores interespaciais (<code>spaces</code>) e os batizadores de largada frasal (<code>sent_starts</code>).</p>
+<p>Para ilustrar o cenário atual, as impressões a seguir trazem as 15 “primeiras pedras” agrupadas na montagem paralela das referidas matrizes.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="co"># Percorre os 15 primeiros itens das listas &#39;words&#39;, &#39;spaces&#39; e &#39;sent_starts&#39;.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="co"># Usa a função zip() para buscar os itens das listas simultaneamente.</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a><span class="cf">for</span> word, space, sent_start <span class="kw">in</span> <span class="bu">zip</span>(words[:<span class="dv">15</span>], spaces[:<span class="dv">15</span>], sent_starts[:<span class="dv">15</span>]):</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a>    </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>    <span class="co"># Imprime o item atual de cada lista</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a>    <span class="bu">print</span>(word, space, sent_start)</span></code></pre></div>
+<pre class="text"><code>How True True
+to True False
+Cope True False
+With True False
+a True False
+Double True False
+Parachute True False
+Failure True False
+While True True
+skydiving False False
+, True False
+it True False
+is True False
+possible True False
+( False False</code></pre>
+<p>Além dessas três colunas vitais, é nossa tarefa amarrar essas diretrizes ao vocabulário inerente do inglês, repassando o coração do modelo (<code>nlp.vocab</code>) por meio da propriedade <code>vocab</code> presente no <code>Doc</code>.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="co"># Cria um objeto Doc do spaCy &quot;manualmente&quot;; atribui à variável &#39;doc&#39;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>doc <span class="op">=</span> Doc(vocab<span class="op">=</span>nlp.vocab, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>          words<span class="op">=</span>words, </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>          spaces<span class="op">=</span>spaces,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>          sent_starts<span class="op">=</span>sent_starts</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a>          )</span></code></pre></div>
+<p>Missão cumprida! Obtemos com sucesso a gênese de um objeto <em>Doc</em> totalmente sob nosso comando métrico e delineado pelas fronteiras autênticas do formato CoNLL-U.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="co"># Recupera os Tokens até o índice 15 do objeto Doc</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>doc[:<span class="dv">15</span>]</span></code></pre></div>
+<pre class="text"><code>How to Cope With a Double Parachute Failure While skydiving, it is possible (</code></pre>
+<p>Os 15 grãos textuais encadeados de forma primorosa evidenciam o encaixe, ditado perfeitamente sob batuta da listagem <code>words</code> em compasso fiel a intermitência ditada pelos sinalizadores em <code>spaces</code>.</p>
+<p>Sem falar nos delimitadores frasais! As sentenças perfeitamente modeladas pela marcação original brilham isoladas sem a interferência natural sintática do spaCy (isso vive alojado nas dependências relativas da gaveta <code>sents</code> do novo objeto <code>doc</code>).</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="co"># Recupera as cinco primeiras sentenças do objeto Doc</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="bu">list</span>(doc.sents)[:<span class="dv">5</span>]</span></code></pre></div>
+<pre class="text"><code>[How to Cope With a Double Parachute Failure,
+ While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity.,
+ In the vast majority of cases, this will not occur;,
+ nevertheless, in this event these coping strategies may assist.,
+ Steps]</code></pre>
+<p>Entretanto, por focarmos nas limitações espaciais descartando a riqueza sintática englobada na estrutura bruta CoNLL-U original (apenas absorvemos o texto e discurso), os atributos internos desses <em>Tokens</em> (como tipo da palavra) encontram-se desamparados (em estado oco).</p>
+<p>Duvida? Veja o deserto retornado numa tentativa de pinçar as raízes morfológicas aprofundadas no campo inerente <code>tag_</code> pertencente ao primeiro elo da frase.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="co"># Obtém a etiqueta refinada de classe gramatical do Token no índice 0</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>doc[<span class="dv">0</span>].tag_</span></code></pre></div>
+<pre class="text"><code>&#39;&#39;</code></pre>
+<p>Branco nítido, inexistência provada. O dilema atual é: o spaCy condena objetos empacotados “do lado de fora” em sua linha normal de atuação do modelo <code>nlp</code>. Precisamos nós mesmos encaminhar os papéis e protocolar as operações injetando <code>doc</code> nos guichês especializados isolados (<em>tagger</em>, <em>parser</em>, etc) disponíveis pela estrada rotulada em <code>pipeline</code>! O mapa já havia sido discutido de praxe em pormenor em trecho anterior (Parte II).</p>
+<p>Iremos transitar com as premissas em <em>loop</em> engarrafando e enriquecendo nosso arcabouço através dos guichês encadeados:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="co"># Percorre os pares nome / componente disponíveis no atributo &#39;pipeline&#39;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="co"># do objeto Language &#39;nlp&#39;.</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a><span class="cf">for</span> name, component <span class="kw">in</span> nlp.pipeline:</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>    </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>    <span class="co"># Usa uma string formatada para imprimir o &#39;name&#39; do componente</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Now applying component </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> ...&quot;</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true"></a>    </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true"></a>    <span class="co"># Fornece o objeto Doc existente ao componente e armazena as anotações</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true"></a>    <span class="co"># atualizadas na variável de mesmo nome (&#39;doc&#39;).</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true"></a>    doc <span class="op">=</span> component(doc)</span></code></pre></div>
+<pre class="text"><code>Now applying component tok2vec ...
+Now applying component tagger ...
+Now applying component parser ...
+Now applying component attribute_ruler ...
+Now applying component lemmatizer ...
+Now applying component ner ...</code></pre>
+<p>Terminado o expediente operário o objeto exibe suas aquisições ao retornar o valor preenchido para a busca em <code>tag_</code>:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="co"># Obtém a etiqueta refinada de classe gramatical do Token no índice 0</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>doc[<span class="dv">0</span>].tag_</span></code></pre></div>
+<pre class="text"><code>&#39;WRB&#39;</code></pre>
+<p>Melhor ainda! Temos à disposição o aparato de análises finas exclusivas derivadas, evidenciadas de antemão através dos construtos sintáticos agregados em sintagmas sob o título de <code>noun_chunks</code>.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="co"># Obtém os cinco primeiros sintagmas nominais do objeto Doc</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="bu">list</span>(doc.noun_chunks)[:<span class="dv">5</span>]</span></code></pre></div>
+<pre class="text"><code>[a Double Parachute Failure,
+ it,
+ both your primary and reserve parachutes,
+ you,
+ no method]</code></pre>
+<p>O detalhe fundamental: os limites frasais pautados “na unha” (sob demanda <code>sent_starts</code>) foram preservados pelo sistema que historicamente tem a tara em atropelar e ditar suas próprias regras baseadas na árvore de sintaxe das palavras em vez da pontuação pura!</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a><span class="co"># Obtém as cinco primeiras sentenças do objeto Doc</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a><span class="bu">list</span>(doc.sents)[:<span class="dv">5</span>]</span></code></pre></div>
+<pre class="text"><code>[How to Cope With a Double Parachute Failure,
+ While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity.,
+ In the vast majority of cases, this will not occur;,
+ nevertheless, in this event these coping strategies may assist.,
+ Steps]</code></pre>
+<p>Cenário pacificado! De posse integral sob manto protetivo da anotação, caminhamos aos derradeiros ritos em infundir na raiz o viés da dimensão analítica calcada e mapeada em nível discursivo oriunda dos garimpos estipulados via <code>discourse_units</code>, atados nas nuances em <code>sent_types</code> e conexões retóricas nas amarras <code>relations</code>.</p>
+<h3 id="amarrando-o-modo-da-oração-às-entranhas-do-spacy">Amarrando o modo da oração às entranhas do spaCy</h3>
+<p>Começaremos carimbando o estado de humor (o tom gramatical, em suma, o modo) atado nas bases do conjunto armazenado <code>sent_types</code>.</p>
+<p>Categorias típicas (como traçamos anteriormente) ditam a tônica em pautas relativas ao uso do tipo “infinitivo”, vertentes calcadas para “imperativo” e balizas de cunho “declarativo”.</p>
+<p>Um mergulho rápido na listagem comprova o resgate das etiquetas.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a><span class="co"># Imprime os tipos de sentença</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a>sent_types[:<span class="dv">10</span>]</span></code></pre></div>
+<pre class="text"><code>[&#39;inf&#39;, &#39;decl&#39;, &#39;decl&#39;, &#39;decl&#39;, &#39;frag&#39;, &#39;imp&#39;, &#39;decl&#39;, &#39;imp&#39;, &#39;imp&#39;, &#39;imp&#39;]</code></pre>
+<p>Nossa missão dita agora “grudar” as correspondentes chancelas na traseira das sentenças que moldam nosso modelo <em>Doc</em>. Para nos certificarmos perante risco de incompatibilidade, atestaremos em conduta primária o nivelamento quantitativo entre o catálogo listado e os lotes dispostos encarnando o grupo frasal da arquitetura atual.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a><span class="co"># Verifica o tamanho da informação de tipo de sentença e</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a><span class="co"># o número de sentenças do objeto Doc.</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a><span class="bu">len</span>(sent_types) <span class="op">==</span> <span class="bu">len</span>(<span class="bu">list</span>(doc.sents))</span></code></pre></div>
+<pre class="text"><code>True</code></pre>
+<p>Para injetar as peculiaridades balizadas nas regras semânticas na infraestrutura robusta do spaCy a conduta ortodoxa determina alocar “tags customizadas” (os “custom attributes”) no bojo interno associado com as particularidades dos conjuntos de texto rotulados pelas diretrizes da propriedade <em>Span</em>, que congrega, agrupa e encarna as delimitações englobando agrupamentos formados por parcelas unidas no manto de matriz <code>Token</code> na raiz interna atada e fixada de preceito pela arquitetura global <code>Doc</code>.</p>
+<p>Ora, se pararmos e inspecionarmos pontualmente, um lote sob regência vinculada na pasta interna a nível <code>sents</code> compõe intrinsecamente um viés formatado de acordo com uma vestimenta autêntica sob carimbo <code>Span</code>.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a><span class="co"># Imprime a primeira sentença do Doc e seu type()</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a><span class="bu">list</span>(doc.sents)[<span class="dv">0</span>], <span class="bu">type</span>(<span class="bu">list</span>(doc.sents)[<span class="dv">0</span>])</span></code></pre></div>
+<pre class="text"><code>(How to Cope With a Double Parachute Failure, spacy.tokens.span.Span)</code></pre>
+<p>Através da constatação e premissa referendada, a investida que estampa nossa meta em injetar a taxonomia vinculativa aos atributos providos nas sentenças requereria e apela pela convocação pontual (uso do artifício “import”) associando as bibliotecas balizadoras para lidar com <em>SpanGroup</em> e o genérico formatado em <em>Span</em>.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a><span class="co"># Importa as classes SpanGroup e Span do spaCy</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a><span class="im">from</span> spacy.tokens.span_group <span class="im">import</span> SpanGroup</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a><span class="im">from</span> spacy.tokens <span class="im">import</span> Span</span></code></pre></div>
+<p>O pilar de arrimo na infraestrutura para expandir a fronteira padronizada da engrenagem passa por encampar de antemão perante a via oficial (a rotina central descrita extensamente por aqui em meados da Parte II) um novo formato peculiar de cadastro atrelado na raiz do artefato central para <code>Span</code>. A premissa no caso se resume em carregar na mochila dessa entidade a chancela extra referenciando o tom “humorístico/mood”.</p>
+<p>Já na esfera englobada operante na denominação particular em torno do utilitário abrigando viés de cunho <code>SpanGroup</code>, ele serve ao singelo fim propiciando agrupamentos customizados voltados a gerenciar caixas fechadas acopladas abrigando trechos de <code>Spans</code>, viabilizando ancorá-los na esteira do atributo pai de nome estipulado por <code>spans</code> nas entranhas da estrutura principal em <code>Doc</code>.</p>
+<p>Logo, fabricaremos nosso conjunto em <code>SpanGroup</code>, englobando os segmentos providos originariamente a nível <em>sents</em> alocados no âmago interno.</p>
+<p>A montagem base exigirá perante uso imperativo a determinação do modelo base a ser operado (em <code>doc</code>), estipulando chancelas em favor do selo norteador pelo quesito em <code>name</code>, por fim ancorando na lista em <code>spans</code> a leva e amostragem coligida do ninho mãe que acolheu as referidas sentenças!</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a><span class="co"># Cria um SpanGroup a partir dos Spans contidos no objeto Doc &#39;doc&#39;, que</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a><span class="co"># foi criado a partir das anotações CoNLL-U. Esses Spans correspondem às</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a><span class="co"># sentenças, cujos limites definimos manualmente. Atribui à variável</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a><span class="co"># &#39;sent_group&#39;.</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true"></a>sent_group <span class="op">=</span> SpanGroup(doc<span class="op">=</span>doc, name<span class="op">=</span><span class="st">&quot;sentences&quot;</span>, spans<span class="op">=</span><span class="bu">list</span>(doc.sents))</span></code></pre></div>
+<p>Pronto. Deixamos as instâncias consolidadas a fim da inserção pontual, alocando a rubrica em favor de fixar raízes perante os arranjos no diretório em prol dos referidos sintagmas abrigados no domínio basilar no diretório central:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a><span class="co"># Atribui o SpanGroup ao atributo &#39;spans&#39; do objeto Doc, sob a chave</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true"></a><span class="co"># &#39;sentences&#39;.</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true"></a>doc.spans[<span class="st">&#39;sentences&#39;</span>] <span class="op">=</span> sent_group</span></code></pre></div>
+<p>Com o reduto operante garantido, fixamos o registro estendendo a alçada do novo selo “mood” (como propriedade de viés particular a ser fixado) sob as regras do arcabouço <em>Span</em>, inicializado de forma segura assumindo um valor cego padronizado de segurança estatuído nulo (None).</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a><span class="co"># Registra o atributo customizado &#39;mood&#39; na classe Span</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a>Span.set_extension(<span class="st">&#39;mood&#39;</span>, default<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p>Nesse exato patamar é possível que pasmemos e apliquemos o fluxo rotineiro iterativo encarnando e transpondo engate simultâneo pautado em chaves pares casando “cada tom gramatical com sua oração nativa”. O Python cuida brilhantemente bem dessa proeza invocando sua magia incorporada de modo inerente em pauta através do operador unificador com viés emparelhador em “zip()”.</p>
+<p>Lembrando, não é mágica — simplesmente vamos ditar a sintaxe base associando os componentes alinhados atrelados à alocada e nomeada <code>mood</code> amarrados por seu turno associando as frases batizadas provisoriamente sob alcunha da vertente em <code>span</code>.</p>
+<p>Fincamos chancelas englobando um detalhe sutil e clássico do spaCy na transição de preenchimento balizando formatação na marca referenciada ao componente via notação singular em sublinhado “<code>_</code>”. Trata-se do reduto privativo reservado a inserções que partem pelo usuário (detalhe já repassado anteriormente!).</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a><span class="co"># Percorre os pares de itens da lista e do SpanGroup</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a><span class="cf">for</span> mood, span <span class="kw">in</span> <span class="bu">zip</span>(sent_types, doc.spans[<span class="st">&#39;sentences&#39;</span>]):</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>    </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>    <span class="co"># Atribui o valor de &#39;mood&#39; ao atributo customizado de mesmo</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true"></a>    <span class="co"># nome, pertencente ao objeto Span.</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true"></a>    span._.mood <span class="op">=</span> mood</span></code></pre></div>
+<p>Agora nossos blocos textuais detêm uma carga informacional aprimorada!</p>
+<p>Que tal pautar averiguação conferindo os arranjos nas chancelas amparadas na sentença alojada no endereço do marcador de número 8?</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a><span class="co"># Recupera a informação de modo verbal da sentença no índice 8</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>doc.spans[<span class="st">&#39;sentences&#39;</span>][<span class="dv">8</span>], doc.spans[<span class="st">&#39;sentences&#39;</span>][<span class="dv">8</span>]._.mood</span></code></pre></div>
+<pre class="text"><code>(If both your primary and reserve chutes have malfunctioned, signal immediately to a fellow jumper who has not yet deployed their chute, waving your arms and signalling that your own is not functional.,
+ &#39;imp&#39;)</code></pre>
+<p>E aí está. O modelo acusa na exatidão, e o diagnóstico assinala que a frase possui um modo “imperativo” enraizado em seu bojo gramatical. Funcionou como um relógio!</p>
+<h3 id="tecendo-o-discurso-com-as-anotações-das-relações-rst">Tecendo o discurso com as anotações das relações RST</h3>
+<p>Chegou a hora e a vez de amarrarmos no pilar da ferramenta o estigma mais profundo da análise. O limite exato estipulando chancelas perante blocos de raciocínios independentes da teoria retórica se encontrava enlatado desde outrora nos arranjos guardados sob posse no acervo com estância referenciada nominalmente pela bagagem <code>discourse_units</code>.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a><span class="co"># Verifica os 10 primeiros itens da lista &#39;discourse_units&#39;</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a>discourse_units[:<span class="dv">10</span>]</span></code></pre></div>
+<pre class="text"><code>[0, 8, 11, 14, 19, 29, 34, 39, 51, 62]</code></pre>
+<p>Os indícios aqui apontam friamente onde uma “unidade retórica” brotava! E como transpor a estatística num formato orgânico? O viés lógico demanda pinçarmos recortes vivos no coração da estrutura original em <em>Doc</em> operando a faca exatamente por onde pautam as cercas balizadoras indicadas a nível de índices (ex: corta de zero a oito, de oito a onze, de onze a catorze, e sucessivamente até esvair o conteúdo)!</p>
+<p>Esse desmembramento é facilmente vencido em pauta com o trato do encadeamento oriundo por via sequencial de loops operados em fôlego em <code>range()</code> fatiando pontualmente de praxe:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="co"># Cria uma lista vazia para guardar as fatias do objeto Doc que correspondem</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a><span class="co"># às unidades de discurso.</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a>edu_spans <span class="op">=</span> []</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true"></a><span class="co"># Percorre os limites das unidades de discurso usando a função range() do Python.</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true"></a><span class="co"># Isso nos dá números, que usamos para indexar a lista &#39;discourse_units&#39;, a qual</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true"></a><span class="co"># contém os índices que marcam o início de cada unidade de discurso.</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(discourse_units)):</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true"></a>    </span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true"></a>    <span class="co"># Tenta executar o bloco de código a seguir</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true"></a>    <span class="cf">try</span>:</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true"></a>        </span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true"></a>        <span class="co"># Obtém o item atual da lista &#39;discourse_units&#39; e o item seguinte; atribui</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true"></a>        <span class="co"># às variáveis &#39;start&#39; e &#39;end&#39;.</span></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true"></a>        start, end <span class="op">=</span> discourse_units[i], discourse_units[i <span class="op">+</span> <span class="dv">1</span>]</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true"></a>    </span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true"></a>    <span class="co"># Se o item seguinte não existir, porque chegamos ao último item da lista,</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true"></a>    <span class="co"># um IndexError será levantado, e nós o capturamos aqui.</span></span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true"></a>    <span class="cf">except</span> <span class="pp">IndexError</span>:</span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true"></a>        </span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true"></a>        <span class="co"># Atribui o início da unidade de discurso normalmente e usa o tamanho do</span></span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true"></a>        <span class="co"># objeto Doc como valor de &#39;end&#39;, marcando o fim da unidade de discurso.</span></span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true"></a>        start, end <span class="op">=</span> discourse_units[i], <span class="bu">len</span>(doc)</span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true"></a></span>
+<span id="cb51-25"><a href="#cb51-25" aria-hidden="true"></a>    <span class="co"># Usa as variáveis &#39;start&#39; e &#39;end&#39; para fatiar o objeto Doc; acrescenta o</span></span>
+<span id="cb51-26"><a href="#cb51-26" aria-hidden="true"></a>    <span class="co"># objeto Span resultante à lista &#39;edu_spans&#39;.</span></span>
+<span id="cb51-27"><a href="#cb51-27" aria-hidden="true"></a>    edu_spans.append(doc[start:end])</span></code></pre></div>
+<p>Com o esquadrinhamento selado na gaveta de repouso por trás das fronteiras contíguas moldadas na matriz listada <code>edu_spans</code>, temos a massa fundamental fragmentada.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a><span class="co"># Obtém os sete primeiros Spans da lista &#39;edu_spans&#39;</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>edu_spans[:<span class="dv">7</span>]</span></code></pre></div>
+<pre class="text"><code>[How to Cope With a Double Parachute Failure,
+ While skydiving,,
+ it is possible,
+ (yet extremely unlikely),
+ that both your primary and reserve parachutes will malfunction,,
+ leaving you with no method,
+ of reducing your velocity.]</code></pre>
+<p>É latente a total indiferença entre o que se estipula chancelas num pilar da gramática ordinária para fixar sentenças longas em relação às métricas para moldar as chancelas da unidade discursiva, descompasso total!</p>
+<p>Mas há peças cruciais pendentes focando os atributos necessários amarrando a premissa de relação e subordinação de um componente sob a mira do vizinho discursivo que moldará seu papel prático.</p>
+<p>Logo criaremos mais três atributos sob estigma “feito em casa” no esqueleto em <em>Span</em>!</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="co"># Registra três atributos customizados para objetos Span, correspondentes ao</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a><span class="co"># id da unidade elementar de discurso, ao id do elemento que atua como alvo</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a><span class="co"># e ao nome da relação.</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a>Span.set_extension(<span class="st">&#39;edu_id&#39;</span>, default<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true"></a>Span.set_extension(<span class="st">&#39;target_id&#39;</span>, default<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true"></a>Span.set_extension(<span class="st">&#39;relation&#39;</span>, default<span class="op">=</span><span class="va">None</span>)</span></code></pre></div>
+<p>Nesta engenharia: - <code>edu_id</code>: Grava o selo de identificação único para a porção elementar retórica. - <code>target_id</code>: Guarda quem é a outra porção conectada que sofre impacto prático. - <code>relation</code>: Rotula a natureza que define a ponte psicológica a entrelaçá-las.</p>
+<p>E vamos novamente aninhar nossa ninhada fracionada de volta ao berço em <em>Doc</em> gerindo-as através da formatação de empacotamento com maestria englobada da já conhecida classe <em>SpanGroup</em>.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a><span class="co"># Cria um objeto SpanGroup a partir dos Spans da lista &#39;edu_spans&#39;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>edu_group <span class="op">=</span> SpanGroup(doc<span class="op">=</span>doc, name<span class="op">=</span><span class="st">&quot;edus&quot;</span>, spans<span class="op">=</span>edu_spans)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true"></a><span class="co"># Atribui o SpanGroup sob a chave &#39;edus&#39;</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true"></a>doc.spans[<span class="st">&#39;edus&#39;</span>] <span class="op">=</span> edu_group</span></code></pre></div>
+<p>A etapa do arremate pede apenas que a gente alimente nossos “tubos de ensaio” vazios com o verdadeiro sangue englobado na matriz inicial (a tripla de tuplas guardada carinhosamente no banco com título de <code>relations</code>).</p>
+<p>Ao puxarmos a lista originária veremos o amparo provido calcado em formatação atrelada a ditar “quem se comunica e como se comunica”.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true"></a><span class="co"># Imprime as cinco primeiras definições de relação da lista &#39;relations&#39;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true"></a>relations[:<span class="dv">5</span>]</span></code></pre></div>
+<pre class="text"><code>[(&#39;preparation&#39;, 0, 10),
+ (&#39;circumstance&#39;, 1, 2),
+ (&#39;background&#39;, 2, 8),
+ (&#39;concession&#39;, 3, 2),
+ (&#39;same-unit&#39;, 4, 2)]</code></pre>
+<p>Resta a burocracia de encaminhar a transferência distribuindo a papelada para a respectiva subseção criada (<code>edus</code> no guarda-chuva de <code>spans</code>).</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a><span class="co"># Percorre cada tripla da lista &#39;relations&#39;</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true"></a><span class="cf">for</span> relation <span class="kw">in</span> relations:</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true"></a>    </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true"></a>    <span class="co"># Desempacota a tripla em três variáveis</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true"></a>    rel_name, source, target <span class="op">=</span> relation[<span class="dv">0</span>], relation[<span class="dv">1</span>], relation[<span class="dv">2</span>]</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true"></a>    </span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true"></a>    <span class="co"># Usa o identificador em &#39;source&#39; para indexar os objetos Span sob a</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true"></a>    <span class="co"># chave &#39;edus&#39;. Em seguida, acessa os atributos customizados e define os</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true"></a>    <span class="co"># valores de &#39;edu_id&#39;, &#39;target_id&#39; e &#39;relation&#39;.</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true"></a>    doc.spans[<span class="st">&#39;edus&#39;</span>][source]._.edu_id <span class="op">=</span> source</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true"></a>    doc.spans[<span class="st">&#39;edus&#39;</span>][source]._.target_id <span class="op">=</span> target</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true"></a>    doc.spans[<span class="st">&#39;edus&#39;</span>][source]._.relation <span class="op">=</span> rel_name</span></code></pre></div>
+<p>Bingo! A trama retórica se encontra solidamente fixada ao osso da engrenagem!</p>
+<p>Vamos averigar o status retórico encravado no pedaço catalogado na posição sob índice de marcação de número 1:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true"></a><span class="co"># Recupera o atributo customizado &#39;relation&#39; do Span no índice 1</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true"></a>doc.spans[<span class="st">&#39;edus&#39;</span>][<span class="dv">1</span>]._.relation</span></code></pre></div>
+<pre class="text"><code>&#39;circumstance&#39;</code></pre>
+<p>Ele acusa operar na pauta “circunstancial” ditando o viés dependendo de amarras de praxe atreladas ao reduto apontando rumo na outra oração da extremidade espelhada balizada ao registro com “target_id”. Mas quem é o comparsa alvejado na mira do “target_id”?</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true"></a><span class="co"># Obtém o Span no índice 1 e o Span referenciado por seu atributo &#39;target_id&#39;</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true"></a>doc.spans[<span class="st">&#39;edus&#39;</span>][<span class="dv">1</span>], doc.spans[<span class="st">&#39;edus&#39;</span>][doc.spans[<span class="st">&#39;edus&#39;</span>][<span class="dv">1</span>]._.target_id]</span></code></pre></div>
+<pre class="text"><code>(While skydiving,, it is possible)</code></pre>
+<p>Eis os gêmeos siameses desnudados: As porções encadeadas comprovando empiricamente e validando as amarras estipuladas entre as unidades elementares discursivas atreladas sob preceito referenciando chancelas do tipo que dita uma circunstância.</p>
+<h2 id="atalhos-para-importar-formatos-conll-u-para-dentro-do-spacy">Atalhos para importar formatos CoNLL-U para dentro do spaCy</h2>
+<p>Caso não haja o apego emocional no ofício minucioso ao querer incorporar customizações artesanais para inflar a estância do modelo atrelada ao <code>Doc</code> e a intenção recaia friamente num interesse mecânico de fazer um passe mágico com viés restrito na pauta focada convertendo CoNLL-U num repositório puro formatado no padrão referenciando ao objeto balizado em spaCy, uma luz brilhante te aguarda: o método atalho sob o nome em utilitário de plantão chamado <code>conllu_to_docs()</code>.</p>
+<p>Ele foi cunhado para viver no nicho englobando o amparo em setores base de processamentos para <code>training</code>, que figura na alçada balizando modelos alimentadores no treinamento focado sob as artérias de bases encorpadas pautando aprendizado computacional.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true"></a><span class="co"># Importa a função &#39;conllu_to_docs&#39; e a classe Doc</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true"></a><span class="im">from</span> spacy.training.converters <span class="im">import</span> conllu_to_docs</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true"></a><span class="im">from</span> spacy.tokens <span class="im">import</span> Doc</span></code></pre></div>
+<p>Este artefato “mastiga” as entradas fornecidas via formato basilar operado na vertente <code>string</code>.</p>
+<p>Empregamos no momento a massa bruta <code>annotations</code> fornecendo-a à máquina. E para que ela opere “quietinha”, escoramos o amparo chancelando premissas operantes na vertente que manda ela trancar a voz no quesito da opção atada e estatuída na marca <code>no_print</code> definida num “ok” positivo.</p>
+<p>A rotina irá cuspir a produção (sob formato Pythonic em ‘generator’), de modo a requerer do usuário providências para converter tudo à moda clássica na moldura para base em formato “lista” (list).</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true"></a><span class="co"># Fornece a string em &#39;annotations&#39; à função &#39;conllu_to_docs&#39;.</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true"></a><span class="co"># Define &#39;no_print&#39; como True e converte o resultado em lista; armazena em &#39;docs&#39;.</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true"></a>docs <span class="op">=</span> <span class="bu">list</span>(conllu_to_docs(annotations, no_print<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true"></a></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true"></a><span class="co"># Obtém os dois primeiros itens da lista resultante</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true"></a>docs[:<span class="dv">2</span>]</span></code></pre></div>
+<pre class="text"><code>[How to Cope With a Double Parachute Failure While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity. In the vast majority of cases, this will not occur; nevertheless, in this event these coping strategies may assist. Steps Remain calm. This may seem obvious, but deep, even breathing (despite the rushing slipstream) and controlling your heart-rate are essential to your continued survival. Entreat assistance. If both your primary and reserve chutes have malfunctioned, signal immediately to a fellow jumper who has not yet deployed their chute, waving your arms and signalling that your own is not functional. If this is a solo jump, then skip to step 6. ,
+ Prepare for deployment. After linking arms with your fellow jumper, you will need to hook your arms through their chest strap, or through both sides of the front of their harness, as far as you can, then grab onto your own strap. Deploy. The shock of the chute deployment will be intense. The G-forces will multiply your body weight, making it impossible to hold on; this is why hooking your arms through the harness is essential. It is likely that the shock will dislocate or break both your arms; nevertheless this is a small price to pay for your life. Prepare for impact. If your companion&#39;s canopy has successfully opened, then both your chances of survival have dramatically increased. ]</code></pre>
+<p>Pronto, criamos as fatias perfeitamente moldadas ao <code>Doc</code>. O pequeno tropeço na engrenagem que assombra essa facilidade balizada em padrão de fábrica: ela quebra arbitrariamente os documentos em maços picotados agrupando as ocorrências pautando-se sob limites focados ao amparo englobando 10 em 10 sentenças em caixinhas alocadas independentes de <code>Doc</code>s individuais (um tanto desastroso).</p>
+<p>Uma fusão coerente focada na reparação recai operando base numa vertente ditada a promover aglutinações embasadas a recompor o texto global num arcabouço atado na pauta unitária no viés em amarrações ancoradas nas chamadas à subrotina originada do artifício balizador estatuído sob a função <code>from_docs()</code> provinda nativa na premissa com chancela perante molde embasando no coração <em>Doc</em>.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true"></a><span class="co"># Combina os objetos Doc da lista &#39;docs&#39; em um único Doc; atribui a &#39;doc&#39;</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true"></a>doc <span class="op">=</span> Doc.from_docs(docs)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true"></a><span class="co"># Verifica o tipo e o tamanho da variável</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true"></a><span class="bu">type</span>(doc), <span class="bu">len</span>(doc)</span></code></pre></div>
+<pre class="text"><code>(spacy.tokens.doc.Doc, 890)</code></pre>
+<p>Milagre operado: Um belo e reluzente documento singular composto majestosamente em 890 matrizes providas de <em>Tokens</em> independentes! E é claro, com todas as virtudes de informações linguísticas incrustadas de nascença!</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true"></a><span class="co"># Percorre os 8 primeiros Tokens usando a função range()</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true"></a><span class="cf">for</span> token_ix <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">8</span>):</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true"></a>    </span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true"></a>    <span class="co"># Usa o número atual em &#39;token_ix&#39; para buscar um Token no Doc.</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true"></a>    <span class="co"># Atribui o objeto Token à variável &#39;token&#39;.</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true"></a>    token <span class="op">=</span> doc[token_ix]</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true"></a>    </span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true"></a>    <span class="co"># Imprime o Token e suas anotações linguísticas</span></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true"></a>    <span class="bu">print</span>(token, token.tag_, token.pos_, token.morph, token.dep_, token.head)</span></code></pre></div>
+<pre class="text"><code>How WRB SCONJ PronType=Int mark Cope
+to TO PART  mark Cope
+Cope VB VERB VerbForm=Inf ROOT Cope
+With IN ADP  case Failure
+a DT DET Definite=Ind|PronType=Art det Failure
+Double JJ ADJ Degree=Pos amod Failure
+Parachute NN NOUN Number=Sing compound Failure
+Failure NN NOUN Number=Sing obl Cope</code></pre>
+<p>Entretanto, não cante vitória de cara perante as virtudes. Ao esbarrar na tentação em requerer e focar em propriedades estatuindo sintagmas compostos enquadrando alocações na premissa originária de entidades em teor <em>noun_chunks</em>, a interface irá corar de vergonha na sua tela gritando e acusando por chancelas atadas em lacunas de dados que causarão a fúria em erros (“NotImplementedError”).</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true"></a><span class="co"># Obtém os sintagmas nominais do Doc</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true"></a><span class="bu">list</span>(doc.noun_chunks)</span></code></pre></div>
+<pre class="text"><code>---------------------------------------------------------------------------
+NotImplementedError                       Traceback (most recent call last)
+Cell In[47], line 2
+      1 # Get the noun chunks in the Doc
+----&gt; 2 list(doc.noun_chunks)
+
+File ~/nlp/lib/python3.9/site-packages/spacy/tokens/doc.pyx:853, in noun_chunks()
+
+NotImplementedError: [E894] The &#39;noun_chunks&#39; syntax iterator is not implemented for language &#39;&#39;.</code></pre>
+<p>O revés ataca em formato oriundo puramente operando a nível estrito: o <code>Doc</code> gestado não porta qualquer cordão umbilical ligando a natureza a modelos estatuídos operantes do nível matricial de <strong>Language</strong> (<em>Vocabulary</em> e outros parâmetros que determinam o que a máquina sabe do idioma). E os extratos “noun chunks” em essência sugam de praxe, obrigatoriamente, embasamentos providos nestes dicionários linguísticos acoplados a suas raízes que chancelam sintaxe perante bases que o sistema ignora no instante atual.</p>
+<p>Para pautar chancelas de praxe de cura e reabilitação não dispomos da possibilidade provida via injeção operando rotinas à força de maneira puramente e simplesmente ditar as cartilhas linguísticas à mão. O procedimento operante foca em balizas de “cirurgias” no armazenamento do formato “disco” acionando base da estância chamada de pilar <em>DocBin</em>, abordada em aprofundamento pretérito provido perante o horizonte da Parte II.</p>
+<p>O pacote englobando as amarrações delineando no esteio pautado na pauta oriunda a estância abarcando propriedades base <code>DocBin</code> ostenta as prerrogativas chancelando enquadramento estipulando chancelas voltadas a transpor dados focados à exportação externa da estrutura pronta.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true"></a><span class="co"># Importa o objeto DocBin do submódulo &#39;tokens&#39;</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true"></a><span class="im">from</span> spacy.tokens <span class="im">import</span> DocBin</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true"></a></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true"></a><span class="co"># Cria um objeto DocBin vazio</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true"></a>doc_bin <span class="op">=</span> DocBin()</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true"></a></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true"></a><span class="co"># Adiciona o Doc atual ao DocBin</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true"></a>doc_bin.add(doc)</span></code></pre></div>
+<p>Nesta pauta o revés reside ao invés do despejo em HD de arquivo bruto nós faremos o saque na fenda operando o recuo, onde engajaremos o saque imediato de volta para a pauta, puxando à luz do dia os extratos usando artifícios da técnica invocada em subrotina <code>get_docs()</code>, só que agora empurramos pela guelra da máquina o pacote que traz a carga focada em estatuir a língua que baliza o sistema de <code>Vocabulary</code>. O artefato que devolve vida inteligente perante amarrações amparadas e englobando o idioma no spaCy.</p>
+<p>O fruto dessa manobra devolve uma safra “generator” e, logo, voltamos à lida transformando isso no velho enquadramento em lista (<code>list</code>).</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true"></a><span class="co"># Usa o método &#39;get_docs&#39; para recuperar os Docs do DocBin</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true"></a>docs <span class="op">=</span> <span class="bu">list</span>(doc_bin.get_docs(vocab<span class="op">=</span>nlp.vocab))</span></code></pre></div>
+<p>Problema sanado, o acesso volta à tona operando de maneira brilhante! A malha atada em viés referencial de propriedades contidas e embutidas sob chancela nos redutos amparando embates voltados ao uso da estrutura originária ditada por <em>noun chunks</em> se submete e jorra farta sem o engasgo da interdição perante a falta do idioma.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true"></a><span class="bu">list</span>(docs[<span class="dv">0</span>].noun_chunks)[:<span class="dv">10</span>]</span></code></pre></div>
+<pre class="text"><code>[it,
+ and reserve parachutes,
+ this,
+ these coping strategies,
+ Steps,
+ This,
+ both your primary and reserve chutes,
+ who,
+ this,
+ you]</code></pre>
+<p>Concluímos assim o mapeamento englobando o panorama referencial pautando-se sob chancelas a pavimentar vias da sua trilha em lidar e aprimorar a exploração das profundezas estruturais ancoradas no trato por anotações abrigadas perante o estigma ditado por regras estatuídas através da maestria provida nativa no formato operante sob regência do esquema abarcado por CoNLL-U operando a nível estrito focando suas intersecções atadas nas malhas do ecossistema e viés originário em componentes providos ao amparo de funcionalidades estipulando enquadramento balizado na estância de spaCy.</p>
+</body>
+</html>

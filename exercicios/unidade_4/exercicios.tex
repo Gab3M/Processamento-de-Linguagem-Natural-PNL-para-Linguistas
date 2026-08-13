@@ -1,0 +1,172 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 4 - Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{exercuxedcios-introduuxe7uxe3o-aos-word-embeddings}{%
+\section{\texorpdfstring{Exercícios --- Introdução aos \emph{word
+embeddings}}{Exercícios --- Introdução aos word embeddings}}\label{exercuxedcios-introduuxe7uxe3o-aos-word-embeddings}}
+
+Os exercícios abaixo pressupõem que você tenha executado o código da
+unidade e que as seguintes variáveis estejam disponíveis: \texttt{nlp},
+\texttt{docs}, \texttt{df}, \texttt{lemma\_df}, \texttt{unique\_lemmas},
+\texttt{lemma\_vectors}, \texttt{pairs}, \texttt{targets},
+\texttt{context} e \texttt{embedding\_model}.
+
+\hypertarget{parte-a-conceitos}{%
+\subsection{Parte A --- Conceitos}\label{parte-a-conceitos}}
+
+\textbf{Exercício 1.} Enuncie a hipótese distribucional em uma frase e
+explique de que modo a citação de Firth (``\emph{You shall know a word
+by the company it keeps}'') a antecipa.
+
+\textbf{Exercício 2.} Explique a diferença entre os eixos
+\textbf{sintagmático} e \textbf{paradigmático} de Saussure. Na matriz
+criada na seção 2.1, o que representam as linhas e o que representam as
+colunas em relação a esses eixos?
+
+\textbf{Exercício 3.} Por que a representação obtida na seção 2.1 é
+chamada de ``saco de palavras'' (\emph{bag of words})? Cite duas
+limitações dessa representação.
+
+\textbf{Exercício 4.} Qual é a diferença entre um vetor \textbf{esparso}
+e um vetor \textbf{denso}? Por que os \emph{word embeddings} aprendidos
+pela camada oculta são densos?
+
+\textbf{Exercício 5.} Explique por que a predição da palavra vizinha é
+descrita como uma \textbf{tarefa substituta} (\emph{proxy}) e não como o
+objetivo real do treinamento.
+
+\textbf{Exercício 6.} A camada oculta da rede tem apenas dois neurônios.
+Explique por que ela é descrita como um ``gargalo'' e qual o papel desse
+gargalo no aprendizado das representações.
+
+\hypertarget{parte-b-programauxe7uxe3o}{%
+\subsection{Parte B --- Programação}\label{parte-b-programauxe7uxe3o}}
+
+\textbf{Exercício 7.} Calcule a similaridade de cossenos entre os
+\emph{Docs} de índices 3 e 4 usando a matriz \texttt{df}. O valor obtido
+é coerente com o conteúdo das duas orações? Justifique.
+
+\textbf{Exercício 8.} Acrescente uma sexta oração à lista
+\texttt{examples} --- por exemplo,
+\texttt{"Stockholm\ is\ the\ capital\ of\ Sweden"} --- e refaça o
+pipeline até a matriz de similaridade de cossenos. Quantas colunas passa
+a ter o \emph{DataFrame} \texttt{df}? Qual \emph{Doc} se torna mais
+similar ao novo?
+
+\textbf{Exercício 9.} Usando a matriz de coocorrência
+\texttt{lemma\_df}, calcule a similaridade de cossenos entre os vetores
+de \texttt{\textquotesingle{}capital\textquotesingle{}} e
+\texttt{\textquotesingle{}the\textquotesingle{}}, e entre
+\texttt{\textquotesingle{}Helsinki\textquotesingle{}} e
+\texttt{\textquotesingle{}ferry\textquotesingle{}}. Comente os
+resultados à luz da hipótese distribucional.
+
+\textbf{Exercício 10.} Modifique o laço que preenche \texttt{lemma\_df}
+para considerar uma janela de \textbf{três} palavras de cada lado, em
+vez de duas. Recalcule a similaridade entre
+\texttt{\textquotesingle{}Helsinki\textquotesingle{}} e
+\texttt{\textquotesingle{}Tallinn\textquotesingle{}} e compare com o
+valor obtido na unidade.
+
+\textbf{Exercício 11.} Escreva uma função
+\texttt{one\_hot(lemma,\ vocabulary)} que receba um lema e uma lista de
+lemas e devolva o vetor one-hot correspondente, sem usar o dicionário
+\texttt{lemma\_vectors}. A função deve levantar um \texttt{ValueError}
+se o lema não estiver no vocabulário.
+
+\textbf{Exercício 12.} Treine novamente a rede neural, desta vez com
+\textbf{quatro} neurônios na camada oculta, mantendo os demais
+parâmetros. Verifique o formato da matriz de pesos da camada oculta e
+explique por que já não é possível plotar diretamente o espaço de
+embeddings em duas dimensões.
+
+\textbf{Exercício 13.} A partir da matriz
+\texttt{hidden\_layer\_weights} obtida na unidade, calcule a
+similaridade de cossenos entre os embeddings de
+\texttt{\textquotesingle{}Helsinki\textquotesingle{}} e
+\texttt{\textquotesingle{}Tallinn\textquotesingle{}}. Compare esse valor
+com o obtido na seção 2.2 a partir da matriz de coocorrência.
+
+\hypertarget{parte-c-reflexuxe3o}{%
+\subsection{Parte C --- Reflexão}\label{parte-c-reflexuxe3o}}
+
+\textbf{Exercício 14.} O exemplo da unidade usa apenas cinco orações.
+Liste três consequências concretas dessa escassez de dados para a
+qualidade dos embeddings aprendidos.
+
+\textbf{Exercício 15.} A unidade menciona que abordagens contemporâneas
+tentam distinguir formas homonímicas como ``banco'' (instituição) e
+``banco'' (assento). Explique por que o modelo construído nesta unidade
+é \textbf{incapaz} de fazer essa distinção e o que seria necessário para
+superá-la.
+
+\end{document}

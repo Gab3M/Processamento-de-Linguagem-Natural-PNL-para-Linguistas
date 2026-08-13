@@ -1,0 +1,119 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 2 - Respostas dos Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{gabarito---muxf3dulo-2-dependuxeancias-universais}{%
+\subsection{Gabarito - Módulo 2: Dependências
+Universais}\label{gabarito---muxf3dulo-2-dependuxeancias-universais}}
+
+\textbf{Resposta 1:} 1. Desenvolver um framework comum para descrever a
+estrutura gramatical de diversos idiomas. 2. Criar corpora anotados (ou
+\emph{treebanks}) para diversos idiomas aplicando este framework
+universal.
+
+\textbf{Resposta 2:} 1. \textbf{Nominais (\emph{nominals}):} Usados para
+representar coisas, sendo frequentemente construídos em torno de
+substantivos (análogos a sintagmas nominais). 2. \textbf{Orações
+(\emph{clauses}):} Usadas para representar eventos, sendo construídas
+fundamentalmente em torno de verbos. Elas situam-se acima dos nominais
+hierarquicamente. 3. \textbf{Modificadores (\emph{modifiers}):} Dependem
+de adjetivos e advérbios e servem para expandir, refinar e detalhar o
+significado tanto de nominais quanto de orações.
+
+\textbf{Resposta 3:} A etiqueta \texttt{root} identifica a \textbf{raiz}
+ou a cabeça central da oração (geralmente o verbo principal). No
+framework UD, as dependências são desenhadas de cabeça para cabeça;
+portanto, os arcos sintáticos partem da raiz (o verbo) em direção às
+palavras que atuam como as cabeças dos nominais dependentes (como o
+pronome sujeito ou o substantivo objeto direto).
+
+\textbf{Resposta 4:} O atributo \texttt{token.subtree} retorna um
+gerador que contém todos os dependentes diretos e indiretos (filhos,
+netos, bisnetos, etc.) \textbf{incluindo o próprio \emph{Token}
+original}. O atributo \texttt{token.children}, por outro lado, retorna
+apenas os dependentes imediatos (filhos diretos de primeiro nível) e
+\textbf{não inclui o \emph{Token} original} na sua saída.
+
+\textbf{Resposta 5:} Essas métricas penalizam desproporcionalmente
+idiomas morfologicamente ricos. Em inglês, as sentenças são mais longas
+devido ao alto uso de palavras de função independentes (preposições,
+auxiliares); logo, errar uma palavra causa um pequeno impacto
+percentual. Em finlandês, onde essas funções são acopladas nas palavras
+originais (formando sentenças mais curtas), um único erro sintático
+representa uma porcentagem de perda muito maior na métrica final.
+Métricas alternativas sugeridas incluem a \textbf{CLAS}
+(\emph{content-labeled attachment score}), que ignora palavras de função
+na contagem, a \textbf{MLAS} (com foco na morfologia) e a \textbf{BLEX}
+(com foco no lema).
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\end{document}

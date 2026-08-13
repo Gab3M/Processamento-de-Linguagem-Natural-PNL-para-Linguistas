@@ -1,0 +1,164 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 3 - Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{exercuxedcios-encontrando-padruxf5es-linguuxedsticos-com-o-spacy}{%
+\section{Exercícios --- Encontrando padrões linguísticos com o
+spaCy}\label{exercuxedcios-encontrando-padruxf5es-linguuxedsticos-com-o-spacy}}
+
+Os exercícios abaixo pressupõem que você tenha executado o código da
+unidade e que as seguintes variáveis estejam disponíveis: \texttt{nlp},
+\texttt{doc}, \texttt{matcher}, \texttt{morph\_matcher} e
+\texttt{dep\_matcher}.
+
+Para os exercícios de programação, use um modelo pequeno para o inglês
+(\texttt{en\_core\_web\_sm}) e o arquivo \texttt{data/occupy.txt}
+utilizado na unidade.
+
+\hypertarget{parte-a-conceitos}{%
+\subsection{Parte A --- Conceitos}\label{parte-a-conceitos}}
+
+\textbf{Exercício 1.} Explique, com suas próprias palavras, a diferença
+entre as classes \emph{Matcher}, \emph{DependencyMatcher} e
+\emph{PhraseMatcher} do spaCy. Dê um exemplo de tarefa linguística
+adequada a cada uma.
+
+\textbf{Exercício 2.} No formato de padrões do spaCy, qual é o papel da
+chave \texttt{OP}? Descreva o efeito de cada um dos quatro operadores
+(\texttt{!}, \texttt{?}, \texttt{+}, \texttt{*}) e dê um exemplo de
+padrão em que o operador \texttt{?} seria preferível ao \texttt{+}.
+
+\textbf{Exercício 3.} Qual a diferença entre as chaves \texttt{POS} e
+\texttt{TAG} em uma regra de padrão? Por que a etiqueta \texttt{NNP} não
+aparece como valor de \texttt{POS}?
+
+\textbf{Exercício 4.} Explique o funcionamento do atributo
+\texttt{IS\_SUPERSET} aplicado à chave \texttt{MORPH}. Por que ele é
+necessário quando queremos casar apenas \emph{alguns} traços
+morfológicos?
+
+\textbf{Exercício 5.} No \emph{DependencyMatcher}, explique a diferença
+entre as chaves \texttt{LEFT\_ID} e \texttt{RIGHT\_ID}. Por que o
+primeiro dicionário de um padrão não possui \texttt{LEFT\_ID}?
+
+\textbf{Exercício 6.} Por que o \emph{DependencyMatcher} devolve tuplas
+de índices em vez de objetos \emph{Span}, como faz o \emph{Matcher}?
+
+\hypertarget{parte-b-programauxe7uxe3o}{%
+\subsection{Parte B --- Programação}\label{parte-b-programauxe7uxe3o}}
+
+\textbf{Exercício 7.} Crie um \emph{Matcher} que encontre sequências de
+um adjetivo (\texttt{ADJ}) seguido de um substantivo (\texttt{NOUN}) no
+objeto \texttt{doc}. Nomeie o padrão como \texttt{adj+noun} e imprima as
+20 primeiras correspondências.
+
+\textbf{Exercício 8.} Modifique o padrão do exercício anterior para
+permitir \textbf{um ou mais} adjetivos antes do substantivo. Compare a
+quantidade de correspondências obtidas com e sem o argumento
+\texttt{greedy=\textquotesingle{}LONGEST\textquotesingle{}} e explique a
+diferença.
+
+\textbf{Exercício 9.} Escreva um padrão que case substantivos no plural,
+usando a chave \texttt{MORPH} com \texttt{IS\_SUPERSET} e o traço
+\texttt{Number=Plur}. Imprima as 15 primeiras correspondências junto com
+os traços morfológicos de cada \emph{Token}.
+
+\textbf{Exercício 10.} Usando o \emph{DependencyMatcher}, escreva um
+padrão que encontre verbos (\texttt{VERB}) e seus objetos diretos
+(\texttt{dobj}), sem incluir o sujeito. Nomeie o padrão como
+\texttt{verb\_dobj} e imprima as 20 primeiras correspondências no
+formato \texttt{verbo\ ...\ objeto}.
+
+\textbf{Exercício 11.} Estenda o padrão do exercício anterior
+acrescentando um terceiro elo à corrente: o \textbf{determinante}
+(\texttt{det}) do objeto direto. Note que esse novo elo deve partir do
+padrão \texttt{d\_object}, e não da âncora \texttt{verb}. Imprima as
+correspondências no formato \texttt{verbo\ ...\ determinante\ objeto}.
+
+\textbf{Exercício 12.} Escreva um laço que produza linhas de
+concordância para as correspondências do exercício 7, exibindo 5
+\emph{Tokens} antes e 5 \emph{Tokens} depois de cada correspondência,
+com o trecho casado destacado em azul usando a classe \texttt{Printer}
+da wasabi.
+
+\hypertarget{parte-c-reflexuxe3o}{%
+\subsection{Parte C --- Reflexão}\label{parte-c-reflexuxe3o}}
+
+\textbf{Exercício 13.} As linhas de concordância da unidade às vezes
+``pulam'' uma ou duas linhas na saída. Explique a causa e proponha uma
+solução em Python que evite esse comportamento.
+
+\textbf{Exercício 14.} Suponha que você queira estudar a construção
+``verbo + preposição + sintagma nominal'' (por exemplo, \emph{depend on
+the government}) em um corpus. Descreva qual \emph{Matcher} você usaria
+e esboce a regra de padrão correspondente, justificando suas escolhas.
+
+\end{document}

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia" />
+  <title>Parte III: Processamento de Linguagem Natural para Linguistas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    /* centralização de figuras e tabelas */
+    figure {
+      margin: 1.5em 0;
+      text-align: center;
+    }
+    figure img {
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.85em;
+      color: #606060;
+      margin-top: 0.4em;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Parte III: Processamento de Linguagem Natural para Linguistas</h1>
+<p class="subtitle">Unidade 4 - Introdução aos word embeddings</p>
+<p class="author">CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia</p>
+<p class="date">Agosto de 2026</p>
+</header>
+<h1 id="introdução-aos-word-embeddings">Introdução aos <em>word embeddings</em></h1>
+<p>Esta seção apresenta os <em>word embeddings</em> (vetores de palavras), uma técnica para aprender representações numéricas que aproximam o significado lexical das palavras, bem como a <strong>hipótese distribucional</strong> que lhes serve de fundamento.</p>
+<h2 id="objetivos-de-aprendizagem">Objetivos de Aprendizagem</h2>
+<p>Ao final deste módulo, você será capaz de:</p>
+<ul>
+<li><strong>Compreender a hipótese distribucional:</strong> Entender a ideia de que o significado de uma palavra pode ser inferido a partir de sua distribuição.</li>
+<li><strong>Representar estruturas numericamente:</strong> Compreender como diferentes aspectos da estrutura linguística podem ser representados por números.</li>
+<li><strong>Entender o aprendizado de embeddings:</strong> Compreender como os <em>word embeddings</em> são aprendidos diretamente a partir dos dados.</li>
+</ul>
+<h2 id="fundamentos-a-hipótese-distribucional-e-os-word-embeddings">1. Fundamentos: a hipótese distribucional e os <em>word embeddings</em></h2>
+<p>A inspiração para os <em>word embeddings</em> é frequentemente atribuída à seguinte observação do linguista inglês <a href="https://en.wikipedia.org/wiki/John_Rupert_Firth">J. R. Firth</a>:</p>
+<blockquote>
+<p>“Você conhecerá uma palavra pela companhia que ela mantém.”</p>
+</blockquote>
+<p>O que Firth quer dizer é que o significado de uma palavra pode ser inferido examinando-se a palavra em seu contexto de ocorrência.</p>
+<p>Essa observação reflete o interesse mais amplo de Firth pelo estudo das palavras em seu contexto de ocorrência:</p>
+<blockquote>
+<p>“O significado completo de uma palavra é sempre contextual, e nenhum estudo do significado desvinculado do contexto pode ser levado a sério.” (Firth <a href="https://doi.org/10.1111/j.1467-968X.1935.tb01254.x">1935</a>: 37)</p>
+</blockquote>
+<blockquote>
+<p>“O significado, isto é, deve ser encarado como um complexo de relações contextuais; e a fonética, a gramática, a lexicografia e a semântica lidam, cada uma, com os seus próprios componentes desse complexo, em seu contexto apropriado.” (Firth <a href="https://doi.org/10.1111/j.1467-968X.1935.tb01254.x">1935</a>: 54)</p>
+</blockquote>
+<p>A observação de Firth sobre o papel do contexto também pode ser relacionada à chamada <strong>hipótese distribucional</strong>, proposta por Harris (<a href="https://doi.org/10.1080/00437956.1954.11659520">1954</a>), que assume que elementos linguísticos como as palavras podem ser caracterizados por sua distribuição no sistema linguístico.</p>
+<blockquote>
+<p>“A distribuição de um elemento será entendida como a soma de todos os seus ambientes. Um ambiente de um elemento A é um arranjo existente de seus coocorrentes, isto é, os demais elementos, cada um em uma posição particular, com os quais A ocorre para formar um enunciado. Os coocorrentes de A em uma dada posição são chamados de sua seleção para aquela posição.” (Harris <a href="https://doi.org/10.1080/00437956.1954.11659520">1954</a>: 146)</p>
+</blockquote>
+<p>O termo <em>distribuição</em> refere-se ao modo como as palavras coocorrem umas com as outras: a distribuição das palavras <em>não é aleatória</em>, mas pode ser caracterizada por meio de probabilidades, e algumas palavras têm maior chance de coocorrer do que outras.</p>
+<p>Dito de outro modo, Boleda (<a href="https://doi.org/10.1146/annurev-linguistics-011619-030303">2020</a>: 214) resume a hipótese distribucional da seguinte forma:</p>
+<blockquote>
+<p>Semelhança de significado resulta em semelhança de distribuição linguística.</p>
+</blockquote>
+<p>Para exemplificar: dado o verbo “gostar”, você provavelmente conseguiria imaginar palavras que <em>poderiam</em> preceder ou seguir esse verbo com maior ou menor probabilidade. Dado algum contexto, você provavelmente também conseguiria substituir “gostar” sem alterar muito o sentido (por exemplo, por “apreciar”). Segundo a hipótese distribucional, esses verbos podem ser usados de forma intercambiável porque ocorrem em contextos linguísticos semelhantes.</p>
+<p>Sahlgren (<a href="http://linguistica.sns.it/RdL/20.1/Sahlgren.pdf">2008</a>: 34) argumenta que a hipótese distribucional tem raízes em “solo estruturalista”, isto é, nas ideias de <a href="https://pt.wikipedia.org/wiki/Ferdinand_de_Saussure">Ferdinand de Saussure</a> sobre a estrutura da linguagem.</p>
+<p>Saussure descreveu a estrutura da linguagem sob duas perspectivas: a <em>langue</em>, o sistema abstrato constituído pela língua, e a <em>parole</em>, as instâncias particulares de linguagem produzidas pelo sistema subjacente da <em>langue</em>.</p>
+<p>Saussure caracterizou a <em>langue</em> como dotada de eixos de organização <strong>paradigmático</strong> e <strong>sintagmático</strong>, que permitem fazer escolhas entre alternativas e combinar essas seleções em estruturas maiores. As alternativas paradigmáticas emergem por oposição: as alternativas só podem ser identificadas pelo que são e pelo que não são.</p>
+<figure>
+<img src="../resources/image12.png" alt="" /><figcaption>Imagem12</figcaption>
+</figure>
+<p>As ideias de Saussure e de Firth foram levadas adiante por <a href="https://en.wikipedia.org/wiki/Michael_Halliday">M. A. K. Halliday</a> (<a href="https://doi.org/10.1080/00437956.1961.11659756">1961</a>), que as incorporou aos fundamentos de uma teoria da linguagem conhecida como <a href="https://pt.wikipedia.org/wiki/Lingu%C3%ADstica_sist%C3%AAmico-funcional">linguística sistêmico-funcional</a> (para uma visão geral recente da área, veja Martin <a href="https://doi.org/10.1080/00437956.2016.1141939">2016</a>).</p>
+<p>Em contraste com a visão saussuriana da língua como um sistema estático de oposições, Halliday enfatiza o papel da <strong>escolha</strong> na linguagem.</p>
+<p>Halliday argumenta que a língua é definida por um <strong>potencial de significado</strong>, realizado <em>dinamicamente</em> por meio de escolhas feitas dentro de sistemas linguísticos que se cruzam. Esses sistemas são fornecidos pela <em>lexicogramática</em>, que Halliday descreve como um contínuo: as escolhas feitas na língua tornam-se cada vez mais delicadas à medida que nos deslocamos da gramática para o léxico (veja, por exemplo, Fontaine <a href="https://doi.org/10.1186/s40554-017-0051-7">2017</a>).</p>
+<p>Nesse pano de fundo, as seções a seguir exploram a hipótese distribucional tanto da perspectiva sintagmática quanto da paradigmática, conforme proposto em Sahlgren (<a href="http://linguistica.sns.it/RdL/20.1/Sahlgren.pdf">2008</a>).</p>
+<h2 id="explorando-a-hipótese-distribucional">2. Explorando a hipótese distribucional</h2>
+<h3 id="uma-perspectiva-sintagmática">2.1. Uma perspectiva sintagmática</h3>
+<p>Nesta seção, exploramos a hipótese distribucional de uma perspectiva sintagmática, isto é, buscamos descrever as estruturas sintagmáticas que resultam da combinação de escolhas paradigmáticas em unidades maiores.</p>
+<p>Para tanto, precisamos primeiro determinar o escopo de uma unidade analítica para examinar estruturas sintagmáticas.</p>
+<p>O escopo das unidades analíticas pode ser motivado linguisticamente – como ao observar palavras que coocorrem dentro de uma oração ou de uma sentença – ou pode simplesmente envolver a observação de palavras que ocorrem a uma distância arbitrária umas das outras.</p>
+<p>Para encontrar palavras que coocorrem, precisamos recuperar as palavras únicas e contar suas ocorrências ao longo das unidades de análise.</p>
+<p>Para começar, vamos importar a biblioteca spaCy e carregar um modelo de linguagem de porte médio para o inglês.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co"># Importa a biblioteca spaCy</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="im">import</span> spacy</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="co"># Carrega um modelo de linguagem de porte médio para o inglês; atribui à variável &#39;nlp&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>nlp <span class="op">=</span> spacy.load(<span class="st">&#39;en_core_web_md&#39;</span>)</span></code></pre></div>
+<p>Definimos então um exemplo simplificado, formado por algumas orações em uma lista Python, que atribuímos à variável <code>examples</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Cria a lista</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>examples <span class="op">=</span> [<span class="st">&quot;Helsinki is the capital of Finland&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>            <span class="st">&quot;Tallinn is the capital of Estonia&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>            <span class="st">&quot;The two capitals are joined by a ferry connection&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>            <span class="st">&quot;Travelling between Helsinki and Tallinn takes about two hours&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>            <span class="st">&quot;Ferries depart from downtown Helsinki and Tallinn&quot;</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="co"># Imprime o conteúdo da lista</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="bu">print</span>(examples)</span></code></pre></div>
+<pre><code>[&#39;Helsinki is the capital of Finland&#39;, &#39;Tallinn is the capital of Estonia&#39;, &#39;The two capitals are joined by a ferry connection&#39;, &#39;Travelling between Helsinki and Tallinn takes about two hours&#39;, &#39;Ferries depart from downtown Helsinki and Tallinn&#39;]</code></pre>
+<p>Podemos então fornecer essa lista ao modelo de linguagem armazenado em <code>nlp</code> e guardar os objetos <em>Doc</em> resultantes em uma lista, na variável <code>docs</code>.</p>
+<p>Para processar as orações de exemplo de forma eficiente, podemos usar o método <code>pipe()</code>, apresentado na Parte II, que recebe uma lista como entrada.</p>
+<p>O método <code>pipe()</code> devolve um objeto gerador, que precisamos converter em lista usando a função <code>list()</code> do Python.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Fornece a lista de sentenças de exemplo &#39;examples&#39; ao método pipe().</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="co"># Converte o resultado em lista e armazena na variável &#39;docs&#39;.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>docs <span class="op">=</span> <span class="bu">list</span>(nlp.pipe(examples))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="co"># Chama a variável para verificar a saída</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>docs</span></code></pre></div>
+<pre><code>[Helsinki is the capital of Finland,
+ Tallinn is the capital of Estonia,
+ The two capitals are joined by a ferry connection,
+ Travelling between Helsinki and Tallinn takes about two hours,
+ Ferries depart from downtown Helsinki and Tallinn]</code></pre>
+<p>Por conveniência e simplicidade, examinamos as coocorrências de <strong>lemas</strong>, em vez das formas flexionadas das palavras.</p>
+<p>Para contar os lemas em cada oração, precisamos importar o objeto <code>LEMMA</code> do módulo <code>attrs</code> do spaCy.</p>
+<p><code>LEMMA</code> é um objeto do spaCy que se refere a esse traço linguístico específico e que podemos passar ao método <code>count_by()</code> de um objeto <em>Doc</em> para instruir o spaCy a contar esses traços.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># Importa o objeto LEMMA do módulo &#39;attrs&#39; do spaCy</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="im">from</span> spacy.attrs <span class="im">import</span> LEMMA</span></code></pre></div>
+<p>Definimos então uma <em>compreensão de dicionário</em> (<em>dictionary comprehension</em>) em Python para contar os lemas em cada objeto <em>Doc</em> da lista <code>docs</code>.</p>
+<p>Uma compreensão de dicionário é declarada com chaves <code>{ }</code>, que também são usadas para designar um dicionário em Python.</p>
+<p>Como os dicionários do Python consistem em <em>chaves</em> e <em>valores</em>, precisamos de <strong>dois</strong> itens para preencher o novo dicionário <code>lemma_counts</code>:</p>
+<ol type="1">
+<li><code>i</code> refere-se ao número devolvido pela função <code>enumerate</code>, que mantém a contagem dos itens da lista <code>docs</code>.</li>
+<li><code>doc</code> refere-se ao documento atual em <code>docs</code>, nossa <em>lista</em> de objetos <em>Doc</em>.</li>
+</ol>
+<p>Observe que, do lado direito da instrução <code>for</code>, essas duas variáveis são separadas por vírgula.</p>
+<p>O lado esquerdo da instrução <code>for</code> define o que é de fato armazenado no dicionário <code>lemma_counts</code>.</p>
+<p>Neste caso, armazenamos a contagem <code>i</code> como <em>chave</em> e atribuímos a saída do método <code>count_by</code> como <em>valor</em>.</p>
+<p>Do lado esquerdo, essas variáveis são separadas por dois-pontos.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co"># Usa uma compreensão de dicionário para preencher o dicionário &#39;lemma_counts&#39;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>lemma_counts <span class="op">=</span> {i: doc.count_by(LEMMA) <span class="cf">for</span> i, doc <span class="kw">in</span> <span class="bu">enumerate</span>(docs)}</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="co"># Chama a variável para verificar a saída</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>lemma_counts</span></code></pre></div>
+<pre><code>{0: {332692160570289739: 1,
+  10382539506755952630: 1,
+  7425985699627899538: 1,
+  15481038060779608540: 1,
+  886050111519832510: 1,
+  12176099360009088175: 1},
+ 1: {7392857733388117912: 1,
+  10382539506755952630: 1,
+  ...},
+ ...}</code></pre>
+<p>As chaves do dicionário <code>lemma_counts</code> correspondem aos índices dos objetos <em>Doc</em> na lista <code>docs</code>, ao passo que os <em>valores</em> consistem em outros dicionários!</p>
+<p>Esses dicionários claramente parecem reportar algumas contagens, mas as sequências de números usadas como chaves podem parecer estranhas.</p>
+<p>Como você deve lembrar da unidade anterior, o spaCy usa sequências de números como identificadores de objetos <em>Lexeme</em> no <em>Vocabulário</em> do objeto <em>Language</em>.</p>
+<p>Podemos verificar isso recuperando o objeto <em>Lexeme</em> com o identificador <code>332692160570289739</code> do <em>Vocabulário</em>, que pode ser acessado pelo atributo <code>vocab</code> do modelo de linguagem armazenado em <code>nlp</code>.</p>
+<p>Usamos então o atributo <code>text</code> do objeto <em>Lexeme</em> para obter a forma legível para humanos.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co"># Busca um Lexeme no Vocabulário do modelo, disponível em &#39;vocab&#39;; obtém o atributo &#39;text&#39;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>nlp.vocab[<span class="dv">332692160570289739</span>].text</span></code></pre></div>
+<pre><code>&#39;Helsinki&#39;</code></pre>
+<p>Como você pode ver, essa sequência de números identifica o <em>Lexeme</em> cujo texto é “Helsinki”.</p>
+<p>Podemos mapear os objetos <em>Lexeme</em> para suas formas legíveis realizando uma compreensão de dicionário um pouco mais complexa.</p>
+<p>Abaixo, atualizamos o dicionário <code>lemma_counts</code> em duas etapas.</p>
+<p>Primeiro, percorremos os pares de <em>chave</em> (<code>i</code>) e <em>valor</em> (<code>counter</code>), acessíveis pelo método <code>items()</code> do dicionário <code>lemma_counts</code> que acabamos de criar.</p>
+<p>Isso é feito pela parte à <strong>direita</strong> da <strong>segunda</strong> instrução <code>for</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>{... <span class="cf">for</span> i, counter <span class="kw">in</span> lemma_counts.items()}</span></code></pre></div>
+<p>Isso nos dá duas coisas a cada iteração: 1. um número em <code>i</code>, que pode ser usado para indexar a lista <code>docs</code> em busca de objetos <em>Doc</em>, e 2. um dicionário Python com identificadores de <em>Lexeme</em> como chaves e as contagens como valores.</p>
+<p>Segundo, atualizamos as <em>chaves</em> e os <em>valores</em> do dicionário <code>lemma_counts</code>, preservando a chave original <code>i</code>, que permite identificar os objetos <em>Doc</em> na lista <code>docs</code>.</p>
+<p>Como o <em>valor</em> do dicionário armazenado em <code>counter</code> é outro dicionário, precisamos definir mais uma compreensão de dicionário!</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>{i: {docs[i].vocab[k].text: v <span class="cf">for</span> k, v <span class="kw">in</span> counter.items()} <span class="cf">for</span> ...}</span></code></pre></div>
+<p>Essa compreensão de dicionário é igual à anterior, mas desta vez atualizamos as <em>chaves</em> do dicionário <code>counter</code> para substituir os identificadores numéricos dos <em>Lexemes</em> por texto legível:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>{docs[i].vocab[k].text: v <span class="cf">for</span> ...}</span></code></pre></div>
+<p>Do lado esquerdo dos dois-pontos <code>:</code> que separam chaves e valores no dicionário que estamos criando, acessamos os objetos <em>Doc</em> da lista <code>docs</code> usando colchetes e referindo-nos ao número atual em <code>i</code>.</p>
+<p>Fornecemos então o objeto <em>Lexeme</em> em <code>k</code> ao atributo <code>vocab</code> para buscar o conteúdo do atributo <code>text</code>.</p>
+<p>Observe que não fazemos nada com as contagens armazenadas na variável <code>v</code> do lado direito dos dois-pontos <code>:</code>, mas simplesmente as transportamos para o dicionário recém-criado!</p>
+<p>Isso ilustra o quanto uma única linha de Python pode realizar com compreensões de dicionário aninhadas umas nas outras.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="co"># Usa uma compreensão de dicionário para substituir as chaves do dicionário &#39;lemma_counts&#39;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>lemma_counts <span class="op">=</span> {i: {docs[i].vocab[k].text: v <span class="cf">for</span> k, v <span class="kw">in</span> counter.items()} <span class="cf">for</span> i, counter <span class="kw">in</span> lemma_counts.items()}</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="co"># Chama a variável para verificar a saída</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>lemma_counts</span></code></pre></div>
+<pre><code>{0: {&#39;Helsinki&#39;: 1, &#39;be&#39;: 1, &#39;the&#39;: 1, &#39;capital&#39;: 1, &#39;of&#39;: 1, &#39;finland&#39;: 1},
+ 1: {&#39;Tallinn&#39;: 1, &#39;be&#39;: 1, &#39;the&#39;: 1, &#39;capital&#39;: 1, &#39;of&#39;: 1, &#39;Estonia&#39;: 1},
+ 2: {&#39;the&#39;: 1, &#39;two&#39;: 1, &#39;capital&#39;: 1, &#39;be&#39;: 1, &#39;join&#39;: 1, &#39;by&#39;: 1, &#39;a&#39;: 1,
+     &#39;ferry&#39;: 1, &#39;connection&#39;: 1},
+ 3: {&#39;travel&#39;: 1, &#39;between&#39;: 1, &#39;Helsinki&#39;: 1, &#39;and&#39;: 1, &#39;Tallinn&#39;: 1,
+     &#39;take&#39;: 1, &#39;about&#39;: 1, &#39;two&#39;: 1, &#39;hour&#39;: 1},
+ 4: {&#39;ferries&#39;: 1, &#39;depart&#39;: 1, &#39;from&#39;: 1, &#39;downtown&#39;: 1, &#39;Helsinki&#39;: 1,
+     &#39;and&#39;: 1, &#39;Tallinn&#39;: 1}}</code></pre>
+<p>Isso nos dá um dicionário com os números dos <em>Docs</em> como <em>chaves</em> e dicionários de contagem de lemas como <em>valores</em>.</p>
+<p>Para compreender melhor essas contagens, podemos organizá-las em forma tabular usando a biblioteca pandas, apresentada na Parte II.</p>
+<p>Para isso, criamos um novo objeto <em>DataFrame</em> chamando a classe <code>DataFrame</code> da biblioteca pandas (<code>pd</code>).</p>
+<p>Podemos facilmente preencher o <em>DataFrame</em> fornecendo o dicionário <code>lemma_counts</code> ao método <code>from_dict()</code> de um <em>DataFrame</em>, que permite criar um <em>DataFrame</em> a partir de um dicionário Python.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="co"># Importa a biblioteca pandas</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a><span class="co"># Criamos então um DataFrame do pandas usando o método .from_dict(),</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="co"># ao qual passamos o dicionário armazenado em &#39;lemma_counts&#39;. Em seguida,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a><span class="co"># ordenamos o índice de forma ascendente com o método sort_index().</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>df <span class="op">=</span> pd.DataFrame.from_dict(lemma_counts).sort_index(ascending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a><span class="co"># Substitui os valores NaN por zeros com o método fillna().</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a><span class="co"># Por fim, usamos o atributo .T para transpor o DataFrame.</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a><span class="co"># Isso troca colunas por linhas, melhorando a legibilidade.</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a>df <span class="op">=</span> df.fillna(<span class="dv">0</span>).T</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true"></a><span class="co"># Imprime o DataFrame</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true"></a>df</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 3%" />
+<col style="width: 4%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 6%" />
+<col style="width: 3%" />
+<col style="width: 6%" />
+<col style="width: 3%" />
+<col style="width: 4%" />
+<col style="width: 6%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 3%" />
+<col style="width: 4%" />
+<col style="width: 3%" />
+<col style="width: 5%" />
+<col style="width: 3%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Estonia</th>
+<th>Helsinki</th>
+<th>Tallinn</th>
+<th>a</th>
+<th>about</th>
+<th>and</th>
+<th>be</th>
+<th>between</th>
+<th>by</th>
+<th>capital</th>
+<th>…</th>
+<th>ferry</th>
+<th>finland</th>
+<th>from</th>
+<th>hour</th>
+<th>join</th>
+<th>of</th>
+<th>take</th>
+<th>the</th>
+<th>travel</th>
+<th>two</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>…</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>…</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>…</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>…</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>…</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p>5 linhas × 24 colunas</p>
+<p>Isso nos dá um <em>DataFrame</em> do pandas com os <em>lemas únicos</em> de todos os <em>Docs</em>, distribuídos em 24 colunas, enquanto os <em>Docs</em> individuais ocupam cinco linhas, com índices de 0 a 4.</p>
+<p>Cada célula do <em>DataFrame</em> informa quantas vezes um dado lema ocorre em um <em>Doc</em>.</p>
+<p>Ao examinar as linhas individuais do <em>DataFrame</em>, podemos usar essas contagens para examinar a coocorrência de lemas dentro de cada <em>Doc</em>.</p>
+<p>Podemos pensar em cada coluna como uma escolha paradigmática: ao examinar as linhas, descobrimos quais escolhas paradigmáticas ocorrem na mesma estrutura sintagmática.</p>
+<p>Vamos examinar os valores da primeira sentença usando o acessador <code>iloc</code>, que permite acessar os índices (linhas) de um <em>DataFrame</em> do pandas.</p>
+<p>Acessamos o primeiro <em>Doc</em>, no índice <code>0</code>, e recuperamos os valores pelo atributo <code>values</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>df.iloc[<span class="dv">0</span>].values</span></code></pre></div>
+<pre><code>array([0., 1., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 1., 0.,
+       0., 0., 1., 0., 1., 0., 0.])</code></pre>
+<p>Isso devolve um <em>array</em>, ou seja, uma lista de números que correspondem às ocorrências de lemas únicos no objeto <em>Doc</em>.</p>
+<p>Em matemática, tais listas de números são chamadas de <strong>vetores</strong>.</p>
+<p>O comprimento desse vetor – 24 – é definido pelo número de lemas únicos em <em>todos</em> os objetos <em>Doc</em>.</p>
+<p>O número correspondente ao comprimento define a <strong>dimensionalidade</strong> do vetor.</p>
+<p>Podemos obter os vetores de cada objeto <em>Doc</em> pelo atributo <code>values</code> do <em>DataFrame</em> <code>df</code>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="co"># Obtém os vetores de cada objeto Doc</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a>df.values</span></code></pre></div>
+<pre><code>array([[0., 1., 0., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 1.,
+        0., 0., 0., 1., 0., 1., 0., 0.],
+       [1., 0., 1., 0., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 1., 0., 1., 0., 0.],
+       [0., 0., 0., 1., 0., 0., 1., 0., 1., 1., 1., 0., 0., 0., 1., 0.,
+        0., 0., 1., 0., 0., 1., 0., 1.],
+       [0., 1., 1., 0., 1., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 1., 0., 0., 1., 0., 1., 1.],
+       [0., 1., 1., 0., 0., 1., 0., 0., 0., 0., 0., 1., 1., 1., 0., 0.,
+        1., 0., 0., 0., 0., 0., 0., 0.]])</code></pre>
+<p>Como cada <em>Doc</em> está agora representado por um vetor, podemos facilmente realizar operações matemáticas, como calcular a distância entre os vetores para avaliar sua similaridade.</p>
+<p>Para isso, importamos a função <code>cosine_similarity()</code> da biblioteca <em>scikit-learn</em>, que permite medir a <a href="https://pt.wikipedia.org/wiki/Similaridade_por_cosseno">similaridade de cossenos</a> entre vetores.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="co"># Importa a função para medir a similaridade de cossenos</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="co"># Avalia a similaridade de cossenos entre os vetores</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>sim <span class="op">=</span> cosine_similarity(df.values)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a><span class="co"># Chama a variável para examinar a saída</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a>sim</span></code></pre></div>
+<pre><code>array([[1.        , 0.66666667, 0.40824829, 0.13608276, 0.15430335],
+       [0.66666667, 1.        , 0.40824829, 0.13608276, 0.15430335],
+       [0.40824829, 0.40824829, 1.        , 0.11111111, 0.        ],
+       [0.13608276, 0.13608276, 0.11111111, 1.        , 0.37796447],
+       [0.15430335, 0.15430335, 0.        , 0.37796447, 1.        ]])</code></pre>
+<p>Isso devolve uma matriz 5 × 5 – uma “tabela” de cinco vetores, cada um com cinco dimensões – com as similaridades de cossenos entre cada par de objetos <em>Doc</em>.</p>
+<p>Para nos ajudar a interpretar essa tabela, vamos importar a função <code>heatmap()</code> da biblioteca seaborn e visualizar a matriz de similaridade de cossenos.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="co"># Importa a função heatmap da biblioteca seaborn</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="im">from</span> seaborn <span class="im">import</span> heatmap</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a><span class="co"># Fornece a matriz de similaridade de cossenos armazenada em &#39;sim&#39; à função heatmap()</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>heatmap(sim)</span></code></pre></div>
+<figure>
+<img src="../resources/image13.png" alt="" /><figcaption>Imagem13</figcaption>
+</figure>
+<p>Cada linha e cada coluna do mapa de calor representam um único <em>Doc</em>, cujos números aparecem nos rótulos dos eixos vertical e horizontal. A barra do lado direito mapeia as cores aos valores de similaridade de cossenos.</p>
+<p>O mapa de calor exibe uma linha diagonal com valores 1.0, porque cada <em>Doc</em> também é comparado consigo mesmo!</p>
+<p>Esses <em>Docs</em> são naturalmente idênticos, o que resulta em um valor de 1.0.</p>
+<p>Note também a alta similaridade de cossenos entre os <em>Docs</em> 0 e 1, que podemos recuperar da lista <code>docs</code>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="co"># Obtém os Docs nos índices [0] e [1] da lista &#39;docs&#39;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>docs[<span class="dv">0</span>], docs[<span class="dv">1</span>]</span></code></pre></div>
+<pre><code>(Helsinki is the capital of Finland, Tallinn is the capital of Estonia)</code></pre>
+<p>Sua similaridade de cossenos é alta, o que significa que os dois <em>Docs</em> estão próximos um do outro no espaço vetorial de 24 dimensões, porque apresentam uma combinação semelhante de escolhas paradigmáticas que formam uma estrutura sintagmática (“is the capital of”).</p>
+<p>Isso ilustra como podemos usar vetores para descrever <em>estruturas sintagmáticas</em>, capturando escolhas paradigmáticas que coocorrem dentro de alguma unidade fixa ou janela de tamanho determinado (no nosso caso, uma oração).</p>
+<p>A desvantagem dessa abordagem, contudo, é que, à medida que o tamanho do vocabulário cresce, também cresce o comprimento do vetor. Para cada palavra nova, precisamos acrescentar mais uma dimensão para acompanhar suas ocorrências. À medida que o vocabulário se expande, aumenta também o número de dimensões com valor zero.</p>
+<p>Além disso, o vetor não contém informação sobre a <em>ordem</em> em que as palavras aparecem. Por essa razão, tais representações são frequentemente caracterizadas pelo termo “<a href="https://en.wikipedia.org/wiki/Bag-of-words_model">saco de palavras</a>” (<em>bag of words</em>).</p>
+<h3 id="uma-perspectiva-paradigmática">2.2. Uma perspectiva paradigmática</h3>
+<p>Para explorar a hipótese distribucional de uma perspectiva paradigmática, precisamos deslocar o alvo da descrição das coocorrências de múltiplas palavras para as palavras individuais.</p>
+<p>Assim como usamos vetores para representar estruturas sintagmáticas acima, podemos fazer o mesmo para palavras individuais.</p>
+<p>Vamos começar tomando os lemas únicos do nosso corpus de <em>Docs</em>, armazenados na lista <code>docs</code>.</p>
+<p>Eles podem ser facilmente recuperados do <em>DataFrame</em> <code>df</code> acessando o atributo <code>columns</code>, pois as colunas do <em>DataFrame</em> correspondem aos lemas únicos.</p>
+<p>Usamos então o método <code>tolist()</code> para converter a saída em uma lista Python.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="co"># Recupera os lemas únicos do DataFrame e converte em lista</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>unique_lemmas <span class="op">=</span> df.columns.tolist()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a><span class="co"># Chama a variável para examinar a saída</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>unique_lemmas</span></code></pre></div>
+<pre><code>[&#39;Estonia&#39;, &#39;Helsinki&#39;, &#39;Tallinn&#39;, &#39;a&#39;, &#39;about&#39;, &#39;and&#39;, &#39;be&#39;, &#39;between&#39;,
+ &#39;by&#39;, &#39;capital&#39;, &#39;connection&#39;, &#39;depart&#39;, &#39;downtown&#39;, &#39;ferries&#39;, &#39;ferry&#39;,
+ &#39;finland&#39;, &#39;from&#39;, &#39;hour&#39;, &#39;join&#39;, &#39;of&#39;, &#39;take&#39;, &#39;the&#39;, &#39;travel&#39;, &#39;two&#39;]</code></pre>
+<p>Isso nos dá uma lista dos lemas únicos presentes nos objetos <em>Doc</em>.</p>
+<p>Para examinar quais palavras coocorrem a uma dada distância umas das outras, podemos criar um novo <em>DataFrame</em> do pandas que use os lemas de <code>unique_lemmas</code> para definir tanto as linhas quanto as colunas.</p>
+<p>Para isso, criamos um novo <em>DataFrame</em> chamado <code>lemma_df</code> e fornecemos a lista <code>unique_lemmas</code> aos argumentos <code>index</code> e <code>columns</code>.</p>
+<p>Por fim, usamos o método <code>fillna()</code> do <em>DataFrame</em> para substituir os valores NaN por zeros.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="co"># Cria um novo DataFrame com os lemas únicos como linhas e colunas, preenchido com zeros</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>lemma_df <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>unique_lemmas, columns<span class="op">=</span>unique_lemmas).fillna(<span class="dv">0</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a><span class="co"># Chama a variável para examinar o DataFrame</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>lemma_df</span></code></pre></div>
+<p>Isso nos dá um <em>DataFrame</em> vazio do pandas com 24 linhas e 24 colunas.</p>
+<p>Esse <em>DataFrame</em> pode ser descrito como uma <strong>matriz de coocorrência</strong>, que registra quantas vezes um lema ocorre a uma dada distância de outro lema (Sahlgren <a href="http://linguistica.sns.it/RdL/20.1/Sahlgren.pdf">2008</a>: 46).</p>
+<p>O primeiro passo para explorar as relações paradigmáticas entre palavras é preencher esse <em>DataFrame</em> com contagens de coocorrência, isto é, com que frequência os lemas ocorrem próximos uns dos outros nos objetos <em>Doc</em> armazenados em <code>docs</code>.</p>
+<p>Para facilitar esse trabalho, vamos começar unindo todos os objetos <em>Doc</em> da lista <code>docs</code> em um único objeto <em>Doc</em>.</p>
+<p>Para isso, podemos usar o método <code>from_docs()</code> de um objeto <em>Doc</em> do spaCy.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="co"># Importa a classe Doc de spacy.tokens</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="im">from</span> spacy.tokens <span class="im">import</span> Doc</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="co"># Cria um novo objeto Doc e usa o método &#39;from_docs()&#39; para combinar os Docs</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="co"># da lista existente &#39;docs&#39;. Atribui o resultado a &#39;combined_docs&#39;.</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>combined_docs <span class="op">=</span> Doc.from_docs(docs)</span></code></pre></div>
+<p>Para os fins atuais, vamos assumir que duas palavras de cada lado de uma palavra constituem seus vizinhos.</p>
+<p>Podemos usar o método <code>nbor()</code> de um <em>Token</em> do spaCy para buscar seus vizinhos.</p>
+<p>O método <code>nbor()</code> recebe um número inteiro como entrada, que determina a posição do vizinho em relação ao <em>Token</em> atual.</p>
+<p>Números inteiros negativos referem-se aos índices dos <em>Tokens</em> que vêm antes do <em>Token</em> atual, enquanto os positivos referem-se aos que vêm depois.</p>
+<p>Contudo, nem todas as palavras têm vizinhos dos dois lados: as palavras que iniciam ou encerram uma sentença ou alguma outra sequência não terão palavras precedentes ou seguintes.</p>
+<p>Para lidar com esse problema, usamos as instruções <code>try</code> e <code>except</code> do Python para capturar os erros decorrentes de vizinhos inexistentes, cujos índices não estão disponíveis.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="co"># Percorre cada Token no objeto Doc</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> combined_docs:</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>    <span class="co"># Percorre um intervalo de posições. Elas representam índices</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>    <span class="co"># relativos ao índice atual do objeto Token.</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a>    <span class="cf">for</span> position <span class="kw">in</span> [<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>]:</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a>        <span class="co"># Tenta executar o bloco de código a seguir</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true"></a>        <span class="cf">try</span>:</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true"></a>            <span class="co"># Usa o método nbor() para obter o vizinho do Token no índice</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true"></a>            <span class="co"># determinado por &#39;position&#39;. Busca o lema do Token vizinho.</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true"></a>            nbor_lemma <span class="op">=</span> token.nbor(position).lemma_</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true"></a>            <span class="co"># Usa o acessador &#39;at&#39; para acessar linhas e colunas do</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true"></a>            <span class="co"># DataFrame &#39;lemma_df&#39;. Incrementa (+=) o valor existente</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true"></a>            <span class="co"># em 1 para atualizar a contagem!</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true"></a>            lemma_df.at[token.lemma_, nbor_lemma] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true"></a>        <span class="co"># Se o bloco de código levantar um IndexError, executa</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true"></a>        <span class="co"># o código abaixo</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true"></a>        <span class="cf">except</span> <span class="pp">IndexError</span>:</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true"></a></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true"></a>            <span class="co"># Passa para o próximo Token</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true"></a>            <span class="cf">continue</span></span></code></pre></div>
+<p>Isso reúne as contagens de coocorrência no <em>DataFrame</em>.</p>
+<p>Vamos examinar o resultado chamando a variável <code>lemma_df</code>.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="co"># Chama a variável para examinar o DataFrame</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a>lemma_df</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Estonia</th>
+<th>Helsinki</th>
+<th>Tallinn</th>
+<th>a</th>
+<th>about</th>
+<th>and</th>
+<th>be</th>
+<th>between</th>
+<th>by</th>
+<th>capital</th>
+<th>…</th>
+<th>of</th>
+<th>take</th>
+<th>the</th>
+<th>travel</th>
+<th>two</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Estonia</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>…</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Helsinki</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>…</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Tallinn</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>…</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>a</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>…</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>about</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>…</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>and</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>…</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>be</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+<td>…</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>capital</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>…</td>
+<td>2</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>of</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>…</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>the</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>…</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>24 linhas × 24 colunas</p>
+<p>Como você pode ver, o <em>DataFrame</em> foi agora preenchido com as contagens de coocorrência de cada lema.</p>
+<p>Note que os valores nas linhas e nas colunas são idênticos, porque as mesmas categorias (lemas) são usadas para ambas.</p>
+<p>Os valores nas linhas/colunas fornecem um vetor para cada lema, que codifica informação sobre suas palavras colocadas (<em>collocates</em>).</p>
+<p>Em outras palavras, cada lema é caracterizado por um vetor que descreve seus vizinhos!</p>
+<p>De acordo com a hipótese distribucional, esperaríamos que alternativas paradigmáticas tivessem distribuições semelhantes.</p>
+<p>Para explorar essa ideia, podemos medir a similaridade de cossenos entre esses vetores usando a função <code>cosine_similarity</code> que importamos do scikit-learn acima.</p>
+<p>Vamos calcular a similaridade de cossenos entre os vetores de “Tallinn” e “Helsinki”.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="co"># Obtém os vetores de &#39;Tallinn&#39; e &#39;Helsinki&#39; a partir do DataFrame.</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="co"># Usa o atributo &#39;values&#39; para acessar os dados como um array NumPy.</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>tallinn_lemma_vector <span class="op">=</span> lemma_df[<span class="st">&#39;Tallinn&#39;</span>].values</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>helsinki_lemma_vector <span class="op">=</span> lemma_df[<span class="st">&#39;Helsinki&#39;</span>].values</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a><span class="co"># Mede a similaridade de cossenos entre os dois vetores. Note que os</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true"></a><span class="co"># vetores precisam ser envolvidos em colchetes para serem fornecidos a</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true"></a><span class="co"># esta função. Isso coloca o array no &#39;formato&#39; correto.</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true"></a>cosine_similarity([tallinn_lemma_vector], [helsinki_lemma_vector])</span></code></pre></div>
+<pre><code>array([[0.42857143]])</code></pre>
+<p>O resultado mostra que os vetores de “Helsinki” e “Tallinn” são de certa forma semelhantes.</p>
+<p>Poderíamos refinar essas representações observando mais dados, para obter uma ideia melhor de como as palavras se distribuem, o que levaria a melhores representações vetoriais.</p>
+<p>Contudo, assim como observamos no caso das estruturas sintagmáticas, a dimensionalidade do espaço vetorial cresce a cada nova palavra acrescentada ao vocabulário.</p>
+<h2 id="aprendendo-word-embeddings">3. Aprendendo <em>word embeddings</em></h2>
+<p>Até aqui, exploramos a hipótese distribucional tanto da perspectiva sintagmática quanto da paradigmática.</p>
+<p>Usamos vetores para representar estruturas paradigmáticas e sintagmáticas e aplicamos abordagens diferentes para codificar, nesses vetores, informação sobre as palavras e sua distribuição.</p>
+<p>Para descrever estruturas sintagmáticas, contamos quais palavras do vocabulário ocorriam dentro da mesma oração; para as estruturas paradigmáticas, contamos quais palavras ocorriam próximas umas das outras.</p>
+<p>Podemos pensar em ambas as abordagens como <strong>mecanismos de abstração</strong> que quantificam informação linguística em representações vetoriais.</p>
+<p>Continuamos agora essa jornada e nos concentramos nos <strong>word embeddings</strong>, uma técnica para aprender representações vetoriais de unidades linguísticas – como palavras ou sentenças – diretamente a partir do texto. Essas representações são estudadas no campo da <strong>semântica distribucional</strong>, que se desenvolveu a partir da hipótese distribucional.</p>
+<p>Boleda (<a href="https://doi.org/10.1146/annurev-linguistics-011619-030303">2020</a>: 214) define a semântica distribucional de modo sucinto:</p>
+<blockquote>
+<p>A semântica distribucional representa o significado das palavras tomando grandes quantidades de texto como entrada e, por meio de um mecanismo de abstração, produzindo um modelo distribucional, semelhante a um léxico, com representações semânticas em forma de vetores – essencialmente, listas de números que determinam pontos em um espaço multidimensional.</p>
+</blockquote>
+<p>Em comparação com nossos esforços anteriores, que envolviam contar coocorrências e codificar essa informação em vetores, as abordagens contemporâneas em semântica distribucional usam <strong>algoritmos</strong> como mecanismo de abstração (Baroni, Dinu &amp; Kruszewski <a href="https://www.aclweb.org/anthology/P14-1023.pdf">2014</a>).</p>
+<p>Assim, nesta seção exploramos o uso de algoritmos como mecanismo de abstração para aprender representações vetoriais de unidades linguísticas.</p>
+<h3 id="codificação-one-hot">3.1. Codificação one-hot</h3>
+<p>Para começar, continuamos trabalhando com os dados armazenados na lista <code>unique_lemmas</code> e usamos uma técnica chamada <strong>codificação one-hot</strong> (<em>one-hot encoding</em>) para representar cada lema por meio de um vetor.</p>
+<p>A codificação one-hot mapeia cada lema para um vetor que consiste em zeros, exceto em uma dimensão, cujo valor é 1. Essa dimensão codifica a identidade de uma dada palavra no vocabulário.</p>
+<p>Você pode pensar nisso como uma dimensão estando “quente” (<em>hot</em>) por ter valor 1, enquanto todas as demais estão “frias”, pois seu valor é zero.</p>
+<p>Vamos examinar isso na prática, mapeando cada lema da lista <code>unique_lemmas</code> para o vetor one-hot correspondente.</p>
+<p>Para isso, importamos o <em>NumPy</em>, uma biblioteca Python para trabalhar com arrays (Harris et al. <a href="https://doi.org/10.1038/s41586-020-2649-2">2020</a>).</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a><span class="co"># Importa o NumPy, atribuindo-lhe o nome &#39;np&#39;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a><span class="co"># Define um dicionário vazio, que servirá de contêiner para lemas e seus vetores</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a>lemma_vectors <span class="op">=</span> {}</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a><span class="co"># Percorre a lista de lemas únicos; conta os itens usando enumerate()</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true"></a><span class="cf">for</span> i, lemma <span class="kw">in</span> <span class="bu">enumerate</span>(unique_lemmas):</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true"></a>    <span class="co"># Cria um vetor cujo comprimento corresponde ao da lista</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true"></a>    <span class="co"># &#39;unique_lemmas&#39;. Isso corresponde ao tamanho do nosso vocabulário.</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true"></a>    <span class="co"># A função np.zeros() preenche esse vetor com zeros.</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true"></a>    vector <span class="op">=</span> np.zeros(shape<span class="op">=</span><span class="bu">len</span>(unique_lemmas))</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true"></a>    <span class="co"># Usa os colchetes para acessar o vetor no índice atual &#39;i&#39;,</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true"></a>    <span class="co"># que recuperamos durante o laço sobre a lista &#39;unique_lemmas&#39;.</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true"></a>    <span class="co"># Define o valor como um, em vez de zero, nessa posição do vetor.</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true"></a>    vector[i] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true"></a>    <span class="co"># Armazena o lema e o vetor no dicionário</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true"></a>    lemma_vectors[lemma] <span class="op">=</span> vector</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true"></a>    <span class="co"># Imprime o vetor e o lema ao qual ele corresponde</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true"></a>    <span class="bu">print</span>(vector, lemma)</span></code></pre></div>
+<pre><code>[1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] Estonia
+[0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] Helsinki
+[0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] Tallinn
+[0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] a
+...
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0.] travel
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1.] two</code></pre>
+<p>Como você pode ver, as dimensões com valor 1.0 formam uma linha diagonal ao longo dos vetores.</p>
+<p>Essa linha diagonal emerge porque cada dimensão do vetor codifica a identidade de um lema único do vocabulário.</p>
+<p>Para exemplificar: o vetor do lema “Estonia” deve ter valor 1.0 na primeira dimensão, porque essa dimensão codifica a identidade desse lema, ao passo que os valores de todas as demais dimensões devem ser zero, pois estão reservados aos lemas que vêm depois.</p>
+<p>Dito de outro modo, se o lema é “Estonia”, ele deve ter valor 1.0 na primeira dimensão. Se a palavra é “Helsinki”, a primeira dimensão deve valer zero, mas a segunda deve valer 1.0, pois essa dimensão está reservada a “Helsinki”.</p>
+<p>Podemos usar vetores one-hot para codificar sequências de palavras em representações numéricas.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a><span class="co"># Percorre os Tokens do primeiro Doc da lista</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> docs[<span class="dv">0</span>]:</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true"></a>    <span class="co"># Obtém o lema de cada token pelo atributo &#39;lemma_&#39;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true"></a>    <span class="co"># e o usa como chave no dicionário &#39;lemma_vectors&#39;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true"></a>    <span class="co"># para recuperar o vetor associado. Em seguida, imprime</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true"></a>    <span class="co"># o próprio lema.</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true"></a>    <span class="bu">print</span>(lemma_vectors[token.lemma_], token.lemma_)</span></code></pre></div>
+<pre><code>[0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] Helsinki
+[0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] be
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0.] the
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.] capital
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0.] of
+[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0.] finland</code></pre>
+<p>Podemos juntar essas representações vetoriais de palavras individuais em uma <strong>matriz</strong>, que é como uma “tabela” de vetores.</p>
+<p>Podemos usar o método <code>vstack()</code> do NumPy para empilhar os vetores verticalmente, isto é, colocá-los uns sobre os outros para formar uma matriz que representa o <em>Doc</em> inteiro.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a><span class="co"># Usa uma compreensão de lista para coletar os vetores de cada lema do primeiro Doc</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a>sentence_matrix <span class="op">=</span> np.vstack([lemma_vectors[token.lemma_] <span class="cf">for</span> token <span class="kw">in</span> docs[<span class="dv">0</span>]])</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true"></a><span class="co"># Chama a variável para examinar a saída</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true"></a>sentence_matrix</span></code></pre></div>
+<pre><code>array([[0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 1., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 1., 0., 0., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1.,
+        0., 0., 0., 0., 0., 0., 0., 0.]])</code></pre>
+<p>Podemos examinar o formato da matriz resultante usando o atributo <code>shape</code>.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a><span class="co"># Obtém o atributo &quot;shape&quot; da matriz armazenada em &#39;sentence_matrix&#39;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a>sentence_matrix.shape</span></code></pre></div>
+<pre><code>(6, 24)</code></pre>
+<p>O atributo <code>shape</code> contém o formato da matriz: seis linhas, uma para cada lema, cada qual com 24 dimensões que codificam a identidade dos lemas individuais no vocabulário.</p>
+<p>Uma matriz como essa permite representar numericamente qualquer sequência de <em>Tokens</em>.</p>
+<p>Contudo, mais uma vez, à medida que o tamanho do vocabulário cresce, também cresce o número de dimensões necessárias para representar cada palavra única do vocabulário.</p>
+<p>Esses vetores são também frequentemente caracterizados como <strong>esparsos</strong>, porque a maior parte de suas dimensões não codifica informação alguma, consistindo apenas em zeros.</p>
+<p>Para tornar a representação vetorial mais eficiente, <em>cada dimensão</em> de um vetor deveria codificar alguma informação sobre a palavra e o contexto em que ela ocorre.</p>
+<p>Isso pode ser alcançado aprendendo os <em>word embeddings</em> diretamente dos dados, usando um algoritmo como mecanismo de abstração.</p>
+<p>Para treinar um algoritmo a prever palavras vizinhas, precisamos primeiro coletar os vizinhos. Para os fins atuais, continuemos tratando os dois lemas precedentes e os dois seguintes como vizinhos.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a><span class="co"># Define uma lista para guardar Tokens e seus Tokens vizinhos</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>pairs <span class="op">=</span> []</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true"></a><span class="co"># Percorre cada Doc na lista de Docs armazenada na variável &#39;docs&#39;</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true"></a><span class="cf">for</span> doc <span class="kw">in</span> docs:</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true"></a>    <span class="co"># Percorre cada Token em um Doc</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true"></a>    <span class="cf">for</span> token <span class="kw">in</span> doc:</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true"></a>        <span class="co"># Percorre os índices dos Tokens vizinhos que nos</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true"></a>        <span class="co"># interessam.</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true"></a>        <span class="cf">for</span> neighbour_i <span class="kw">in</span> [<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>]:</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true"></a>            <span class="co"># Tenta recuperar o vizinho na posição &#39;neighbour_i&#39;</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true"></a>            <span class="cf">try</span>:</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true"></a></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true"></a>                <span class="co"># Atribui o Token vizinho à variável &#39;context&#39;</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true"></a>                context <span class="op">=</span> token.nbor(neighbour_i)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true"></a></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true"></a>                <span class="co"># Acrescenta à lista &#39;pairs&#39; uma tupla formada pelo</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true"></a>                <span class="co"># Token atual e pelo Token vizinho</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true"></a>                pairs.append((token.lemma_, context.lemma_))</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true"></a></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true"></a>            <span class="co"># Usa o comando except para capturar o erro que surge</span></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true"></a>            <span class="co"># caso não haja Token precedente (&#39;IndexError&#39;)</span></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true"></a>            <span class="cf">except</span> <span class="pp">IndexError</span>:</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true"></a></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true"></a>                <span class="co"># Passa para o próximo Token da lista de vizinhos</span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true"></a>                <span class="cf">continue</span></span></code></pre></div>
+<p>Isso produz uma lista de tuplas contendo pares de palavras que ocorrem a até duas palavras de distância uma da outra.</p>
+<p>Vamos imprimir os 10 primeiros pares para examinar o resultado.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a><span class="co"># Imprime as 10 primeiras tuplas da lista &#39;pairs&#39;</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a>pairs[:<span class="dv">10</span>]</span></code></pre></div>
+<pre><code>[(&#39;Helsinki&#39;, &#39;be&#39;),
+ (&#39;Helsinki&#39;, &#39;the&#39;),
+ (&#39;be&#39;, &#39;Helsinki&#39;),
+ (&#39;be&#39;, &#39;the&#39;),
+ (&#39;be&#39;, &#39;capital&#39;),
+ (&#39;the&#39;, &#39;Helsinki&#39;),
+ (&#39;the&#39;, &#39;be&#39;),
+ (&#39;the&#39;, &#39;capital&#39;),
+ (&#39;the&#39;, &#39;of&#39;),
+ (&#39;capital&#39;, &#39;be&#39;)]</code></pre>
+<p>A primeira palavra de cada tupla pode ser descrita como o lema <strong>alvo</strong> (<em>target</em>), enquanto a segunda constitui o lema de <strong>contexto</strong>.</p>
+<p>Para preparar o terreno para as predições, precisamos coletar todas as palavras-alvo da lista e suas palavras de contexto correspondentes, e convertê-las em suas representações numéricas com codificação one-hot.</p>
+<p>Isso pode ser feito com uma compreensão de lista que percorre as tuplas da lista <code>pairs</code>.</p>
+<p>Podemos então buscar o vetor com codificação one-hot no dicionário <code>lemma_vectors</code>, usando o lema-alvo como chave.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a><span class="co"># Define uma compreensão de lista que coleta os lemas-alvo e armazena</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true"></a><span class="co"># os vetores one-hot em uma lista chamada &#39;targets&#39;</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true"></a>targets <span class="op">=</span> [lemma_vectors[target] <span class="cf">for</span> target, context <span class="kw">in</span> pairs]</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true"></a><span class="co"># Empilha todos os lemas-alvo em uma matriz</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true"></a>targets <span class="op">=</span> np.vstack(targets)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true"></a></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true"></a><span class="co"># Chama a variável para verificar o tamanho da matriz</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true"></a>targets.shape</span></code></pre></div>
+<pre><code>(118, 24)</code></pre>
+<p>Examinar o atributo <code>shape</code> do array NumPy armazenado em <code>targets</code> revela que nossos dados contêm um total de 118 lemas-alvo.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a><span class="co"># Obtém a primeira linha do array</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a>targets[<span class="dv">0</span>]</span></code></pre></div>
+<pre><code>array([0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0.])</code></pre>
+<p>Como você pode ver, o array <code>targets</code> contém vetores one-hot que codificam a identidade dos lemas, recuperados do dicionário <code>lemma_vectors</code>.</p>
+<p>Em seguida, repetimos a mesma operação para os lemas de contexto.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a><span class="co"># Define uma compreensão de lista que coleta os lemas de contexto e armazena</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a><span class="co"># os vetores one-hot em uma lista chamada &#39;context&#39;</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a>context <span class="op">=</span> [lemma_vectors[context] <span class="cf">for</span> target, context <span class="kw">in</span> pairs]</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true"></a><span class="co"># Empilha todos os lemas de contexto em uma matriz</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true"></a>context <span class="op">=</span> np.vstack(context)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true"></a><span class="co"># Chama a variável para verificar o tamanho da matriz</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true"></a>context.shape</span></code></pre></div>
+<pre><code>(118, 24)</code></pre>
+<p>Perfeito! Cada lema-alvo em <code>targets</code> agora tem um lema de contexto correspondente em <code>context</code>.</p>
+<h3 id="criando-uma-rede-neural">3.2. Criando uma rede neural</h3>
+<p>Em seguida, definiremos uma pequena rede neural, que tentará aprender um mapeamento entre os vetores dos lemas-alvo e os dos lemas de contexto.</p>
+<p>Em outras palavras, dado o vetor da palavra-alvo, a rede neural tenta prever o vetor do lema de contexto correspondente.</p>
+<p>Para isso, definimos uma pequena rede neural usando uma biblioteca chamada <a href="https://keras.io/">Keras</a>.</p>
+<p>Mais especificamente, implementamos uma variante de um algoritmo para aprendizado de <em>word embeddings</em> chamado <em>Word2vec</em> (de <em>word to vector</em>), proposto por Tomas Mikolov et al. (<a href="https://arxiv.org/abs/1301.3781v3">2013</a>).</p>
+<p>O Keras faz parte da biblioteca de aprendizado profundo TensorFlow. Importamos dessa biblioteca tanto o Keras quanto <em>Dense</em>, um tipo específico de camada de rede neural.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="co"># Importa o módulo Keras e a classe Dense</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a><span class="im">from</span> tensorflow.keras.layers <span class="im">import</span> Dense</span></code></pre></div>
+<p>Começamos definindo uma camada de entrada (<em>Input</em>), que recebe os vetores one-hot armazenados na variável <code>targets</code>.</p>
+<p>Buscamos o tamanho da segunda dimensão (no índice <code>[1]</code>) da matriz <code>targets</code>, disponível no atributo <code>shape</code>.</p>
+<p>Fornecemos então essa informação ao <em>argumento</em> <code>shape</code> da camada <em>Input</em>, pois a rede neural precisa saber quantas dimensões têm as entradas. No nosso caso, o número é 24.</p>
+<p>Também usamos o argumento <code>name</code> para nomear a camada como <code>input_layer</code>.</p>
+<p>Armazenamos o objeto <em>Input</em> resultante na variável <code>network_input</code>.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a><span class="co"># Cria uma camada de entrada para a rede; armazena em &#39;network_input&#39;</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true"></a>network_input <span class="op">=</span> keras.Input(shape<span class="op">=</span>targets.shape[<span class="dv">1</span>], name<span class="op">=</span><span class="st">&#39;input_layer&#39;</span>)</span></code></pre></div>
+<p>Em seguida, definimos uma camada <em>Dense</em> com dois neurônios, conforme definido pelo argumento <code>units</code>.</p>
+<p>Qualquer camada situada entre as camadas de entrada e de saída é chamada de <strong>camada oculta</strong>.</p>
+<p>Conectamos a camada <em>Input</em> à camada oculta colocando a variável <code>network_input</code> entre parênteses após a camada <em>Dense</em>:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true"></a>Dense(...)(network_input)</span></code></pre></div>
+<p>Atribuímos a saída da camada <em>Dense</em> à variável <code>hidden_layer</code>.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="co"># Cria uma camada oculta para a rede; armazena em &#39;hidden_layer&#39;</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a>hidden_layer <span class="op">=</span> Dense(units<span class="op">=</span><span class="dv">2</span>, activation<span class="op">=</span><span class="va">None</span>, name<span class="op">=</span><span class="st">&#39;hidden_layer&#39;</span>)(network_input)</span></code></pre></div>
+<p>Para fazer predições sobre quais lemas de contexto ocorrem próximos aos lemas-alvo, definimos outra camada <em>Dense</em>, cujo argumento <code>units</code> corresponde ao tamanho do nosso vocabulário.</p>
+<p>Essa camada atua como a camada de saída da nossa rede.</p>
+<p>Ao definir o argumento <code>activation</code> como <code>softmax</code>, a rede devolverá probabilidades para todos os lemas do vocabulário.</p>
+<p>Dito de outro modo, quando fornecemos uma palavra de entrada, obtemos de volta uma distribuição de probabilidade sobre os 24 lemas do nosso vocabulário, cuja soma é aproximadamente 1.</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true"></a><span class="co"># Cria uma camada de saída para a rede; armazena em &#39;output_layer&#39;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true"></a>output_layer <span class="op">=</span> Dense(units<span class="op">=</span>context.shape[<span class="dv">1</span>], activation<span class="op">=</span><span class="st">&#39;softmax&#39;</span>, name<span class="op">=</span><span class="st">&#39;output_layer&#39;</span>)(hidden_layer)</span></code></pre></div>
+<p>Combinamos então as camadas definidas acima em uma rede e atribuímos o resultado à variável <code>embedding_model</code>.</p>
+<p>Isso é feito usando o objeto <em>Model</em> do Keras e seus dois argumentos, <code>inputs</code> e <code>outputs</code>, aos quais devemos fornecer as camadas de entrada e de saída da nossa rede, isto é, <code>input_layer</code> e <code>output_layer</code>.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true"></a><span class="co"># Cria um Model do Keras; armazena em &#39;embedding_model&#39;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true"></a>embedding_model <span class="op">=</span> keras.Model(inputs<span class="op">=</span>network_input, outputs<span class="op">=</span>output_layer)</span></code></pre></div>
+<p>Por fim, usamos o método <code>compile()</code> para compilar o modelo e definir uma função de perda por meio do argumento <code>loss</code>.</p>
+<p>A função de perda aproxima o erro entre os lemas de contexto previstos e os reais.</p>
+<p>Esse erro é usado para ajustar os “pesos” da rede neural de modo a, potencialmente, melhorar as predições da próxima vez.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true"></a><span class="co"># Compila o modelo para treinamento; define a função de perda</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true"></a>embedding_model.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;categorical_crossentropy&#39;</span>)</span></code></pre></div>
+<p>Para examinar o modelo resultante, chamamos o método <code>summary()</code>.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true"></a><span class="co"># Imprime um resumo do modelo</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true"></a>embedding_model.summary()</span></code></pre></div>
+<pre><code>Model: &quot;model&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ input_layer (InputLayer)    [(None, 24)]              0
+
+ hidden_layer (Dense)        (None, 2)                 50
+
+ output_layer (Dense)        (None, 24)                72
+
+=================================================================
+Total params: 122
+Trainable params: 122
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+<h3 id="treinando-uma-rede-neural">3.3. Treinando uma rede neural</h3>
+<p>Compilamos agora uma rede neural simples. A rede tem uma única camada oculta com dois neurônios, que atua como um <strong>gargalo</strong> para a informação.</p>
+<p>Em outras palavras, para aprender a prever os lemas de contexto a partir dos lemas-alvo, o modelo precisa aprender a condensar a informação contida nos vetores de entrada esparsos, de 24 dimensões.</p>
+<p>O próximo passo é treinar o modelo. Isso é feito com a função <code>fit()</code> do modelo.</p>
+<p>Essa função exige a definição de vários argumentos. Os argumentos <code>x</code> e <code>y</code> correspondem às entradas e às saídas. Eles consistem nos lemas-alvo e de contexto, armazenados nas matrizes <code>targets</code> e <code>context</code>, respectivamente.</p>
+<p>Examinamos 64 pares de lemas-alvo e de contexto simultaneamente, conforme definido pela palavra-chave <code>batch_size</code>, e percorremos todos os pares de lemas 1500 vezes, conforme definido pela palavra-chave <code>epochs</code>.</p>
+<p>Também fornecemos o argumento <code>verbose</code> com valor 0, para evitar inundar o <em>notebook</em> com mensagens de status sobre o procedimento de treinamento.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true"></a><span class="co"># Ajusta um modelo aos dados</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true"></a>embedding_model.fit(x<span class="op">=</span>targets,   <span class="co"># entradas</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true"></a>                    y<span class="op">=</span>context,   <span class="co"># saídas</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true"></a>                    batch_size<span class="op">=</span><span class="dv">64</span>,  <span class="co"># quantos pares de palavras são processados simultaneamente</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true"></a>                    epochs<span class="op">=</span><span class="dv">1500</span>,   <span class="co"># quantas vezes percorremos todos os dados</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true"></a>                    verbose<span class="op">=</span><span class="dv">0</span>   <span class="co"># não imprimir o status do treinamento</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true"></a>                   )</span></code></pre></div>
+<pre><code>&lt;keras.callbacks.History at 0x2cb245b20&gt;</code></pre>
+<p>Agora que a rede neural foi treinada, podemos usar o modelo para prever quais lemas de contexto têm maior probabilidade de ocorrer próximos ao lema-alvo.</p>
+<p>Vamos examinar essas predições recuperando o vetor one-hot do lema “be” e fornecendo-o ao modelo.</p>
+<p>Para isso, precisamos usar a função <code>expand_dims()</code> do NumPy para adicionar um eixo fictício à frente do vetor, pois nossa rede espera receber vetores em lotes. Isso informa à rede que a entrada consiste em um único vetor.</p>
+<p>Armazenamos a entrada na variável <code>input_array</code>.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true"></a><span class="co"># Adiciona um eixo fictício ao vetor de entrada</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true"></a>input_array <span class="op">=</span> np.expand_dims(lemma_vectors[<span class="st">&#39;be&#39;</span>], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true"></a><span class="co"># Verifica o formato do array de entrada</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true"></a>input_array.shape</span></code></pre></div>
+<pre><code>(1, 24)</code></pre>
+<p>Fornecemos então o vetor ao modelo usando seu método <code>predict()</code>, que devolve um array de probabilidades.</p>
+<p>Armazenamos essas probabilidades na variável <code>prediction</code>.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true"></a><span class="co"># Fornece a entrada à rede neural; armazena as predições em &#39;prediction&#39;</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true"></a>prediction <span class="op">=</span> embedding_model.predict(input_array)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true"></a></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true"></a><span class="co"># Chama a variável para examinar a saída</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true"></a>prediction</span></code></pre></div>
+<pre><code>array([[0.03111641, 0.03402824, 0.04240917, 0.01279583, 0.02988414,
+        0.01735245, 0.17078072, 0.00548733, 0.02843637, 0.14491512,
+        0.00424392, 0.00272338, 0.00635636, 0.00279296, 0.01021747,
+        0.02801406, 0.00377476, 0.02527589, 0.03736946, 0.08433194,
+        0.02223407, 0.17439087, 0.00555136, 0.07551773]], dtype=float32)</code></pre>
+<p>Essas probabilidades correspondem aos lemas únicos do nosso vocabulário.</p>
+<p>Para examinar qual lema tem maior probabilidade de ocorrer na vizinhança do lema “be”, podemos usar a função <code>argmax()</code> do NumPy para descobrir qual dimensão do vetor <code>prediction</code> tem o maior valor.</p>
+<p>Isso nos dá um número inteiro, que podemos usar como índice da lista de lemas armazenada em <code>unique_lemmas</code>.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true"></a><span class="co"># Indexa a lista de lemas únicos usando o inteiro devolvido por np.argmax()</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true"></a>unique_lemmas[np.argmax(prediction)]</span></code></pre></div>
+<pre><code>&#39;the&#39;</code></pre>
+<blockquote>
+<p><strong>Nota.</strong> Como os pesos da rede são inicializados aleatoriamente, os valores numéricos exatos e o lema previsto podem variar de uma execução para outra. O que importa aqui é o comportamento qualitativo, não os números precisos.</p>
+</blockquote>
+<p>E agora vem a parte interessante: prever o(s) vizinho(s) mais provável(is) de um dado lema <strong>não é o objetivo real</strong> do procedimento de treinamento; essa tarefa é <strong>um substituto (<em>proxy</em>) do verdadeiro objetivo</strong>: aprender representações numéricas para palavras individuais.</p>
+<p>Para prever os lemas de contexto, a rede precisa aprender representações úteis para os lemas-alvo. Pode-se pensar nessas representações numéricas como a identidade da palavra, que inicialmente foi codificada por um vetor one-hot.</p>
+<p>Essas representações podem ser obtidas da <strong>camada oculta</strong> da rede neural, que contém dois neurônios.</p>
+<p>Os neurônios da camada oculta têm <em>parâmetros</em>, comumente chamados de <em>pesos</em>, que são ajustados à medida que a rede aprende a melhorar suas predições com base no erro estimado pela função de perda.</p>
+<p>Os pesos de um modelo podem ser recuperados com o método <code>get_weights()</code> de um <em>Model</em> do Keras.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true"></a><span class="co"># Recupera os pesos do modelo; atribui a lista resultante a &#39;model_weights&#39;</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true"></a>model_weights <span class="op">=</span> embedding_model.get_weights()</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true"></a></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true"></a><span class="co"># Os pesos da camada oculta são o primeiro item da lista</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true"></a>hidden_layer_weights <span class="op">=</span> model_weights[<span class="dv">0</span>]</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true"></a></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true"></a><span class="co"># Chama a variável e usa o atributo &#39;shape&#39; para examinar o tamanho</span></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true"></a>hidden_layer_weights.shape</span></code></pre></div>
+<pre><code>(24, 2)</code></pre>
+<p>Os pesos da camada oculta consistem em 24 vetores bidimensionais, um vetor bidimensional para cada lema único do vocabulário.</p>
+<p>Vamos imprimir os cinco primeiros vetores para examinar seus valores.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true"></a><span class="co"># Examina os cinco primeiros itens da matriz de pesos</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true"></a>hidden_layer_weights[:<span class="dv">5</span>]</span></code></pre></div>
+<pre><code>array([[ 2.6961532 , -1.5385563 ],
+       [-0.9250037 , -0.37894028],
+       [-0.5655858 , -0.98387873],
+       [ 0.7383912 ,  2.1261196 ],
+       [-0.24349385, -2.3168392 ]], dtype=float32)</code></pre>
+<p>Em contraste com os vetores esparsos da codificação one-hot, as representações aprendidas pela camada oculta podem ser caracterizadas como <strong>densas</strong>, pois cada dimensão do vetor codifica alguma informação.</p>
+<p>Podemos pensar nesses valores bidimensionais como coordenadas e plotar as dimensões uma contra a outra para examinar a posição de cada lema no espaço bidimensional.</p>
+<p>Isso representa o <strong>espaço de embeddings</strong> dos vetores.</p>
+<p>Para visualizar o espaço de embeddings e os vetores dentro dele, usamos uma compreensão de dicionário para mapear cada lema único à sua representação bidimensional na camada oculta.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true"></a><span class="co"># Coleta os pesos da camada oculta em um dicionário usando uma compreensão de dicionário</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true"></a>lemma_embeddings <span class="op">=</span> {lemma: hidden_layer_weights[i] <span class="cf">for</span> i, lemma <span class="kw">in</span> <span class="bu">enumerate</span>(unique_lemmas)}</span></code></pre></div>
+<p>Importamos então a biblioteca <em>matplotlib</em> e criamos uma figura. O argumento <code>dpi</code> define a resolução da figura em 150 pontos por polegada.</p>
+<p>Em seguida, percorremos os lemas e suas representações vetoriais no dicionário <code>lemma_embeddings</code>.</p>
+<p>O método <code>items()</code> de um dicionário devolve tanto as chaves quanto os valores, que então adicionamos à figura do <em>matplotlib</em>.</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true"></a><span class="co"># Isso instrui o Jupyter a renderizar o gráfico do matplotlib no Notebook</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true"></a></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true"></a><span class="co"># Importa o componente pyplot do matplotlib</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true"></a></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true"></a><span class="co"># Cria uma figura com resolução de 150 DPI</span></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true"></a>plt.figure(dpi<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true"></a></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true"></a><span class="co"># Percorre os pares chave/valor do dicionário</span></span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true"></a><span class="cf">for</span> lemma, coordinates <span class="kw">in</span> lemma_embeddings.items():</span>
+<span id="cb73-12"><a href="#cb73-12" aria-hidden="true"></a></span>
+<span id="cb73-13"><a href="#cb73-13" aria-hidden="true"></a>    <span class="co"># Desempacota a variável coordinates em duas variáveis.</span></span>
+<span id="cb73-14"><a href="#cb73-14" aria-hidden="true"></a>    <span class="co"># Elas correspondem às coordenadas horizontal e vertical.</span></span>
+<span id="cb73-15"><a href="#cb73-15" aria-hidden="true"></a>    x, y <span class="op">=</span> coordinates[<span class="dv">0</span>], coordinates[<span class="dv">1</span>]</span>
+<span id="cb73-16"><a href="#cb73-16" aria-hidden="true"></a></span>
+<span id="cb73-17"><a href="#cb73-17" aria-hidden="true"></a>    <span class="co"># Usa o método scatter() para adicionar as coordenadas x e y</span></span>
+<span id="cb73-18"><a href="#cb73-18" aria-hidden="true"></a>    <span class="co"># à figura</span></span>
+<span id="cb73-19"><a href="#cb73-19" aria-hidden="true"></a>    plt.scatter(x, y)</span>
+<span id="cb73-20"><a href="#cb73-20" aria-hidden="true"></a></span>
+<span id="cb73-21"><a href="#cb73-21" aria-hidden="true"></a>    <span class="co"># Usa o método annotate() para adicionar os lemas como rótulos</span></span>
+<span id="cb73-22"><a href="#cb73-22" aria-hidden="true"></a>    <span class="co"># aos pares de coordenadas, que devem ser envolvidos em uma tupla</span></span>
+<span id="cb73-23"><a href="#cb73-23" aria-hidden="true"></a>    plt.annotate(lemma, (x, y))</span></code></pre></div>
+<figure>
+<img src="../resources/image14.png" alt="" /><figcaption>Imagem14</figcaption>
+</figure>
+<p>Podemos agora visualizar cada lema como um ponto no espaço de embeddings bidimensional, plotando as dimensões uma contra a outra.</p>
+<p>Isso permite examinar o resultado sob a ótica da hipótese distribucional, que sugere que os vetores de lemas que ocorrem em contextos linguísticos semelhantes devem estar próximos uns dos outros no espaço de embeddings.</p>
+<p>Ter acesso a mais dados (e a um vocabulário maior) permitiria ao modelo aprender mais sobre as coocorrências entre palavras, o que possibilitaria aprender melhores representações para os lemas no espaço de embeddings.</p>
+<p>O espaço de embeddings também poderia ser ampliado aumentando-se o número de neurônios na camada oculta da rede neural. Esse tipo de “capacidade” adicional permitiria ao modelo aprender representações mais complexas para palavras individuais. É comum que os vetores de palavras tenham várias centenas de dimensões, todas capturando alguma informação sobre a palavra e sua distribuição.</p>
+<p>Esta seção deve ter lhe dado uma compreensão básica da hipótese distribucional, que fundamenta a noção de <em>word embeddings</em> e a pesquisa em semântica distribucional.</p>
+<p>Você também deve compreender como os <em>word embeddings</em> são aprendidos diretamente dos dados por meio de uma tarefa substituta (<em>proxy</em>), como a predição da palavra vizinha.</p>
+<p>Note, contudo, que o exemplo simplificado apresentado acima apenas arranha a superfície do modo como os <em>word embeddings</em> são aprendidos.</p>
+<p>As abordagens contemporâneas para o aprendizado de <em>word embeddings</em> usam redes neurais com arquiteturas complexas e bilhões de parâmetros, que também tentam codificar mais informação sobre as palavras vizinhas, a fim de distinguir formas homonímicas – como “banco” enquanto instituição financeira e “banco” enquanto assento.</p>
+<p>Na próxima seção, aprofundaremos o estudo dos <em>word embeddings</em> e de como eles podem ser usados no spaCy.</p>
+</body>
+</html>

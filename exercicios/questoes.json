@@ -1,0 +1,326 @@
+[
+ {
+  "unidade": 1,
+  "titulo": "Processando Diversos Idiomas",
+  "licao": "unidade_1/processando_diversos_idiomas.html",
+  "questoes": [
+   {
+    "n": 1,
+    "secao": "",
+    "enunciado": "Historicamente, as ferramentas de Processamento de Linguagem Natural (PNL) foram desenvolvidas com forte foco no idioma inglês. Explique dois desafios estruturais significativos encontrados ao tentar aplicar essas mesmas ferramentas convencionais para outros idiomas, como o finlandês, turco ou o japonês.",
+    "resposta": "Os dois principais desafios estruturais são:\n1. **Morfologia complexa:** Idiomas aglutinativos (como finlandês e turco) podem combinar a raiz, o tempo verbal, marcadores de caso e pronomes em uma única palavra, diferentemente do inglês.\n2. **Ordem das palavras (Sintaxe):** Enquanto o inglês segue uma ordem estrita Sujeito-Verbo-Objeto (SVO), muitos outros idiomas possuem ordens flexíveis ou adotam estruturas diferentes, como Sujeito-Objeto-Verbo (SOV), comum no japonês."
+   },
+   {
+    "n": 2,
+    "secao": "",
+    "enunciado": "Utilizando a biblioteca Stanza, escreva o código Python necessário para fazer o download do modelo de linguagem para o idioma finlandês (código de idioma `'fi'`). Em seguida, inicialize um pipeline (*Pipeline*) que inclua exclusivamente os processadores de tokenização e etiquetagem de classes gramaticais (POS).",
+    "resposta": "```python\nimport stanza\n\n# Baixa o modelo de linguagem para o finlandês\nstanza.download(lang='fi')\n\n# Inicializa o pipeline apenas com o tokenizador \n# e o etiquetador de classes gramaticais\nnlp_fi = stanza.Pipeline(lang='fi', processors='tokenize, pos')\n```"
+   },
+   {
+    "n": 3,
+    "secao": "",
+    "enunciado": "Após processar um texto no Stanza, a saída gerada para uma sentença não é uma lista comum do Python, mas um objeto *Sentence*. Qual método nativo da biblioteca você pode utilizar para converter as anotações linguísticas desse objeto em uma lista de dicionários Python, facilitando a interação com as anaves/valores?",
+    "resposta": "Deve-se utilizar o método `to_dict()`. Este método converte o objeto *Sentence* em uma lista de dicionários onde cada dicionário representa um único objeto *Token*, contendo as anotações linguísticas na forma de pares chave-valor (ex: 'id', 'text', 'lemma', 'upos')."
+   },
+   {
+    "n": 4,
+    "secao": "",
+    "enunciado": "Qual é a maneira mais eficiente, em termos de custo computacional e estruturação de código, para processar múltiplos textos (documentos) de uma só vez utilizando o Stanza? Descreva os passos técnicos utilizando a sintaxe de compreensão de listas (*list comprehension*).",
+    "resposta": "A maneira mais eficiente é não passar string por string, mas coletá-las em uma lista e pré-empacotá-las em objetos *Document*. O passo a passo seria:\n1. Reunir os textos como strings em uma lista padrão (ex: `str_docs`).\n2. Utilizar uma compreensão de lista para criar uma nova lista instanciando documentos vazios preenchidos apenas com o texto: `docs_in = [stanza.Document([], text=doc) for doc in str_docs]`.\n3. Passar a lista completa `docs_in` diretamente para o objeto do modelo de linguagem (pipeline) de uma só vez para realizar a anotação."
+   },
+   {
+    "n": 5,
+    "secao": "",
+    "enunciado": "A biblioteca `spacy-stanza` é uma excelente ferramenta para integrar os modelos pesados do Stanza dentro do ecossistema familiar do spaCy. Apesar dessa vantagem, o texto menciona uma \"grande limitação\" para o seu uso. Qual é essa limitação? Dê um exemplo de idioma que ilustra esse problema.",
+    "resposta": "A limitação é que **o idioma em questão deve ser suportado nativamente tanto pelo Stanza quanto pelo spaCy**. Se tentarmos processar o idioma Wolof, por exemplo, não será possível usar o `spacy-stanza`, pois o spaCy não possui suporte a esse idioma em seu framework de base."
+   }
+  ]
+ },
+ {
+  "unidade": 2,
+  "titulo": "Dependências Universais",
+  "licao": "unidade_2/dependencias_universais.html",
+  "questoes": [
+   {
+    "n": 1,
+    "secao": "",
+    "enunciado": "O projeto *Universal Dependencies* (UD) é descrito como um esforço colaborativo que possui dois objetivos principais e sobrepostos. Quais são esses dois objetivos?",
+    "resposta": "1. Desenvolver um framework comum para descrever a estrutura gramatical de diversos idiomas.\n2. Criar corpora anotados (ou *treebanks*) para diversos idiomas aplicando este framework universal."
+   },
+   {
+    "n": 2,
+    "secao": "",
+    "enunciado": "A descrição de estruturas linguísticas dentro do framework UD baseia-se em três tipos principais de unidades frasais. Liste quais são essas três unidades e descreva brevemente o propósito ou o núcleo (a que classe de palavras estão associadas) de cada uma.",
+    "resposta": "1. **Nominais (*nominals*):** Usados para representar coisas, sendo frequentemente construídos em torno de substantivos (análogos a sintagmas nominais).\n2. **Orações (*clauses*):** Usadas para representar eventos, sendo construídas fundamentalmente em torno de verbos. Elas situam-se acima dos nominais hierarquicamente.\n3. **Modificadores (*modifiers*):** Dependem de adjetivos e advérbios e servem para expandir, refinar e detalhar o significado tanto de nominais quanto de orações."
+   },
+   {
+    "n": 3,
+    "secao": "",
+    "enunciado": "Na árvore de análise sintática (parse tree) gerada pelo framework UD para uma oração completa, o que significa a etiqueta de dependência `root` e como as relações de dependência sintática fluem a partir dela em relação aos nominais da frase?",
+    "resposta": "A etiqueta `root` identifica a **raiz** ou a cabeça central da oração (geralmente o verbo principal). No framework UD, as dependências são desenhadas de cabeça para cabeça; portanto, os arcos sintáticos partem da raiz (o verbo) em direção às palavras que atuam como as cabeças dos nominais dependentes (como o pronome sujeito ou o substantivo objeto direto)."
+   },
+   {
+    "n": 4,
+    "secao": "",
+    "enunciado": "Ao explorar as dependências sintáticas utilizando os objetos *Token* da biblioteca spaCy, você pode navegar na árvore de análise de várias formas. Qual é a diferença exata entre os resultados retornados pelos atributos `token.subtree` e `token.children`?",
+    "resposta": "O atributo `token.subtree` retorna um gerador que contém todos os dependentes diretos e indiretos (filhos, netos, bisnetos, etc.) **incluindo o próprio *Token* original**. O atributo `token.children`, por outro lado, retorna apenas os dependentes imediatos (filhos diretos de primeiro nível) e **não inclui o *Token* original** na sua saída."
+   },
+   {
+    "n": 5,
+    "secao": "",
+    "enunciado": "Por que as métricas tradicionais de avaliação, como UAS (*Unlabeled Attachment Score*) e LAS (*Labeled Attachment Score*), tornam-se problemáticas e desiguais ao comparar o desempenho de modelos analíticos entre diferentes idiomas, especificamente comparando o inglês com um idioma morfologicamente rico como o finlandês? Cite ao menos uma métrica alternativa sugerida para resolver esse problema.",
+    "resposta": "Essas métricas penalizam desproporcionalmente idiomas morfologicamente ricos. Em inglês, as sentenças são mais longas devido ao alto uso de palavras de função independentes (preposições, auxiliares); logo, errar uma palavra causa um pequeno impacto percentual. Em finlandês, onde essas funções são acopladas nas palavras originais (formando sentenças mais curtas), um único erro sintático representa uma porcentagem de perda muito maior na métrica final. \nMétricas alternativas sugeridas incluem a **CLAS** (*content-labeled attachment score*), que ignora palavras de função na contagem, a **MLAS** (com foco na morfologia) e a **BLEX** (com foco no lema)."
+   }
+  ]
+ },
+ {
+  "unidade": 3,
+  "titulo": "Encontrando padrões linguísticos com o spaCy",
+  "licao": "unidade_3/padroes_linguisticos.html",
+  "questoes": [
+   {
+    "n": 1,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Explique, com suas próprias palavras, a diferença entre as classes *Matcher*, *DependencyMatcher* e *PhraseMatcher* do spaCy. Dê um exemplo de tarefa linguística adequada a cada uma.",
+    "resposta": "* O *Matcher* casa **sequências lineares de *Tokens*** com base em seus atributos (classe gramatical, traços morfológicos, forma, lema etc.). É adequado, por exemplo, para localizar sequências \"pronome + verbo\".\n* O *DependencyMatcher* casa **padrões na árvore de dependências**, isto é, relações de cabeça e dependente. É adequado para localizar, por exemplo, todos os sujeitos nominais de verbos, independentemente da ordem linear das palavras.\n* O *PhraseMatcher* casa **objetos *Doc* contra objetos *Doc*** e é otimizado para listas grandes de termos fixos. É adequado, por exemplo, para localizar milhares de nomes de medicamentos ou de topônimos em um corpus."
+   },
+   {
+    "n": 2,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "No formato de padrões do spaCy, qual é o papel da chave `OP`? Descreva o efeito de cada um dos quatro operadores (`!`, `?`, `+`, `*`) e dê um exemplo de padrão em que o operador `?` seria preferível ao `+`.",
+    "resposta": "A chave `OP` define a **quantificação** de um padrão de *Token*:\n\n* `!` — nega o padrão; ele deve ocorrer exatamente zero vezes.\n* `?` — torna o padrão opcional; pode ocorrer zero ou uma vez.\n* `+` — exige uma ou mais ocorrências.\n* `*` — permite zero ou mais ocorrências.\n\nO operador `?` é preferível ao `+` quando o elemento é **facultativo, mas não repetível**, como o determinante em um sintagma nominal do inglês: `[{'POS': 'DET', 'OP': '?'}, {'POS': 'NOUN'}]` casa tanto *the capital* quanto *capitals*, mas não permitiria uma sequência de determinantes."
+   },
+   {
+    "n": 3,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Qual a diferença entre as chaves `POS` e `TAG` em uma regra de padrão? Por que a etiqueta `NNP` não aparece como valor de `POS`?",
+    "resposta": "`POS` refere-se à etiqueta **geral** (*coarse-grained*) de classe gramatical, definida pelo conjunto universal das Dependências Universais (`NOUN`, `VERB`, `ADJ`, `PROPN` etc.). `TAG` refere-se à etiqueta **refinada** (*fine-grained*), específica do corpus de treinamento do modelo — no caso do inglês, o conjunto do Penn Treebank (`NN`, `NNS`, `NNP`, `VBD` etc.).\n\n`NNP` é uma etiqueta do Penn Treebank e, portanto, só é válida como valor de `TAG`. O equivalente geral seria `PROPN` em `POS`, mas `NNP` é mais específico, pois distingue nome próprio singular de plural (`NNPS`)."
+   },
+   {
+    "n": 4,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Explique o funcionamento do atributo `IS_SUPERSET` aplicado à chave `MORPH`. Por que ele é necessário quando queremos casar apenas *alguns* traços morfológicos?",
+    "resposta": "Quando o valor de `MORPH` é uma *string*, o spaCy exige uma correspondência **exata** de todo o conjunto de traços morfológicos. Com `IS_SUPERSET`, o spaCy verifica se o conjunto de traços do *Token* **contém** o conjunto fornecido no padrão, ou seja, se é um superconjunto dele.\n\nIsso é necessário porque quase nunca conhecemos de antemão a combinação completa de traços de um *Token*. Ao buscar apenas verbos no passado, por exemplo, queremos casar tanto `Tense=Past|VerbForm=Fin` quanto `Aspect=Perf|Tense=Past|VerbForm=Part`; um único traço, `Tense=Past`, basta como critério."
+   },
+   {
+    "n": 5,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "No *DependencyMatcher*, explique a diferença entre as chaves `LEFT_ID` e `RIGHT_ID`. Por que o primeiro dicionário de um padrão não possui `LEFT_ID`?",
+    "resposta": "`RIGHT_ID` é o **nome do padrão atual**, usado para que padrões posteriores possam referenciá-lo. `LEFT_ID` é a **referência a um padrão já definido**, ao qual o padrão atual se conecta por meio do operador relacional em `REL_OP`.\n\nO primeiro dicionário não possui `LEFT_ID` porque é a **âncora**: não há nenhum padrão anterior ao qual ele possa se ligar. A âncora é o ponto de partida da corrente."
+   },
+   {
+    "n": 6,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Por que o *DependencyMatcher* devolve tuplas de índices em vez de objetos *Span*, como faz o *Matcher*?",
+    "resposta": "Um objeto *Span* representa uma **fatia contígua** de um objeto *Doc*, definida por um índice inicial e um final. Correspondências de dependência, porém, ligam *Tokens* que podem estar arbitrariamente distantes na ordem linear e com material interveniente que não faz parte da correspondência (por exemplo, em *the movement in New York began*, o sujeito `movement` e o verbo `began` não são adjacentes). Como não formam uma fatia contígua, não podem ser representados por um *Span*; por isso o spaCy devolve os índices individuais dos *Tokens*."
+   },
+   {
+    "n": 7,
+    "secao": "Parte B — Programação",
+    "enunciado": "Crie um *Matcher* que encontre sequências de um adjetivo (`ADJ`) seguido de um substantivo (`NOUN`) no objeto `doc`. Nomeie o padrão como `adj+noun` e imprima as 20 primeiras correspondências.",
+    "resposta": "```python\nfrom spacy.matcher import Matcher\n\n# Cria um novo Matcher com o vocabulário do modelo\nadj_matcher = Matcher(vocab=nlp.vocab)\n\n# Define o padrão: um adjetivo seguido de um substantivo\nadj_noun = [{'POS': 'ADJ'}, {'POS': 'NOUN'}]\n\n# Adiciona o padrão ao Matcher\nadj_matcher.add('adj+noun', patterns=[adj_noun])\n\n# Aplica o Matcher ao Doc e obtém os resultados como Spans\nadj_results = adj_matcher(doc, as_spans=True)\n\n# Imprime as 20 primeiras correspondências\nfor result in adj_results[:20]:\n    print(result)\n```"
+   },
+   {
+    "n": 8,
+    "secao": "Parte B — Programação",
+    "enunciado": "Modifique o padrão do exercício anterior para permitir **um ou mais** adjetivos antes do substantivo. Compare a quantidade de correspondências obtidas com e sem o argumento `greedy='LONGEST'` e explique a diferença.",
+    "resposta": "```python\n# Permite um ou mais adjetivos antes do substantivo\nadj_noun_plus = [{'POS': 'ADJ', 'OP': '+'}, {'POS': 'NOUN'}]\n\n# Versão sem 'greedy'\nmatcher_a = Matcher(vocab=nlp.vocab)\nmatcher_a.add('adj+noun', patterns=[adj_noun_plus])\nresults_a = matcher_a(doc, as_spans=True)\n\n# Versão com 'greedy'\nmatcher_b = Matcher(vocab=nlp.vocab)\nmatcher_b.add('adj+noun', patterns=[adj_noun_plus], greedy='LONGEST')\nresults_b = matcher_b(doc, as_spans=True)\n\nprint('Sem greedy:', len(results_a))\nprint('Com greedy:', len(results_b))\n```\n\n**Explicação.** Sem `greedy`, o operador `+` devolve uma correspondência a *cada* posição em que o padrão pode ser satisfeito: para a sequência *large public space*, o spaCy devolve tanto `public space` quanto `large public space`. Com `greedy='LONGEST'`, o spaCy filtra as correspondências sobrepostas e mantém apenas a mais longa de cada grupo, reduzindo o total de resultados."
+   },
+   {
+    "n": 9,
+    "secao": "Parte B — Programação",
+    "enunciado": "Escreva um padrão que case substantivos no plural, usando a chave `MORPH` com `IS_SUPERSET` e o traço `Number=Plur`. Imprima as 15 primeiras correspondências junto com os traços morfológicos de cada *Token*.",
+    "resposta": "```python\n# Cria um Matcher para traços morfológicos\nplural_matcher = Matcher(vocab=nlp.vocab)\n\n# Define o padrão: substantivos cujos traços contenham Number=Plur\nplural_noun = [{'POS': 'NOUN', 'MORPH': {'IS_SUPERSET': ['Number=Plur']}}]\n\n# Adiciona o padrão ao Matcher\nplural_matcher.add('plural_noun', patterns=[plural_noun])\n\n# Aplica o Matcher ao Doc\nplural_results = plural_matcher(doc, as_spans=True)\n\n# Imprime as 15 primeiras correspondências e seus traços morfológicos\nfor result in plural_results[:15]:\n    print(result, '\\t', result[0].morph)\n```"
+   },
+   {
+    "n": 10,
+    "secao": "Parte B — Programação",
+    "enunciado": "Usando o *DependencyMatcher*, escreva um padrão que encontre verbos (`VERB`) e seus objetos diretos (`dobj`), sem incluir o sujeito. Nomeie o padrão como `verb_dobj` e imprima as 20 primeiras correspondências no formato `verbo ... objeto`.",
+    "resposta": "```python\nfrom spacy.matcher import DependencyMatcher\n\n# Cria um novo DependencyMatcher\nobj_matcher = DependencyMatcher(vocab=nlp.vocab)\n\n# Define a corrente: âncora (verbo) e seu objeto direto\nverb_dobj = [{'RIGHT_ID': 'verb', 'RIGHT_ATTRS': {'POS': 'VERB'}},\n             {'LEFT_ID': 'verb', 'REL_OP': '>', 'RIGHT_ID': 'd_object',\n              'RIGHT_ATTRS': {'DEP': 'dobj'}}\n            ]\n\n# Adiciona o padrão ao matcher\nobj_matcher.add('verb_dobj', patterns=[verb_dobj])\n\n# Aplica o matcher ao Doc\nobj_matches = obj_matcher(doc)\n\n# Imprime as 20 primeiras correspondências\nfor match in obj_matches[:20]:\n\n    # Desempacota a tupla em nome do padrão e lista de índices\n    pattern_name, matches = match[0], match[1]\n\n    # Os índices seguem a ordem em que os padrões foram definidos\n    verb, dobject = matches[0], matches[1]\n\n    print(nlp.vocab[pattern_name].text, '\\t', doc[verb], '...', doc[dobject])\n```"
+   },
+   {
+    "n": 11,
+    "secao": "Parte B — Programação",
+    "enunciado": "Estenda o padrão do exercício anterior acrescentando um terceiro elo à corrente: o **determinante** (`det`) do objeto direto. Note que esse novo elo deve partir do padrão `d_object`, e não da âncora `verb`. Imprima as correspondências no formato `verbo ... determinante objeto`.",
+    "resposta": "```python\n# O terceiro elo parte de 'd_object', e não da âncora 'verb'\nverb_dobj_det = [{'RIGHT_ID': 'verb', 'RIGHT_ATTRS': {'POS': 'VERB'}},\n                 {'LEFT_ID': 'verb', 'REL_OP': '>', 'RIGHT_ID': 'd_object',\n                  'RIGHT_ATTRS': {'DEP': 'dobj'}},\n                 {'LEFT_ID': 'd_object', 'REL_OP': '>', 'RIGHT_ID': 'determiner',\n                  'RIGHT_ATTRS': {'DEP': 'det'}}\n                ]\n\n# Cria um matcher novo para evitar misturar com padrões anteriores\ndet_matcher = DependencyMatcher(vocab=nlp.vocab)\ndet_matcher.add('verb_dobj_det', patterns=[verb_dobj_det])\n\ndet_matches = det_matcher(doc)\n\nfor match in det_matches[:20]:\n\n    pattern_name, matches = match[0], match[1]\n\n    # A ordem dos índices segue a ordem de definição dos padrões\n    verb, dobject, determiner = matches[0], matches[1], matches[2]\n\n    print(nlp.vocab[pattern_name].text, '\\t',\n          doc[verb], '...', doc[determiner], doc[dobject])\n```\n\n**Explicação.** O determinante é dependente do **substantivo**, não do verbo. Por isso `LEFT_ID` deve ser `d_object`: estamos prolongando a corrente para a direita a partir do objeto direto, e não abrindo uma nova corrente a partir da âncora."
+   },
+   {
+    "n": 12,
+    "secao": "Parte B — Programação",
+    "enunciado": "Escreva um laço que produza linhas de concordância para as correspondências do exercício 7, exibindo 5 *Tokens* antes e 5 *Tokens* depois de cada correspondência, com o trecho casado destacado em azul usando a classe `Printer` da wasabi.",
+    "resposta": "```python\nfrom wasabi import Printer\n\n# Inicializa o Printer\nmatch = Printer()\n\n# Percorre as correspondências mantendo a contagem\nfor i, result in enumerate(adj_results, start=1):\n\n    print(i,\n          doc[result.start - 5: result.start],   # contexto à esquerda\n          match.text(result, color='blue', no_print=True),  # correspondência em azul\n          doc[result.end: result.end + 5]        # contexto à direita\n         )\n```"
+   },
+   {
+    "n": 13,
+    "secao": "Parte C — Reflexão",
+    "enunciado": "As linhas de concordância da unidade às vezes \"pulam\" uma ou duas linhas na saída. Explique a causa e proponha uma solução em Python que evite esse comportamento.",
+    "resposta": "O texto de origem contém quebras de linha (`\\n`) que o spaCy preserva como *Tokens*. Quando uma dessas quebras cai na janela de contexto, ela é impressa literalmente e desloca a saída para outra linha.\n\nUma solução é substituir os caracteres de espaçamento pelo caractere de espaço antes de imprimir:\n\n```python\nfor i, result in enumerate(adj_results, start=1):\n\n    # Converte as fatias em texto e normaliza os espaços em branco\n    left = ' '.join(doc[result.start - 5: result.start].text.split())\n    right = ' '.join(doc[result.end: result.end + 5].text.split())\n\n    print(i, left, match.text(result, color='blue', no_print=True), right)\n```\n\nO método `split()` sem argumentos divide a *string* em qualquer sequência de espaços em branco — incluindo `\\n` e `\\t` — e `join()` a reconstitui com espaços simples.\n\nAlternativamente, poderíamos limpar o texto antes de fornecê-lo ao modelo de linguagem, ou filtrar os *Tokens* cujo atributo `is_space` seja `True`."
+   },
+   {
+    "n": 14,
+    "secao": "Parte C — Reflexão",
+    "enunciado": "Suponha que você queira estudar a construção \"verbo + preposição + sintagma nominal\" (por exemplo, *depend on the government*) em um corpus. Descreva qual *Matcher* você usaria e esboce a regra de padrão correspondente, justificando suas escolhas.",
+    "resposta": "A construção envolve uma relação **sintática**, e não meramente linear: o sintagma nominal é o objeto da preposição, que por sua vez é dependente do verbo. Palavras podem intervir entre os elementos (*depend heavily on the government*), o que torna o *Matcher* linear frágil. Portanto, a escolha adequada é o **DependencyMatcher**.\n\nA regra teria três elos:\n\n```python\nverb_prep_np = [\n    # Âncora: o verbo\n    {'RIGHT_ID': 'verb', 'RIGHT_ATTRS': {'POS': 'VERB'}},\n\n    # A preposição é dependente do verbo, com a relação 'prep'\n    {'LEFT_ID': 'verb', 'REL_OP': '>', 'RIGHT_ID': 'preposition',\n     'RIGHT_ATTRS': {'DEP': 'prep'}},\n\n    # O objeto da preposição é dependente da preposição, com a relação 'pobj'\n    {'LEFT_ID': 'preposition', 'REL_OP': '>', 'RIGHT_ID': 'prep_object',\n     'RIGHT_ATTRS': {'DEP': 'pobj'}}\n]\n```\n\n**Justificativa das escolhas:**\n\n* A âncora é o verbo, porque é o elemento em torno do qual a construção se organiza.\n* O segundo elo parte do verbo (`LEFT_ID: 'verb'`), pois a preposição é dependente dele.\n* O terceiro elo parte da preposição (`LEFT_ID: 'preposition'`), e **não** do verbo, porque o sintagma nominal é dependente da preposição — trata-se de um prolongamento da mesma corrente.\n* Se quiséssemos restringir o verbo a um lema específico, bastaria acrescentar `'LEMMA': 'depend'` ao dicionário `RIGHT_ATTRS` da âncora."
+   }
+  ]
+ },
+ {
+  "unidade": 4,
+  "titulo": "Introdução aos word embeddings",
+  "licao": "unidade_4/introducao_word_embeddings.html",
+  "questoes": [
+   {
+    "n": 1,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Enuncie a hipótese distribucional em uma frase e explique de que modo a citação de Firth (\"*You shall know a word by the company it keeps*\") a antecipa.",
+    "resposta": "A hipótese distribucional afirma que **semelhança de significado resulta em semelhança de distribuição linguística**: palavras que ocorrem em contextos semelhantes tendem a ter significados semelhantes.\n\nA citação de Firth a antecipa ao deslocar o critério de identificação do significado da palavra isolada para sua **companhia**, isto é, para os elementos com que ela coocorre. Firth não formula a hipótese em termos distribucionais quantitativos — isso é feito por Harris ([1954](https://doi.org/10.1080/00437956.1954.11659520)) —, mas estabelece o princípio metodológico de que o significado é contextual e, portanto, observável no uso."
+   },
+   {
+    "n": 2,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Explique a diferença entre os eixos **sintagmático** e **paradigmático** de Saussure. Na matriz criada na seção 2.1, o que representam as linhas e o que representam as colunas em relação a esses eixos?",
+    "resposta": "* O eixo **sintagmático** é o eixo da **combinação**: descreve como os elementos escolhidos se encadeiam horizontalmente para formar estruturas maiores (*Helsinki* + *is* + *the capital of* + *Finland*).\n* O eixo **paradigmático** é o eixo da **seleção**: descreve o conjunto de alternativas que poderiam ocupar uma mesma posição na estrutura (*Helsinki* / *Tallinn* / *Estocolmo*). As alternativas se definem por oposição.\n\nNa matriz da seção 2.1:\n\n* Cada **coluna** corresponde a um lema único, isto é, a uma **escolha paradigmática** disponível.\n* Cada **linha** corresponde a um *Doc*, isto é, a uma **estrutura sintagmática** concreta, que registra quais escolhas paradigmáticas foram efetivamente combinadas."
+   },
+   {
+    "n": 3,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Por que a representação obtida na seção 2.1 é chamada de \"saco de palavras\" (*bag of words*)? Cite duas limitações dessa representação.",
+    "resposta": "A representação é chamada de \"saco de palavras\" porque registra apenas **quais** palavras ocorrem e **quantas vezes**, descartando completamente a informação sobre a **ordem** em que aparecem. É como se as palavras fossem jogadas em um saco e agitadas.\n\nDuas limitações:\n\n1. **Perda da ordem e da estrutura.** As orações *o cão mordeu o homem* e *o homem mordeu o cão* recebem exatamente o mesmo vetor, embora signifiquem coisas opostas.\n2. **Crescimento da dimensionalidade e esparsidade.** Cada palavra nova do vocabulário exige uma dimensão adicional. Como cada documento contém apenas uma fração ínfima do vocabulário, a esmagadora maioria das dimensões vale zero, o que desperdiça memória e dificulta o cálculo de distâncias significativas."
+   },
+   {
+    "n": 4,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Qual é a diferença entre um vetor **esparso** e um vetor **denso**? Por que os *word embeddings* aprendidos pela camada oculta são densos?",
+    "resposta": "Um vetor **esparso** é aquele em que a maior parte das dimensões vale zero e apenas poucas carregam informação — como o vetor one-hot, em que exatamente uma dimensão vale 1. Um vetor **denso** é aquele em que praticamente todas as dimensões têm valores não nulos, cada uma codificando alguma parcela de informação.\n\nOs embeddings da camada oculta são densos porque a rede é **forçada** a comprimir a informação de 24 dimensões esparsas em apenas 2 dimensões. Como não há espaço para reservar uma dimensão por palavra, cada dimensão precisa passar a codificar informação distribuída sobre a palavra e seu contexto."
+   },
+   {
+    "n": 5,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "Explique por que a predição da palavra vizinha é descrita como uma **tarefa substituta** (*proxy*) e não como o objetivo real do treinamento.",
+    "resposta": "O objetivo final não é dispor de um preditor de palavras vizinhas — essa predição, isoladamente, tem pouca utilidade prática. O objetivo é obter **representações numéricas úteis** das palavras.\n\nA predição funciona como tarefa substituta porque **só é possível resolvê-la bem se a rede aprender boas representações**. Para prever que *the* e *capital* aparecem perto de *be*, a rede precisa codificar, nos pesos da camada oculta, informação sobre o comportamento distribucional de *be*. Ao fim do treinamento, descartamos o preditor e ficamos com os pesos — que são os embeddings.\n\nTrata-se do princípio geral do **aprendizado auto-supervisionado**: o rótulo é extraído do próprio texto, sem anotação humana."
+   },
+   {
+    "n": 6,
+    "secao": "Parte A — Conceitos",
+    "enunciado": "A camada oculta da rede tem apenas dois neurônios. Explique por que ela é descrita como um \"gargalo\" e qual o papel desse gargalo no aprendizado das representações.",
+    "resposta": "A camada oculta é um gargalo porque é muito mais estreita (2 neurônios) do que as camadas de entrada e de saída (24 unidades cada). Toda a informação necessária para a predição precisa **passar por essas duas dimensões**.\n\nEsse estrangulamento é justamente o que produz o aprendizado. Se a camada oculta tivesse 24 neurônios, a rede poderia simplesmente copiar a entrada, memorizando cada palavra individualmente, sem generalizar nada. Ao ser obrigada a comprimir, a rede é forçada a **agrupar palavras com comportamento distribucional semelhante** na mesma região do espaço — que é exatamente o que a hipótese distribucional prevê."
+   },
+   {
+    "n": 7,
+    "secao": "Parte B — Programação",
+    "enunciado": "Calcule a similaridade de cossenos entre os *Docs* de índices 3 e 4 usando a matriz `df`. O valor obtido é coerente com o conteúdo das duas orações? Justifique.",
+    "resposta": "```python\nfrom sklearn.metrics.pairwise import cosine_similarity\n\n# Compara os vetores dos Docs nos índices 3 e 4\ncosine_similarity([df.values[3]], [df.values[4]])\n```\n\n```\narray([[0.37796447]])\n```\n\nO valor é coerente. As orações são:\n\n```\nTravelling between Helsinki and Tallinn takes about two hours\nFerries depart from downtown Helsinki and Tallinn\n```\n\nElas compartilham três lemas — `Helsinki`, `and` e `Tallinn` —, o que produz uma similaridade moderada (0,38). Esse valor é claramente inferior ao dos *Docs* 0 e 1 (0,67), que compartilham quatro lemas em uma estrutura sintagmática idêntica (*is the capital of*), mas superior ao dos pares que quase nada compartilham."
+   },
+   {
+    "n": 8,
+    "secao": "Parte B — Programação",
+    "enunciado": "Acrescente uma sexta oração à lista `examples` — por exemplo, `\"Stockholm is the capital of Sweden\"` — e refaça o pipeline até a matriz de similaridade de cossenos. Quantas colunas passa a ter o *DataFrame* `df`? Qual *Doc* se torna mais similar ao novo?",
+    "resposta": "```python\n# Acrescenta a nova oração à lista\nexamples.append(\"Stockholm is the capital of Sweden\")\n\n# Reprocessa toda a lista\ndocs = list(nlp.pipe(examples))\n\n# Reconta os lemas\nlemma_counts = {i: doc.count_by(LEMMA) for i, doc in enumerate(docs)}\nlemma_counts = {i: {docs[i].vocab[k].text: v for k, v in counter.items()}\n                for i, counter in lemma_counts.items()}\n\n# Reconstrói o DataFrame\ndf = pd.DataFrame.from_dict(lemma_counts).sort_index(ascending=True).fillna(0).T\n\n# Verifica o formato\nprint(df.shape)\n\n# Recalcula a matriz de similaridade\nsim = cosine_similarity(df.values)\nprint(sim[5])\n```\n\n```\n(6, 26)\n[0.66666667 0.66666667 0.40824829 0.         0.         1.        ]\n```\n\nO *DataFrame* passa a ter **26 colunas**: as 24 originais mais os dois lemas novos, `Stockholm` e `Sweden`.\n\nOs *Docs* 0 e 1 tornam-se **igualmente** os mais similares ao novo *Doc* 5, ambos com 0,67. Isso faz sentido: as três orações compartilham exatamente a mesma estrutura sintagmática (*X is the capital of Y*), diferindo apenas nos dois nomes próprios. É precisamente a previsão da hipótese distribucional: `Helsinki`, `Tallinn` e `Stockholm` são alternativas paradigmáticas de uma mesma posição."
+   },
+   {
+    "n": 9,
+    "secao": "Parte B — Programação",
+    "enunciado": "Usando a matriz de coocorrência `lemma_df`, calcule a similaridade de cossenos entre os vetores de `'capital'` e `'the'`, e entre `'Helsinki'` e `'ferry'`. Comente os resultados à luz da hipótese distribucional.",
+    "resposta": "```python\n# Similaridade entre 'capital' e 'the'\nprint(cosine_similarity([lemma_df['capital'].values], [lemma_df['the'].values]))\n\n# Similaridade entre 'Helsinki' e 'ferry'\nprint(cosine_similarity([lemma_df['Helsinki'].values], [lemma_df['ferry'].values]))\n```\n\n```\narray([[0.53846154]])\narray([[0.13363062]])\n```\n\n**Comentário.** O par `capital` / `the` apresenta similaridade alta (0,54) porque ambos ocorrem repetidamente nos mesmos contextos locais (*the capital of*), compartilhando vizinhos como `be`, `of` e um ao outro. Isso ilustra um ponto importante: a hipótese distribucional captura **similaridade de distribuição**, que nem sempre corresponde a similaridade de significado — um determinante e um substantivo não são sinônimos.\n\nO par `Helsinki` / `ferry` apresenta similaridade baixa (0,13): as duas palavras ocorrem em vizinhanças bastante distintas no nosso pequeno corpus."
+   },
+   {
+    "n": 10,
+    "secao": "Parte B — Programação",
+    "enunciado": "Modifique o laço que preenche `lemma_df` para considerar uma janela de **três** palavras de cada lado, em vez de duas. Recalcule a similaridade entre `'Helsinki'` e `'Tallinn'` e compare com o valor obtido na unidade.",
+    "resposta": "```python\n# Recria o DataFrame vazio\nlemma_df_3 = pd.DataFrame(index=unique_lemmas, columns=unique_lemmas).fillna(0)\n\n# Percorre os Tokens, agora com janela de três palavras de cada lado\nfor token in combined_docs:\n\n    # Note o intervalo ampliado de posições\n    for position in [-3, -2, -1, 1, 2, 3]:\n\n        try:\n            nbor_lemma = token.nbor(position).lemma_\n            lemma_df_3.at[token.lemma_, nbor_lemma] += 1\n\n        except IndexError:\n            continue\n\n# Recalcula a similaridade\ncosine_similarity([lemma_df_3['Tallinn'].values], [lemma_df_3['Helsinki'].values])\n```\n\n```\narray([[0.56577895]])\n```\n\n**Comparação.** Com janela 2, a similaridade era de **0,43**; com janela 3, sobe para **0,57**. Ampliar a janela aumenta o número de vizinhos compartilhados registrados e, portanto, o número de dimensões não nulas em comum, elevando a similaridade.\n\nDe modo geral, janelas menores tendem a capturar relações mais **sintáticas** (colocações imediatas), enquanto janelas maiores capturam relações mais **temáticas** ou tópicas. A escolha da janela é, portanto, uma decisão analítica, não um detalhe técnico."
+   },
+   {
+    "n": 11,
+    "secao": "Parte B — Programação",
+    "enunciado": "Escreva uma função `one_hot(lemma, vocabulary)` que receba um lema e uma lista de lemas e devolva o vetor one-hot correspondente, sem usar o dicionário `lemma_vectors`. A função deve levantar um `ValueError` se o lema não estiver no vocabulário.",
+    "resposta": "```python\nimport numpy as np\n\ndef one_hot(lemma, vocabulary):\n    \"\"\"Devolve o vetor one-hot de um lema em relação a um vocabulário.\n\n    Parâmetros:\n        lemma: string com o lema a ser codificado\n        vocabulary: lista de lemas únicos\n\n    Devolve:\n        Um array NumPy do tamanho do vocabulário.\n    \"\"\"\n\n    # Verifica se o lema pertence ao vocabulário\n    if lemma not in vocabulary:\n\n        # Levanta um erro informativo caso contrário\n        raise ValueError(f\"O lema '{lemma}' não está no vocabulário.\")\n\n    # Cria um vetor de zeros com o tamanho do vocabulário\n    vector = np.zeros(shape=len(vocabulary))\n\n    # Define como 1 a posição correspondente ao lema\n    vector[vocabulary.index(lemma)] = 1\n\n    return vector\n\n\n# Testes\nprint(one_hot('Helsinki', unique_lemmas))\nprint(one_hot('Curitiba', unique_lemmas))\n```\n\n```\n[0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]\nValueError: O lema 'Curitiba' não está no vocabulário.\n```"
+   },
+   {
+    "n": 12,
+    "secao": "Parte B — Programação",
+    "enunciado": "Treine novamente a rede neural, desta vez com **quatro** neurônios na camada oculta, mantendo os demais parâmetros. Verifique o formato da matriz de pesos da camada oculta e explique por que já não é possível plotar diretamente o espaço de embeddings em duas dimensões.",
+    "resposta": "```python\n# Reconstrói a rede com quatro neurônios na camada oculta\nnetwork_input = keras.Input(shape=targets.shape[1], name='input_layer')\n\n# Apenas o argumento 'units' muda\nhidden_layer = Dense(units=4, activation=None, name='hidden_layer')(network_input)\n\noutput_layer = Dense(units=context.shape[1], activation='softmax',\n                     name='output_layer')(hidden_layer)\n\nmodel_4d = keras.Model(inputs=network_input, outputs=output_layer)\nmodel_4d.compile(loss='categorical_crossentropy')\n\nmodel_4d.fit(x=targets, y=context, batch_size=64, epochs=1500, verbose=0)\n\n# Verifica o formato dos pesos da camada oculta\nweights_4d = model_4d.get_weights()[0]\nprint(weights_4d.shape)\n```\n\n```\n(24, 4)\n```\n\nA matriz de pesos passa a ter formato `(24, 4)`: cada um dos 24 lemas é agora representado por um vetor de **quatro** dimensões.\n\nJá não é possível plotar o espaço diretamente porque um gráfico de dispersão só dispõe de dois eixos, e teríamos quatro coordenadas por ponto. Para visualizar, seria necessário aplicar uma técnica de **redução de dimensionalidade** — como PCA ou t-SNE — que projeta os vetores de quatro dimensões em duas, preservando aproximadamente as distâncias relativas. Essa é exatamente a abordagem adotada na próxima unidade, ao visualizar os embeddings do spaCy, que têm centenas de dimensões."
+   },
+   {
+    "n": 13,
+    "secao": "Parte B — Programação",
+    "enunciado": "A partir da matriz `hidden_layer_weights` obtida na unidade, calcule a similaridade de cossenos entre os embeddings de `'Helsinki'` e `'Tallinn'`. Compare esse valor com o obtido na seção 2.2 a partir da matriz de coocorrência.",
+    "resposta": "```python\n# Localiza os índices dos dois lemas\ni_hel = unique_lemmas.index('Helsinki')\ni_tal = unique_lemmas.index('Tallinn')\n\n# Compara os embeddings aprendidos\ncosine_similarity([hidden_layer_weights[i_hel]], [hidden_layer_weights[i_tal]])\n```\n\n```\narray([[0.60469307]])\n```\n\n**Comparação.** A similaridade calculada a partir da matriz de coocorrência era de **0,43**; a partir dos embeddings aprendidos, obtemos aproximadamente **0,60**.\n\nDuas ressalvas importantes:\n\n1. O valor exato **varia entre execuções**, pois os pesos são inicializados aleatoriamente. O que se deve observar é a tendência, não o número.\n2. Em apenas duas dimensões, quaisquer dois vetores tendem a apresentar similaridade de cossenos relativamente alta, simplesmente porque há pouco espaço para que fiquem distantes. Comparar valores absolutos entre espaços de dimensionalidades diferentes é, portanto, enganoso."
+   },
+   {
+    "n": 14,
+    "secao": "Parte C — Reflexão",
+    "enunciado": "O exemplo da unidade usa apenas cinco orações. Liste três consequências concretas dessa escassez de dados para a qualidade dos embeddings aprendidos.",
+    "resposta": "1. **Vocabulário insuficiente para generalizar.** Com 24 lemas e 118 pares, quase todas as palavras ocorrem uma ou duas vezes. A rede não tem evidência estatística suficiente para distinguir regularidade de acaso: uma única coocorrência tem o mesmo peso que um padrão sistemático.\n\n2. **Sobreajuste ao exemplo específico.** O modelo aprende as cinco orações particulares, não a língua inglesa. `Helsinki` e `Tallinn` ficam próximos porque aparecem literalmente lado a lado nos dados, e não porque o modelo tenha inferido que ambos são capitais bálticas.\n\n3. **Ausência de palavras funcionais em contexto variado.** Palavras como `the` e `of` ocorrem em pouquíssimos contextos distintos, quando na realidade sua característica definidora é ocorrer em uma enorme variedade deles. Suas representações ficam, portanto, distorcidas — e, como são frequentes, distorcem também as representações das palavras vizinhas.\n\nUma quarta consequência, mais sutil: as próprias métricas de avaliação tornam-se pouco informativas, já que não há dados retidos para teste."
+   },
+   {
+    "n": 15,
+    "secao": "Parte C — Reflexão",
+    "enunciado": "A unidade menciona que abordagens contemporâneas tentam distinguir formas homonímicas como \"banco\" (instituição) e \"banco\" (assento). Explique por que o modelo construído nesta unidade é **incapaz** de fazer essa distinção e o que seria necessário para superá-la.",
+    "resposta": "O modelo é incapaz de fazer a distinção porque atribui **exatamente um vetor a cada forma lexical**. O dicionário `lemma_vectors` mapeia a *string* `'banco'` a um único vetor one-hot, e a camada oculta produz um único embedding correspondente. As duas acepções de \"banco\" são, para o modelo, literalmente a mesma entrada — e o vetor resultante acaba sendo uma média confusa dos dois contextos de uso.\n\nEsse é o limite dos chamados embeddings **estáticos** (Word2vec, GloVe, fastText): um tipo lexical, um vetor.\n\nPara superá-lo é necessário produzir embeddings **contextuais**, em que a representação de uma palavra depende da sentença em que ela ocorre. Isso exige:\n\n* Uma arquitetura capaz de **ler a sentença inteira** ao codificar cada palavra — tipicamente um *Transformer* com mecanismo de atenção, em vez de uma rede que recebe uma única palavra isolada como entrada.\n* Uma tarefa de treinamento que **force o uso do contexto**, como prever uma palavra mascarada a partir de toda a sentença (o objetivo de *masked language modelling* usado pelo BERT).\n* Volume muito maior de dados e de parâmetros, para que os diferentes contextos de uso de cada forma sejam efetivamente observados.\n\nNesses modelos, as ocorrências de \"banco\" em *sentei no banco* e em *fui ao banco* recebem vetores distintos, pois cada representação é computada em função das palavras que a cercam. Os embeddings contextuais obtidos de *Transformers* são o tema da próxima unidade."
+   }
+  ]
+ },
+ {
+  "unidade": 5,
+  "titulo": "Word embeddings no spaCy",
+  "licao": "unidade_5/embeddings_de_palavras_no_spacy.html",
+  "questoes": [
+   {
+    "n": 1,
+    "secao": "",
+    "enunciado": "Carregue o modelo de linguagem `en_core_web_lg` do spaCy e crie um objeto `Doc` para a frase 'The cat sat on the mat.'.",
+    "resposta": "```python\nimport spacy\n# Certifique-se de que o modelo foi baixado previamente: \n#python -m spacy download en_core_web_lg\nnlp = spacy.load('en_core_web_lg')\ndoc = nlp('The cat sat on the mat.')\n```"
+   },
+   {
+    "n": 2,
+    "secao": "",
+    "enunciado": "Verifique se o token 'cat' está presente no vocabulário (usando a propriedade `is_oov`) e imprima as 5 primeiras dimensões do seu vetor de embeddings.",
+    "resposta": "```python\ncat_token = doc[1] # Acessando 'cat'\nprint('OOV:', cat_token.is_oov)\nprint('Primeiras 5 dimensões:', cat_token.vector[:5])\n```"
+   },
+   {
+    "n": 3,
+    "secao": "",
+    "enunciado": "Calcule e imprima a similaridade de cosseno (cosine similarity) entre os tokens 'cat' e 'dog' (lembre-se de processar 'dog' com o nlp antes).",
+    "resposta": "```python\ndoc2 = nlp('The dog sat on the mat.')\ndog_token = doc2[1]\nprint('Similaridade:', cat_token.similarity(dog_token))\n```"
+   },
+   {
+    "n": 4,
+    "secao": "",
+    "enunciado": "Calcule a similaridade entre duas frases completas (objetos `Doc`): 'I love programming' e 'Coding is my passion'.",
+    "resposta": "```python\nfrase1 = nlp('I love programming')\nfrase2 = nlp('Coding is my passion')\nprint('Similaridade entre frases:', frase1.similarity(frase2))\n```"
+   }
+  ]
+ },
+ {
+  "unidade": 6,
+  "titulo": "Anotações de nível de discurso",
+  "licao": "unidade_6/trabalhando_com_anotacoes_de_nivel_de_discurso.html",
+  "questoes": [
+   {
+    "n": 1,
+    "secao": "",
+    "enunciado": "Importe a biblioteca `conllu` e faça o parse da seguinte string CoNLL-U para criar uma lista de sentenças:\n```python\ntext_conllu = (\n    \"# text = Hello world\\n\"\n    \"1\\tHello\\thello\\tINTJ\\tUH\\t_\\t0\\troot\\t_\\t_\\n\"\n    \"2\\tworld\\tworld\\tNOUN\\tNN\\tNumber=Sing\\t1\\tvocative\\t_\\t_\"\n)\n```",
+    "resposta": "```python\nimport conllu\n\ntext_conllu = (\n    \"# text = Hello world\\n\"\n    \"1\\tHello\\thello\\tINTJ\\tUH\\t_\\t0\\troot\\t_\\t_\\n\"\n    \"2\\tworld\\tworld\\tNOUN\\tNN\\tNumber=Sing\\t1\\tvocative\\t_\\t_\"\n)\nsentences = conllu.parse(text_conllu)\n```"
+   },
+   {
+    "n": 2,
+    "secao": "",
+    "enunciado": "Acesse a primeira sentença gerada (do exercício anterior) e imprima o `lemma` e a `upos` (part-of-speech tag universal) da palavra 'world'.",
+    "resposta": "```python\nsent1 = sentences[0]\n# O índice 1 corresponde ao segundo token: 'world'\ntoken_world = sent1[1]\nprint('Lemma:', token_world['lemma'])\nprint('UPOS:', token_world['upos'])\n```"
+   },
+   {
+    "n": 3,
+    "secao": "",
+    "enunciado": "A partir dos tokens extraídos da anotação, crie uma lista `words` iterando para pegar a forma textual (`form`) e defina manualmente uma lista `spaces = [True, False]`.",
+    "resposta": "```python\nwords = [token['form'] for token in sent1]\nspaces = [True, False] # Considerando sem espaço final na frase\n```"
+   },
+   {
+    "n": 4,
+    "secao": "",
+    "enunciado": "Utilize as listas geradas (e `sent_starts=[True, False]`) para instanciar um objeto `Doc` manualmente (importando `Doc` de `spacy.tokens`) em um modelo em branco (`spacy.blank('en')`).",
+    "resposta": "```python\nimport spacy\nfrom spacy.tokens import Doc\n\nnlp = spacy.blank('en')\n# Instanciando o Doc manualmente\ndoc = Doc(nlp.vocab, words=words, spaces=spaces, sent_starts=[True, False])\nprint('Tokens do Doc gerado:', list(doc))\n```"
+   }
+  ]
+ }
+]

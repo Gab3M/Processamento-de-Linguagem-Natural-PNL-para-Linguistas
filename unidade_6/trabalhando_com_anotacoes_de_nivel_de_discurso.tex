@@ -1,0 +1,1493 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 6 - Anotações de nível de discurso}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{trabalhando-com-anotauxe7uxf5es-de-nuxedvel-de-discurso}{%
+\section{Trabalhando com anotações de nível de
+discurso}\label{trabalhando-com-anotauxe7uxf5es-de-nuxedvel-de-discurso}}
+
+Nas seções anteriores, exploramos diversas técnicas de Processamento de
+Linguagem Natural (PLN) para gerar anotações linguísticas a partir de
+textos puros.
+
+Agora, o nosso foco será aprender a aproveitar anotações linguísticas
+que já estão prontas, dando atenção especial àquelas que analisam
+estruturas maiores do que uma simples oração (cláusula) --- os chamados
+fenômenos de nível de discurso.
+
+Ao final desta seção, você deverá ser capaz de:
+
+\begin{itemize}
+\tightlist
+\item
+  Compreender o básico do formato de anotação CoNLL-U.
+\item
+  Criar um objeto \emph{Doc} do spaCy manualmente, a partir do zero.
+\item
+  Anotar trechos de texto (\emph{Spans}) dentro de um objeto \emph{Doc}
+  utilizando \emph{SpanGroups}.
+\item
+  Importar corpora com anotações no formato CoNLL-U para o ecossistema
+  do spaCy.
+\end{itemize}
+
+\hypertarget{o-formato-de-anotauxe7uxe3o-conll-u}{%
+\subsection{O formato de anotação
+CoNLL-U}\label{o-formato-de-anotauxe7uxe3o-conll-u}}
+
+O CoNLL-X é um formato padrão para descrever características
+linguísticas em uma grande variedade de idiomas (Buchholz e Marsi
+\href{https://www.aclweb.org/anthology/W06-2920}{2006}). Ele foi criado,
+a princípio, para facilitar o compartilhamento de dados nas chamadas
+\emph{shared tasks} (desafios computacionais abertos a pesquisadores) no
+campo do PLN (veja Nissim et
+al.~\href{https://doi.org/10.1162/COLI_a_00304}{2017}).
+
+O \href{https://universaldependencies.org/format.html}{CoNLL-U} é a
+evolução desse formato, adaptado para suportar o modelo de Dependências
+Universais (\emph{Universal Dependencies}), do qual falamos na Parte
+III. Hoje em dia, o CoNLL-U é amplamente usado para distribuir corpora
+textuais em projetos baseados no \emph{Universal Dependencies}, mas
+também é o queridinho de vários outros projetos independentes de
+linguística computacional.
+
+Para se ter uma ideia da sua abrangência, existem arquivos CoNLL-U não
+só para \href{https://universaldependencies.org/}{inúmeras línguas
+modernas}, mas até mesmo para idiomas da antiguidade, como o Acádio
+(Luukko et
+al.~\href{https://www.aclweb.org/anthology/2020.tlt-1.11}{2020}) e o
+Copta (Zeldes e Abrams
+\href{https://www.aclweb.org/anthology/W18-6022}{2018}).
+
+\hypertarget{como-o-conll-u-funciona-por-dentro}{%
+\subsubsection{Como o CoNLL-U funciona por
+dentro}\label{como-o-conll-u-funciona-por-dentro}}
+
+Os arquivos com as anotações CoNLL-U são sempre distribuídos como texto
+simples (texto puro, como vimos na Parte II).
+
+Ao abrir um desses arquivos, você notará três tipos de linhas:
+\textbf{linhas de comentário} (comment lines), \textbf{linhas de
+palavra} (word lines) e \textbf{linhas em branco} (blank lines).
+
+\begin{itemize}
+\tightlist
+\item
+  As \textbf{linhas de comentário} ficam antes do texto principal e
+  começam com o símbolo da cerquilha (\texttt{\#}). Elas guardam
+  informações extras (metadados) sobre o trecho de texto que vem a
+  seguir.
+\item
+  As \textbf{linhas de palavra} carregam todas as anotações referentes a
+  uma única palavra ou pontuação (token). As frases são formadas por uma
+  sequência contínua dessas linhas de palavra.
+\end{itemize}
+
+A estrutura dessas anotações obedece a uma organização rigorosa de
+colunas separadas pela tecla \emph{Tab}, contendo 10 campos essenciais:
+
+\begin{verbatim}
+ID  FORM    LEMMA   UPOS    XPOS    FEATS   HEAD    DEPREL  DEPS    MISC
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{ID}: A posição (índice) da palavra na frase.
+\item
+  \texttt{FORM}: Como a palavra (ou pontuação) aparece no texto
+  original.
+\item
+  \texttt{LEMMA}: A forma base ou de dicionário da palavra (lema).
+\item
+  \texttt{UPOS}: A
+  \href{https://universaldependencies.org/u/pos/}{categoria gramatical
+  universal} (substantivo, verbo, etc.).
+\item
+  \texttt{XPOS}: Uma categoria gramatical mais detalhada, específica do
+  idioma analisado.
+\item
+  \texttt{FEATS}:
+  \href{https://universaldependencies.org/u/feat/index.html}{Atributos
+  morfológicos} (gênero, número, tempo verbal, etc.).
+\item
+  \texttt{HEAD}: O ID da palavra que atua como o ``chefe'' sintático
+  (núcleo) da palavra atual.
+\item
+  \texttt{DEPREL}: O tipo de relação de dependência sintática que a
+  palavra tem com seu \texttt{HEAD}.
+\item
+  \texttt{DEPS}:
+  \href{https://universaldependencies.org/u/overview/enhanced-syntax.html}{Relações
+  de dependência aprimoradas}.
+\item
+  \texttt{MISC}: Informações adicionais de qualquer natureza (um campo
+  coringa).
+\end{enumerate}
+
+Por fim, uma \textbf{linha em branco} aparece no final das linhas de
+palavras para sinalizar ao sistema que a frase terminou e outra vai
+começar.
+
+\hypertarget{trabalhando-com-conll-u-em-python}{%
+\subsubsection{Trabalhando com CoNLL-U em
+Python}\label{trabalhando-com-conll-u-em-python}}
+
+Para manipular esses arquivos de forma inteligente usando o Python, a
+nossa melhor amiga será a biblioteca
+\href{https://github.com/EmilStenstrom/conllu/}{conllu}. Ela é leve e
+muito competente para ler textos no formato CoNLL-U e transformá-los em
+estruturas nativas do Python, fáceis de processar.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa a biblioteca conllu}
+\ImportTok{import}\NormalTok{ conllu}
+\end{Highlighting}
+\end{Shaded}
+
+Para o nosso estudo, vamos usar um arquivo CoNLL-U extraído do
+\href{https://corpling.uis.georgetown.edu/gum/}{Georgetown University
+Multilayer Corpus} (GUM; veja Zeldes
+\href{http://dx.doi.org/10.1007/s10579-016-9343-x}{2017}). Vamos abrir o
+arquivo como texto puro, lê-lo com o método \texttt{read()} e salvar o
+texto na variável \texttt{annotations}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Abre o arquivo de texto puro para leitura; atribui a \textquotesingle{}data\textquotesingle{}}
+\ControlFlowTok{with} \BuiltInTok{open}\NormalTok{(}\StringTok{\textquotesingle{}data/GUM\_whow\_parachute.conllu\textquotesingle{}}\NormalTok{, mode}\OperatorTok{=}\StringTok{"r"}\NormalTok{, encoding}\OperatorTok{=}\StringTok{"utf{-}8"}\NormalTok{) }\ImportTok{as}\NormalTok{ data:}
+    
+    \CommentTok{\# Lê o conteúdo do arquivo e atribui a \textquotesingle{}annotations\textquotesingle{}}
+\NormalTok{    annotations }\OperatorTok{=}\NormalTok{ data.read()}
+
+\CommentTok{\# Verifica o tipo do objeto resultante}
+\BuiltInTok{type}\NormalTok{(annotations)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+str
+\end{verbatim}
+
+O arquivo foi carregado na memória do computador como uma gigantesca
+string (texto contínuo). Podemos espiar os primeiros 1000 caracteres
+dela para ter uma noção:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Imprime os 1000 primeiros caracteres da string em \textquotesingle{}annotations\textquotesingle{}}
+\BuiltInTok{print}\NormalTok{(annotations[:}\DecValTok{1000}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# newdoc id = GUM_whow_parachute
+# sent_id = GUM_whow_parachute-1
+# text = How to Cope With a Double Parachute Failure
+# s_type = inf
+1   How how SCONJ   WRB PronType=Int    3   mark    _   Discourse=preparation:1->11
+2   to  to  PART    TO  _   3   mark    _   _
+3   Cope    Cope    VERB    VB  VerbForm=Inf    0   root    _   _
+4   With    with    ADP IN  _   8   case    _   _
+5   a   a   DET DT  Definite=Ind|PronType=Art   8   det _   Entity=(event-1
+6   Double  double  ADJ JJ  Degree=Pos  8   amod    _   _
+7   Parachute   parachute   NOUN    NN  Number=Sing 8   compound    _   Entity=(object-2)
+8   Failure failure NOUN    NN  Number=Sing 3   obl _   Entity=event-1)
+
+# sent_id = GUM_whow_parachute-2
+# text = While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity.
+# s_type = decl
+1   While   while   SCONJ   IN  _   2   mark    _   Discourse=circumstance:2->3
+2   skydiving   skydiving   NOUN    NN  Number=Sing 6   advcl   _   Entity=(event-3)|SpaceAfter=No
+3   ,   ,   PUNCT   ,   _   2   punct   _   _
+4   it  it  PRON    PRP Case=Nom|Gender=Neut|Num
+\end{verbatim}
+
+Fica bem nítida a estrutura que descrevemos acima: as linhas comentadas
+com a cerquilha (\texttt{\#}), logo seguidas por colunas super
+organizadas com os dados da palavra e suas análises linguísticas.
+
+O símbolo sublinhado (\texttt{\_}) é usado quando uma das 10 colunas não
+tem uma anotação definida (valor ausente).
+
+Observe a décima coluna, a \texttt{MISC}. O corpus GUM costuma injetar
+campos como \texttt{Discourse} e \texttt{Entity} para marcar informações
+de nível superior sobre a estrutura do discurso e das entidades no texto
+(quem é quem na história, lugares, objetos, etc.).
+
+A grande questão agora é: como automatizar a leitura disso no Python sem
+nos perdermos nessa string gigante?
+
+Aqui entra a função \texttt{parse()} do módulo \texttt{conllu}. Ela faz
+exatamente o trabalho duro de ``fatiar e traduzir'' a string bruta em um
+formato legível.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Usa a função parse() para analisar as anotações; armazena em \textquotesingle{}sentences\textquotesingle{}}
+\NormalTok{sentences }\OperatorTok{=}\NormalTok{ conllu.parse(annotations)}
+\end{Highlighting}
+\end{Shaded}
+
+O que a função \texttt{parse()} nos devolve é uma lista do Python
+recheada de objetos \emph{TokenList}. O \emph{TokenList} é a estrutura
+de dados chave criada pela própria biblioteca \texttt{conllu} para
+abrigar orações.
+
+Vamos verificar o que se esconde no primeiro item
+(\texttt{sentences{[}0{]}}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sentences[}\DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+TokenList<How, to, Cope, With, a, Double, Parachute, Failure, metadata={newdoc id: "GUM_whow_parachute", sent_id: "GUM_whow_parachute-1", text: "How to Cope With a Double Parachute Failure", s_type: "inf"}>
+\end{verbatim}
+
+Maravilha, a biblioteca capturou os metadados (que estavam com
+\texttt{\#}) e os disponibilizou sob a propriedade \texttt{metadata}.
+Vamos acessar esse dicionário de metadados diretamente:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém os metadados do primeiro item da lista}
+\NormalTok{sentences[}\DecValTok{0}\NormalTok{].metadata}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+{'newdoc id': 'GUM_whow_parachute',
+ 'sent_id': 'GUM_whow_parachute-1',
+ 'text': 'How to Cope With a Double Parachute Failure',
+ 's_type': 'inf'}
+\end{verbatim}
+
+Isso nos revela como o projeto GUM costuma estruturar a papelada: ele
+usa \texttt{newdoc\_id} para rotular o documento inteiro,
+\texttt{sent\_id} para rotular cada sentença isolada, \texttt{text} com
+a frase original limpa, e \texttt{s\_type} que categoriza a sentença sob
+um viés gramatical (afirmação, pergunta, imperativo etc). (Zeldes \&
+Simonson \href{https://www.aclweb.org/anthology/W16-1709}{2017}: 69).
+
+Embora o terminal retorne um formato que parece um simples dicionário, a
+estrutura por trás do \texttt{metadata} é um objeto especializado
+(chamado \emph{Metadata}). No entanto, sua operação diária é idêntica a
+um dicionário nativo do Python: bastam chaves e valores.
+
+Portanto, se precisarmos apenas do modo verbal da oração
+(\texttt{s\_type}), usamos a sintaxe clássica de dicionário:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém o tipo de sentença sob a chave \textquotesingle{}s\_type\textquotesingle{}}
+\NormalTok{sentences[}\DecValTok{0}\NormalTok{].metadata[}\StringTok{\textquotesingle{}s\_type\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'inf'
+\end{verbatim}
+
+Isso nos retornará a string \texttt{inf}, indicando que a frase está no
+modo infinitivo.
+
+E sobre as palavras individuais? Como o próprio nome aponta, o objeto
+\emph{TokenList} é construído agrupando múltiplos \emph{Tokens}.
+
+Acessar o primeiro \emph{Token} do nosso primeiro \emph{TokenList} é
+simples:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém o primeiro token da primeira sentença}
+\NormalTok{sentences[}\DecValTok{0}\NormalTok{][}\DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+{'id': 1,
+ 'form': 'How',
+ 'lemma': 'how',
+ 'upos': 'SCONJ',
+ 'xpos': 'WRB',
+ 'feats': {'PronType': 'Int'},
+ 'head': 3,
+ 'deprel': 'mark',
+ 'deps': None,
+ 'misc': {'Discourse': 'preparation:1->11'}}
+\end{verbatim}
+
+Mais uma vez, recebemos as informações num arranjo que emula a estrutura
+de um dicionário.
+
+Note bem a chave \texttt{misc}. O dicionário embutido nela carrega
+anotações cruciais sobre as ``relações de discurso''. Essas relações
+servem para amarrar ideias através de uma teoria gramatical profunda,
+chamada \href{https://www.sfu.ca/rst}{Teoria da Estrutura Retórica (RST
+- Rhetorical Structure Theory)} (Mann \& Thompson
+\href{https://doi.org/10.1515/text.1.1988.8.3.243}{1988}).
+
+De forma resumida, essa anotação nos diz que existe uma relação
+discursiva (do tipo \textbf{preparation}) ligando as partes ``1'' e
+``11'' do texto.
+
+Porém, atenção: esses números não apontam para índices de palavras ou de
+sentenças soltas. Eles apontam para ``Unidades Elementares do Discurso''
+(do inglês \emph{Elementary Discourse Units}, ou EDU).
+
+A segmentação em EDUs cria uma lente de aumento na qual os analistas
+subdividem a narrativa em fragmentos básicos e avaliam de que forma eles
+formam o esqueleto da história.
+
+No molde clássico da Teoria da Estrutura Retórica (RST), as EDUs
+coincidem majoritariamente com cláusulas ou orações, mas não se trata de
+uma regra universal matemática.
+
+\hypertarget{levando-a-anuxe1lise-de-discurso-para-objetos-doc-do-spacy}{%
+\subsection{\texorpdfstring{Levando a análise de discurso para objetos
+\emph{Doc} do
+spaCy}{Levando a análise de discurso para objetos Doc do spaCy}}\label{levando-a-anuxe1lise-de-discurso-para-objetos-doc-do-spacy}}
+
+Como verificamos anteriormente, os metadados embutidos no campo
+\texttt{misc} (como a anotação \texttt{Discourse}) sinalizam o exato
+momento onde uma nova EDU \textbf{inicia}.
+
+Se percorrermos a nossa sequência de \emph{Tokens} rastreando o
+surgimento dessas anotações, seremos capazes de desenhar precisamente as
+fronteiras entre cada Unidade Elementar do Discurso --- que muitas vezes
+cruzam o limite fixo das orações normais da nossa \emph{TokenList}.
+
+A estratégia prática é varrer todos os \emph{Tokens} criando uma
+contagem progressiva e anotar qual índice abriga o valioso carimbo
+\texttt{Discourse}.
+
+Vamos instanciar a variável de contagem (\texttt{counter}) e preparar o
+``terreno'' (várias listas) para guardar com segurança as descobertas:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cria uma variável com valor 0, que usaremos para contar}
+\CommentTok{\# os Tokens processados}
+\NormalTok{counter }\OperatorTok{=} \DecValTok{0}
+
+\CommentTok{\# Usamos estas listas para acompanhar as sentenças, as unidades de discurso}
+\CommentTok{\# e as relações que se mantêm entre elas.}
+\NormalTok{discourse\_units }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{sent\_types }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{relations }\OperatorTok{=}\NormalTok{ []}
+
+\CommentTok{\# Cria listas vazias para a informação que extrairemos das anotações}
+\CommentTok{\# CoNLL{-}U. Essas listas serão usadas para criar um objeto Doc do}
+\CommentTok{\# spaCy mais adiante.}
+\NormalTok{words }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{spaces }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{sent\_starts }\OperatorTok{=}\NormalTok{ []}
+\end{Highlighting}
+\end{Shaded}
+
+O bloco a seguir irá analisar, palavra por palavra de cada
+\texttt{sentence}, preenchendo as listas acima com todos os dados
+relevantes (marcando também onde iniciam os EDUs):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Percorre cada objeto TokenList}
+\ControlFlowTok{for}\NormalTok{ sentence }\KeywordTok{in}\NormalTok{ sentences:}
+    
+    \CommentTok{\# Ao começar a percorrer uma nova sentença, define o valor da}
+    \CommentTok{\# variável \textquotesingle{}is\_start\textquotesingle{} como True. Isso marca o início de uma}
+    \CommentTok{\# sentença.}
+\NormalTok{    is\_start }\OperatorTok{=} \VariableTok{True}
+    
+    \CommentTok{\# Acrescenta o tipo da sentença atual à lista \textquotesingle{}sent\_types\textquotesingle{}}
+\NormalTok{    sent\_types.append(sentence.metadata[}\StringTok{\textquotesingle{}s\_type\textquotesingle{}}\NormalTok{])}
+        
+    \CommentTok{\# Prossegue percorrendo os Tokens do TokenList atual}
+    \ControlFlowTok{for}\NormalTok{ token }\KeywordTok{in}\NormalTok{ sentence:}
+        
+        \CommentTok{\# Usa a chave \textquotesingle{}form\textquotesingle{} para recuperar a forma da palavra do Token}
+        \CommentTok{\# e a acrescenta à lista \textquotesingle{}words\textquotesingle{}.}
+\NormalTok{        words.append(token[}\StringTok{\textquotesingle{}form\textquotesingle{}}\NormalTok{])}
+        
+        \CommentTok{\# Verifica se este Token inicia uma sentença, avaliando se a}
+        \CommentTok{\# variável \textquotesingle{}is\_start\textquotesingle{} é True.}
+        \ControlFlowTok{if}\NormalTok{ is\_start:}
+            
+            \CommentTok{\# Se o Token inicia uma sentença, acrescenta o valor True à lista}
+            \CommentTok{\# \textquotesingle{}sent\_starts\textquotesingle{}. Note a ausência de aspas: trata{-}se de um valor}
+            \CommentTok{\# booleano (True / False).}
+\NormalTok{            sent\_starts.append(}\VariableTok{True}\NormalTok{)}
+            
+            \CommentTok{\# Define \textquotesingle{}is\_start\textquotesingle{} como False até que a próxima sentença comece}
+            \CommentTok{\# e a variável seja novamente definida como True.}
+\NormalTok{            is\_start }\OperatorTok{=} \VariableTok{False}
+        
+        \CommentTok{\# Se a variável \textquotesingle{}is\_start\textquotesingle{} for False, executa o bloco abaixo}
+        \ControlFlowTok{else}\NormalTok{:}
+            
+            \CommentTok{\# Acrescenta o valor False à lista \textquotesingle{}sent\_starts\textquotesingle{}}
+\NormalTok{            sent\_starts.append(}\VariableTok{False}\NormalTok{)}
+        
+        \CommentTok{\# Verifica se a chave \textquotesingle{}misc\textquotesingle{} contém algo e se ela guarda o valor}
+        \CommentTok{\# \textquotesingle{}Discourse\textquotesingle{}; em caso afirmativo, executa o bloco abaixo.}
+        \ControlFlowTok{if}\NormalTok{ token[}\StringTok{\textquotesingle{}misc\textquotesingle{}}\NormalTok{] }\KeywordTok{is} \KeywordTok{not} \VariableTok{None} \KeywordTok{and} \StringTok{\textquotesingle{}Discourse\textquotesingle{}} \KeywordTok{in}\NormalTok{ token[}\StringTok{\textquotesingle{}misc\textquotesingle{}}\NormalTok{]:}
+            
+            \CommentTok{\# A presença da chave \textquotesingle{}Discourse\textquotesingle{} indica o início de uma nova}
+            \CommentTok{\# unidade elementar de discurso; acrescenta seu índice à lista}
+            \CommentTok{\# \textquotesingle{}discourse\_units\textquotesingle{}.}
+\NormalTok{            discourse\_units.append(counter)}
+            
+            \CommentTok{\# Desempacota a definição da relação; começa separando o nome da}
+            \CommentTok{\# relação das unidades elementares de discurso. Atribui os objetos}
+            \CommentTok{\# resultantes a \textquotesingle{}relation\textquotesingle{} e \textquotesingle{}edus\textquotesingle{}.}
+\NormalTok{            relation, edus }\OperatorTok{=}\NormalTok{ token[}\StringTok{\textquotesingle{}misc\textquotesingle{}}\NormalTok{][}\StringTok{\textquotesingle{}Discourse\textquotesingle{}}\NormalTok{].split(}\StringTok{\textquotesingle{}:\textquotesingle{}}\NormalTok{)}
+            
+            \CommentTok{\# Tenta dividir a anotação da relação em duas partes}
+            \ControlFlowTok{try}\NormalTok{:}
+                
+                \CommentTok{\# Divide na string \textquotesingle{}{-}\textgreater{}\textquotesingle{} e atribui a \textquotesingle{}source\textquotesingle{}}
+                \CommentTok{\# e \textquotesingle{}target\textquotesingle{}, respectivamente.}
+\NormalTok{                source, target }\OperatorTok{=}\NormalTok{ edus.split(}\StringTok{\textquotesingle{}{-}\textgreater{}\textquotesingle{}}\NormalTok{)}
+                
+                \CommentTok{\# Subtrai 1 de \textquotesingle{}source\textquotesingle{} e de \textquotesingle{}target\textquotesingle{}, porque os identificadores}
+                \CommentTok{\# usados no corpus GUM não começam em zero, ao contrário dos}
+                \CommentTok{\# nossos Spans do spaCy que correspondem às unidades elementares}
+                \CommentTok{\# de discurso. Também converte os números em inteiros}
+                \CommentTok{\# (originalmente eles são strings!).}
+\NormalTok{                source, target }\OperatorTok{=} \BuiltInTok{int}\NormalTok{(source) }\OperatorTok{{-}} \DecValTok{1}\NormalTok{, }\BuiltInTok{int}\NormalTok{(target) }\OperatorTok{{-}} \DecValTok{1}
+            
+            \CommentTok{\# O nó raiz da árvore RST não terá alvo, o que levanta um}
+            \CommentTok{\# ValueError, já que só existe um item.}
+            \ControlFlowTok{except} \PreprocessorTok{ValueError}\NormalTok{:}
+                
+                \CommentTok{\# Atribui o primeiro item de \textquotesingle{}edus\textquotesingle{} a \textquotesingle{}source\textquotesingle{} e define}
+                \CommentTok{\# \textquotesingle{}target\textquotesingle{} como None.}
+\NormalTok{                source, target }\OperatorTok{=}\NormalTok{ edus[}\DecValTok{0}\NormalTok{], }\VariableTok{None}
+                
+                \CommentTok{\# Subtrai 1 de \textquotesingle{}source\textquotesingle{}, conforme explicado acima.}
+\NormalTok{                source }\OperatorTok{=} \BuiltInTok{int}\NormalTok{(source) }\OperatorTok{{-}} \DecValTok{1} 
+                
+            \CommentTok{\# Compila a definição da relação em uma tripla e a acrescenta}
+            \CommentTok{\# à lista \textquotesingle{}relations\textquotesingle{}.}
+\NormalTok{            relations.append((relation, source, target))}
+            
+        \CommentTok{\# Verifica se o Token atual é seguido por um espaço. Quando não é o}
+        \CommentTok{\# caso — por exemplo, no Token ao final de um TokenList —, essa}
+        \CommentTok{\# informação está disponível na chave \textquotesingle{}misc\textquotesingle{}.}
+        \ControlFlowTok{if}\NormalTok{ token[}\StringTok{\textquotesingle{}misc\textquotesingle{}}\NormalTok{] }\KeywordTok{is} \KeywordTok{not} \VariableTok{None} \KeywordTok{and} \StringTok{\textquotesingle{}SpaceAfter\textquotesingle{}} \KeywordTok{in}\NormalTok{ token[}\StringTok{\textquotesingle{}misc\textquotesingle{}}\NormalTok{]:}
+            
+            \CommentTok{\# Se a chave \textquotesingle{}misc\textquotesingle{} guarda um dicionário com a chave \textquotesingle{}SpaceAfter\textquotesingle{}}
+            \CommentTok{\# com o valor \textquotesingle{}No\textquotesingle{}, executa o bloco abaixo}
+            \ControlFlowTok{if}\NormalTok{ token[}\StringTok{\textquotesingle{}misc\textquotesingle{}}\NormalTok{][}\StringTok{\textquotesingle{}SpaceAfter\textquotesingle{}}\NormalTok{] }\OperatorTok{==} \StringTok{\textquotesingle{}No\textquotesingle{}}\NormalTok{:}
+                
+                \CommentTok{\# Acrescenta o valor booleano False à lista \textquotesingle{}spaces\textquotesingle{}.}
+\NormalTok{                spaces.append(}\VariableTok{False}\NormalTok{)}
+            
+        \CommentTok{\# Se a chave \textquotesingle{}SpaceAfter\textquotesingle{} não for encontrada em \textquotesingle{}misc\textquotesingle{}, o token é}
+        \CommentTok{\# seguido por um espaço.}
+        \ControlFlowTok{else}\NormalTok{:}
+
+            \CommentTok{\# Acrescenta True à lista de espaços}
+\NormalTok{            spaces.append(}\VariableTok{True}\NormalTok{)}
+        
+        \CommentTok{\# Atualiza o contador ao terminar de processar um objeto Token,}
+        \CommentTok{\# somando 1 ao seu valor.}
+\NormalTok{        counter }\OperatorTok{+=} \DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+O código acima é uma rotina clássica de ``garimpo''. Varrer um
+dicionário estruturado na unha para separar todos os grãos essenciais
+que, mais na frente, ajudarão a moldar um objeto \emph{Doc} limpo,
+mantendo viva a bagagem de informações aprofundadas do documento
+original.
+
+Como você notou, processar arquivos baseados num esquema rico (como o
+CoNLL-U) não admite aventureiros. Entender exatamente as engrenagens de
+cada modelo (aqui, a forma como o corpus GUM acondiciona regras
+linguísticas dentro da coluna livre \texttt{misc}) exige leitura do
+manual, para garantir que as fatias não derretem no final do trajeto.
+
+Na vida normal de programadores de PLN, injetar texto simples no funil
+do \texttt{Language} object para que o spaCy entregue, do outro lado, um
+arquivo rico em morfologia e marcações estruturais é rotineiro, algo que
+batemos o martelo na Parte II.
+
+Entretanto, esse atalho \textbf{não serve para a missão atual}. E o
+porquê disso é elementar: caso deixássemos a inteligência do spaCy
+fragmentar a nosso texto de forma nativa e automática (ou seja,
+tokenizando do seu próprio jeito), correríamos o perigo real do spaCy
+tomar liberdades divergentes da estrutura em ``pedras fundamentais''
+exigidas pelo CoNLL-U e nosso meticuloso rastreio cair por terra.
+Perderíamos a sincronia geométrica das anotações discursivas!
+
+A via correta passa pela ``fabricação artesanal'' do objeto \emph{Doc}.
+Carregaremos os construtores na unha a partir da módulo matricial
+\texttt{tokens}, somando, é claro, a bagagem intelectual (o idioma de
+vocabulário) presente num clássico modelo inglês simplificado (o
+modesto, mas competente, \texttt{en\_core\_web\_sm}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa a classe Doc e a biblioteca spaCy}
+\ImportTok{from}\NormalTok{ spacy.tokens }\ImportTok{import}\NormalTok{ Doc}
+\ImportTok{import}\NormalTok{ spacy}
+
+\CommentTok{\# Carrega um modelo de linguagem pequeno para o inglês; armazena em \textquotesingle{}nlp\textquotesingle{}}
+\NormalTok{nlp }\OperatorTok{=}\NormalTok{ spacy.load(}\StringTok{\textquotesingle{}en\_core\_web\_sm\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Com o arcabouço pronto, injetaremos no objeto as matrizes que
+laboriosamente resgatamos antes: a listagem das palavras
+(\texttt{words}), seus indícios delimitadores interespaciais
+(\texttt{spaces}) e os batizadores de largada frasal
+(\texttt{sent\_starts}).
+
+Para ilustrar o cenário atual, as impressões a seguir trazem as 15
+``primeiras pedras'' agrupadas na montagem paralela das referidas
+matrizes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Percorre os 15 primeiros itens das listas \textquotesingle{}words\textquotesingle{}, \textquotesingle{}spaces\textquotesingle{} e \textquotesingle{}sent\_starts\textquotesingle{}.}
+\CommentTok{\# Usa a função zip() para buscar os itens das listas simultaneamente.}
+\ControlFlowTok{for}\NormalTok{ word, space, sent\_start }\KeywordTok{in} \BuiltInTok{zip}\NormalTok{(words[:}\DecValTok{15}\NormalTok{], spaces[:}\DecValTok{15}\NormalTok{], sent\_starts[:}\DecValTok{15}\NormalTok{]):}
+    
+    \CommentTok{\# Imprime o item atual de cada lista}
+    \BuiltInTok{print}\NormalTok{(word, space, sent\_start)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+How True True
+to True False
+Cope True False
+With True False
+a True False
+Double True False
+Parachute True False
+Failure True False
+While True True
+skydiving False False
+, True False
+it True False
+is True False
+possible True False
+( False False
+\end{verbatim}
+
+Além dessas três colunas vitais, é nossa tarefa amarrar essas diretrizes
+ao vocabulário inerente do inglês, repassando o coração do modelo
+(\texttt{nlp.vocab}) por meio da propriedade \texttt{vocab} presente no
+\texttt{Doc}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cria um objeto Doc do spaCy "manualmente"; atribui à variável \textquotesingle{}doc\textquotesingle{}}
+\NormalTok{doc }\OperatorTok{=}\NormalTok{ Doc(vocab}\OperatorTok{=}\NormalTok{nlp.vocab, }
+\NormalTok{          words}\OperatorTok{=}\NormalTok{words, }
+\NormalTok{          spaces}\OperatorTok{=}\NormalTok{spaces,}
+\NormalTok{          sent\_starts}\OperatorTok{=}\NormalTok{sent\_starts}
+\NormalTok{          )}
+\end{Highlighting}
+\end{Shaded}
+
+Missão cumprida! Obtemos com sucesso a gênese de um objeto \emph{Doc}
+totalmente sob nosso comando métrico e delineado pelas fronteiras
+autênticas do formato CoNLL-U.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Recupera os Tokens até o índice 15 do objeto Doc}
+\NormalTok{doc[:}\DecValTok{15}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+How to Cope With a Double Parachute Failure While skydiving, it is possible (
+\end{verbatim}
+
+Os 15 grãos textuais encadeados de forma primorosa evidenciam o encaixe,
+ditado perfeitamente sob batuta da listagem \texttt{words} em compasso
+fiel a intermitência ditada pelos sinalizadores em \texttt{spaces}.
+
+Sem falar nos delimitadores frasais! As sentenças perfeitamente
+modeladas pela marcação original brilham isoladas sem a interferência
+natural sintática do spaCy (isso vive alojado nas dependências relativas
+da gaveta \texttt{sents} do novo objeto \texttt{doc}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Recupera as cinco primeiras sentenças do objeto Doc}
+\BuiltInTok{list}\NormalTok{(doc.sents)[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[How to Cope With a Double Parachute Failure,
+ While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity.,
+ In the vast majority of cases, this will not occur;,
+ nevertheless, in this event these coping strategies may assist.,
+ Steps]
+\end{verbatim}
+
+Entretanto, por focarmos nas limitações espaciais descartando a riqueza
+sintática englobada na estrutura bruta CoNLL-U original (apenas
+absorvemos o texto e discurso), os atributos internos desses
+\emph{Tokens} (como tipo da palavra) encontram-se desamparados (em
+estado oco).
+
+Duvida? Veja o deserto retornado numa tentativa de pinçar as raízes
+morfológicas aprofundadas no campo inerente \texttt{tag\_} pertencente
+ao primeiro elo da frase.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém a etiqueta refinada de classe gramatical do Token no índice 0}
+\NormalTok{doc[}\DecValTok{0}\NormalTok{].tag\_}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+''
+\end{verbatim}
+
+Branco nítido, inexistência provada. O dilema atual é: o spaCy condena
+objetos empacotados ``do lado de fora'' em sua linha normal de atuação
+do modelo \texttt{nlp}. Precisamos nós mesmos encaminhar os papéis e
+protocolar as operações injetando \texttt{doc} nos guichês
+especializados isolados (\emph{tagger}, \emph{parser}, etc) disponíveis
+pela estrada rotulada em \texttt{pipeline}! O mapa já havia sido
+discutido de praxe em pormenor em trecho anterior (Parte II).
+
+Iremos transitar com as premissas em \emph{loop} engarrafando e
+enriquecendo nosso arcabouço através dos guichês encadeados:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Percorre os pares nome / componente disponíveis no atributo \textquotesingle{}pipeline\textquotesingle{}}
+\CommentTok{\# do objeto Language \textquotesingle{}nlp\textquotesingle{}.}
+\ControlFlowTok{for}\NormalTok{ name, component }\KeywordTok{in}\NormalTok{ nlp.pipeline:}
+    
+    \CommentTok{\# Usa uma string formatada para imprimir o \textquotesingle{}name\textquotesingle{} do componente}
+    \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"Now applying component }\SpecialCharTok{\{}\NormalTok{name}\SpecialCharTok{\}}\SpecialStringTok{ ..."}\NormalTok{)}
+    
+    \CommentTok{\# Fornece o objeto Doc existente ao componente e armazena as anotações}
+    \CommentTok{\# atualizadas na variável de mesmo nome (\textquotesingle{}doc\textquotesingle{}).}
+\NormalTok{    doc }\OperatorTok{=}\NormalTok{ component(doc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Now applying component tok2vec ...
+Now applying component tagger ...
+Now applying component parser ...
+Now applying component attribute_ruler ...
+Now applying component lemmatizer ...
+Now applying component ner ...
+\end{verbatim}
+
+Terminado o expediente operário o objeto exibe suas aquisições ao
+retornar o valor preenchido para a busca em \texttt{tag\_}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém a etiqueta refinada de classe gramatical do Token no índice 0}
+\NormalTok{doc[}\DecValTok{0}\NormalTok{].tag\_}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'WRB'
+\end{verbatim}
+
+Melhor ainda! Temos à disposição o aparato de análises finas exclusivas
+derivadas, evidenciadas de antemão através dos construtos sintáticos
+agregados em sintagmas sob o título de \texttt{noun\_chunks}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém os cinco primeiros sintagmas nominais do objeto Doc}
+\BuiltInTok{list}\NormalTok{(doc.noun\_chunks)[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[a Double Parachute Failure,
+ it,
+ both your primary and reserve parachutes,
+ you,
+ no method]
+\end{verbatim}
+
+O detalhe fundamental: os limites frasais pautados ``na unha'' (sob
+demanda \texttt{sent\_starts}) foram preservados pelo sistema que
+historicamente tem a tara em atropelar e ditar suas próprias regras
+baseadas na árvore de sintaxe das palavras em vez da pontuação pura!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém as cinco primeiras sentenças do objeto Doc}
+\BuiltInTok{list}\NormalTok{(doc.sents)[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[How to Cope With a Double Parachute Failure,
+ While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity.,
+ In the vast majority of cases, this will not occur;,
+ nevertheless, in this event these coping strategies may assist.,
+ Steps]
+\end{verbatim}
+
+Cenário pacificado! De posse integral sob manto protetivo da anotação,
+caminhamos aos derradeiros ritos em infundir na raiz o viés da dimensão
+analítica calcada e mapeada em nível discursivo oriunda dos garimpos
+estipulados via \texttt{discourse\_units}, atados nas nuances em
+\texttt{sent\_types} e conexões retóricas nas amarras
+\texttt{relations}.
+
+\hypertarget{amarrando-o-modo-da-orauxe7uxe3o-uxe0s-entranhas-do-spacy}{%
+\subsubsection{Amarrando o modo da oração às entranhas do
+spaCy}\label{amarrando-o-modo-da-orauxe7uxe3o-uxe0s-entranhas-do-spacy}}
+
+Começaremos carimbando o estado de humor (o tom gramatical, em suma, o
+modo) atado nas bases do conjunto armazenado \texttt{sent\_types}.
+
+Categorias típicas (como traçamos anteriormente) ditam a tônica em
+pautas relativas ao uso do tipo ``infinitivo'', vertentes calcadas para
+``imperativo'' e balizas de cunho ``declarativo''.
+
+Um mergulho rápido na listagem comprova o resgate das etiquetas.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Imprime os tipos de sentença}
+\NormalTok{sent\_types[:}\DecValTok{10}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['inf', 'decl', 'decl', 'decl', 'frag', 'imp', 'decl', 'imp', 'imp', 'imp']
+\end{verbatim}
+
+Nossa missão dita agora ``grudar'' as correspondentes chancelas na
+traseira das sentenças que moldam nosso modelo \emph{Doc}. Para nos
+certificarmos perante risco de incompatibilidade, atestaremos em conduta
+primária o nivelamento quantitativo entre o catálogo listado e os lotes
+dispostos encarnando o grupo frasal da arquitetura atual.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verifica o tamanho da informação de tipo de sentença e}
+\CommentTok{\# o número de sentenças do objeto Doc.}
+\BuiltInTok{len}\NormalTok{(sent\_types) }\OperatorTok{==} \BuiltInTok{len}\NormalTok{(}\BuiltInTok{list}\NormalTok{(doc.sents))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+Para injetar as peculiaridades balizadas nas regras semânticas na
+infraestrutura robusta do spaCy a conduta ortodoxa determina alocar
+``tags customizadas'' (os ``custom attributes'') no bojo interno
+associado com as particularidades dos conjuntos de texto rotulados pelas
+diretrizes da propriedade \emph{Span}, que congrega, agrupa e encarna as
+delimitações englobando agrupamentos formados por parcelas unidas no
+manto de matriz \texttt{Token} na raiz interna atada e fixada de
+preceito pela arquitetura global \texttt{Doc}.
+
+Ora, se pararmos e inspecionarmos pontualmente, um lote sob regência
+vinculada na pasta interna a nível \texttt{sents} compõe intrinsecamente
+um viés formatado de acordo com uma vestimenta autêntica sob carimbo
+\texttt{Span}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Imprime a primeira sentença do Doc e seu type()}
+\BuiltInTok{list}\NormalTok{(doc.sents)[}\DecValTok{0}\NormalTok{], }\BuiltInTok{type}\NormalTok{(}\BuiltInTok{list}\NormalTok{(doc.sents)[}\DecValTok{0}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(How to Cope With a Double Parachute Failure, spacy.tokens.span.Span)
+\end{verbatim}
+
+Através da constatação e premissa referendada, a investida que estampa
+nossa meta em injetar a taxonomia vinculativa aos atributos providos nas
+sentenças requereria e apela pela convocação pontual (uso do artifício
+``import'') associando as bibliotecas balizadoras para lidar com
+\emph{SpanGroup} e o genérico formatado em \emph{Span}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa as classes SpanGroup e Span do spaCy}
+\ImportTok{from}\NormalTok{ spacy.tokens.span\_group }\ImportTok{import}\NormalTok{ SpanGroup}
+\ImportTok{from}\NormalTok{ spacy.tokens }\ImportTok{import}\NormalTok{ Span}
+\end{Highlighting}
+\end{Shaded}
+
+O pilar de arrimo na infraestrutura para expandir a fronteira
+padronizada da engrenagem passa por encampar de antemão perante a via
+oficial (a rotina central descrita extensamente por aqui em meados da
+Parte II) um novo formato peculiar de cadastro atrelado na raiz do
+artefato central para \texttt{Span}. A premissa no caso se resume em
+carregar na mochila dessa entidade a chancela extra referenciando o tom
+``humorístico/mood''.
+
+Já na esfera englobada operante na denominação particular em torno do
+utilitário abrigando viés de cunho \texttt{SpanGroup}, ele serve ao
+singelo fim propiciando agrupamentos customizados voltados a gerenciar
+caixas fechadas acopladas abrigando trechos de \texttt{Spans},
+viabilizando ancorá-los na esteira do atributo pai de nome estipulado
+por \texttt{spans} nas entranhas da estrutura principal em \texttt{Doc}.
+
+Logo, fabricaremos nosso conjunto em \texttt{SpanGroup}, englobando os
+segmentos providos originariamente a nível \emph{sents} alocados no
+âmago interno.
+
+A montagem base exigirá perante uso imperativo a determinação do modelo
+base a ser operado (em \texttt{doc}), estipulando chancelas em favor do
+selo norteador pelo quesito em \texttt{name}, por fim ancorando na lista
+em \texttt{spans} a leva e amostragem coligida do ninho mãe que acolheu
+as referidas sentenças!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cria um SpanGroup a partir dos Spans contidos no objeto Doc \textquotesingle{}doc\textquotesingle{}, que}
+\CommentTok{\# foi criado a partir das anotações CoNLL{-}U. Esses Spans correspondem às}
+\CommentTok{\# sentenças, cujos limites definimos manualmente. Atribui à variável}
+\CommentTok{\# \textquotesingle{}sent\_group\textquotesingle{}.}
+\NormalTok{sent\_group }\OperatorTok{=}\NormalTok{ SpanGroup(doc}\OperatorTok{=}\NormalTok{doc, name}\OperatorTok{=}\StringTok{"sentences"}\NormalTok{, spans}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(doc.sents))}
+\end{Highlighting}
+\end{Shaded}
+
+Pronto. Deixamos as instâncias consolidadas a fim da inserção pontual,
+alocando a rubrica em favor de fixar raízes perante os arranjos no
+diretório em prol dos referidos sintagmas abrigados no domínio basilar
+no diretório central:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Atribui o SpanGroup ao atributo \textquotesingle{}spans\textquotesingle{} do objeto Doc, sob a chave}
+\CommentTok{\# \textquotesingle{}sentences\textquotesingle{}.}
+\NormalTok{doc.spans[}\StringTok{\textquotesingle{}sentences\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ sent\_group}
+\end{Highlighting}
+\end{Shaded}
+
+Com o reduto operante garantido, fixamos o registro estendendo a alçada
+do novo selo ``mood'' (como propriedade de viés particular a ser fixado)
+sob as regras do arcabouço \emph{Span}, inicializado de forma segura
+assumindo um valor cego padronizado de segurança estatuído nulo (None).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Registra o atributo customizado \textquotesingle{}mood\textquotesingle{} na classe Span}
+\NormalTok{Span.set\_extension(}\StringTok{\textquotesingle{}mood\textquotesingle{}}\NormalTok{, default}\OperatorTok{=}\VariableTok{None}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Nesse exato patamar é possível que pasmemos e apliquemos o fluxo
+rotineiro iterativo encarnando e transpondo engate simultâneo pautado em
+chaves pares casando ``cada tom gramatical com sua oração nativa''. O
+Python cuida brilhantemente bem dessa proeza invocando sua magia
+incorporada de modo inerente em pauta através do operador unificador com
+viés emparelhador em ``zip()''.
+
+Lembrando, não é mágica --- simplesmente vamos ditar a sintaxe base
+associando os componentes alinhados atrelados à alocada e nomeada
+\texttt{mood} amarrados por seu turno associando as frases batizadas
+provisoriamente sob alcunha da vertente em \texttt{span}.
+
+Fincamos chancelas englobando um detalhe sutil e clássico do spaCy na
+transição de preenchimento balizando formatação na marca referenciada ao
+componente via notação singular em sublinhado ``\texttt{\_}''. Trata-se
+do reduto privativo reservado a inserções que partem pelo usuário
+(detalhe já repassado anteriormente!).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Percorre os pares de itens da lista e do SpanGroup}
+\ControlFlowTok{for}\NormalTok{ mood, span }\KeywordTok{in} \BuiltInTok{zip}\NormalTok{(sent\_types, doc.spans[}\StringTok{\textquotesingle{}sentences\textquotesingle{}}\NormalTok{]):}
+    
+    \CommentTok{\# Atribui o valor de \textquotesingle{}mood\textquotesingle{} ao atributo customizado de mesmo}
+    \CommentTok{\# nome, pertencente ao objeto Span.}
+\NormalTok{    span.\_.mood }\OperatorTok{=}\NormalTok{ mood}
+\end{Highlighting}
+\end{Shaded}
+
+Agora nossos blocos textuais detêm uma carga informacional aprimorada!
+
+Que tal pautar averiguação conferindo os arranjos nas chancelas
+amparadas na sentença alojada no endereço do marcador de número 8?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Recupera a informação de modo verbal da sentença no índice 8}
+\NormalTok{doc.spans[}\StringTok{\textquotesingle{}sentences\textquotesingle{}}\NormalTok{][}\DecValTok{8}\NormalTok{], doc.spans[}\StringTok{\textquotesingle{}sentences\textquotesingle{}}\NormalTok{][}\DecValTok{8}\NormalTok{].\_.mood}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(If both your primary and reserve chutes have malfunctioned, signal immediately to a fellow jumper who has not yet deployed their chute, waving your arms and signalling that your own is not functional.,
+ 'imp')
+\end{verbatim}
+
+E aí está. O modelo acusa na exatidão, e o diagnóstico assinala que a
+frase possui um modo ``imperativo'' enraizado em seu bojo gramatical.
+Funcionou como um relógio!
+
+\hypertarget{tecendo-o-discurso-com-as-anotauxe7uxf5es-das-relauxe7uxf5es-rst}{%
+\subsubsection{Tecendo o discurso com as anotações das relações
+RST}\label{tecendo-o-discurso-com-as-anotauxe7uxf5es-das-relauxe7uxf5es-rst}}
+
+Chegou a hora e a vez de amarrarmos no pilar da ferramenta o estigma
+mais profundo da análise. O limite exato estipulando chancelas perante
+blocos de raciocínios independentes da teoria retórica se encontrava
+enlatado desde outrora nos arranjos guardados sob posse no acervo com
+estância referenciada nominalmente pela bagagem
+\texttt{discourse\_units}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verifica os 10 primeiros itens da lista \textquotesingle{}discourse\_units\textquotesingle{}}
+\NormalTok{discourse\_units[:}\DecValTok{10}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[0, 8, 11, 14, 19, 29, 34, 39, 51, 62]
+\end{verbatim}
+
+Os indícios aqui apontam friamente onde uma ``unidade retórica''
+brotava! E como transpor a estatística num formato orgânico? O viés
+lógico demanda pinçarmos recortes vivos no coração da estrutura original
+em \emph{Doc} operando a faca exatamente por onde pautam as cercas
+balizadoras indicadas a nível de índices (ex: corta de zero a oito, de
+oito a onze, de onze a catorze, e sucessivamente até esvair o conteúdo)!
+
+Esse desmembramento é facilmente vencido em pauta com o trato do
+encadeamento oriundo por via sequencial de loops operados em fôlego em
+\texttt{range()} fatiando pontualmente de praxe:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cria uma lista vazia para guardar as fatias do objeto Doc que correspondem}
+\CommentTok{\# às unidades de discurso.}
+\NormalTok{edu\_spans }\OperatorTok{=}\NormalTok{ []}
+
+\CommentTok{\# Percorre os limites das unidades de discurso usando a função range() do Python.}
+\CommentTok{\# Isso nos dá números, que usamos para indexar a lista \textquotesingle{}discourse\_units\textquotesingle{}, a qual}
+\CommentTok{\# contém os índices que marcam o início de cada unidade de discurso.}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\BuiltInTok{len}\NormalTok{(discourse\_units)):}
+    
+    \CommentTok{\# Tenta executar o bloco de código a seguir}
+    \ControlFlowTok{try}\NormalTok{:}
+        
+        \CommentTok{\# Obtém o item atual da lista \textquotesingle{}discourse\_units\textquotesingle{} e o item seguinte; atribui}
+        \CommentTok{\# às variáveis \textquotesingle{}start\textquotesingle{} e \textquotesingle{}end\textquotesingle{}.}
+\NormalTok{        start, end }\OperatorTok{=}\NormalTok{ discourse\_units[i], discourse\_units[i }\OperatorTok{+} \DecValTok{1}\NormalTok{]}
+    
+    \CommentTok{\# Se o item seguinte não existir, porque chegamos ao último item da lista,}
+    \CommentTok{\# um IndexError será levantado, e nós o capturamos aqui.}
+    \ControlFlowTok{except} \PreprocessorTok{IndexError}\NormalTok{:}
+        
+        \CommentTok{\# Atribui o início da unidade de discurso normalmente e usa o tamanho do}
+        \CommentTok{\# objeto Doc como valor de \textquotesingle{}end\textquotesingle{}, marcando o fim da unidade de discurso.}
+\NormalTok{        start, end }\OperatorTok{=}\NormalTok{ discourse\_units[i], }\BuiltInTok{len}\NormalTok{(doc)}
+
+    \CommentTok{\# Usa as variáveis \textquotesingle{}start\textquotesingle{} e \textquotesingle{}end\textquotesingle{} para fatiar o objeto Doc; acrescenta o}
+    \CommentTok{\# objeto Span resultante à lista \textquotesingle{}edu\_spans\textquotesingle{}.}
+\NormalTok{    edu\_spans.append(doc[start:end])}
+\end{Highlighting}
+\end{Shaded}
+
+Com o esquadrinhamento selado na gaveta de repouso por trás das
+fronteiras contíguas moldadas na matriz listada \texttt{edu\_spans},
+temos a massa fundamental fragmentada.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém os sete primeiros Spans da lista \textquotesingle{}edu\_spans\textquotesingle{}}
+\NormalTok{edu\_spans[:}\DecValTok{7}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[How to Cope With a Double Parachute Failure,
+ While skydiving,,
+ it is possible,
+ (yet extremely unlikely),
+ that both your primary and reserve parachutes will malfunction,,
+ leaving you with no method,
+ of reducing your velocity.]
+\end{verbatim}
+
+É latente a total indiferença entre o que se estipula chancelas num
+pilar da gramática ordinária para fixar sentenças longas em relação às
+métricas para moldar as chancelas da unidade discursiva, descompasso
+total!
+
+Mas há peças cruciais pendentes focando os atributos necessários
+amarrando a premissa de relação e subordinação de um componente sob a
+mira do vizinho discursivo que moldará seu papel prático.
+
+Logo criaremos mais três atributos sob estigma ``feito em casa'' no
+esqueleto em \emph{Span}!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Registra três atributos customizados para objetos Span, correspondentes ao}
+\CommentTok{\# id da unidade elementar de discurso, ao id do elemento que atua como alvo}
+\CommentTok{\# e ao nome da relação.}
+\NormalTok{Span.set\_extension(}\StringTok{\textquotesingle{}edu\_id\textquotesingle{}}\NormalTok{, default}\OperatorTok{=}\VariableTok{None}\NormalTok{)}
+\NormalTok{Span.set\_extension(}\StringTok{\textquotesingle{}target\_id\textquotesingle{}}\NormalTok{, default}\OperatorTok{=}\VariableTok{None}\NormalTok{)}
+\NormalTok{Span.set\_extension(}\StringTok{\textquotesingle{}relation\textquotesingle{}}\NormalTok{, default}\OperatorTok{=}\VariableTok{None}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Nesta engenharia: - \texttt{edu\_id}: Grava o selo de identificação
+único para a porção elementar retórica. - \texttt{target\_id}: Guarda
+quem é a outra porção conectada que sofre impacto prático. -
+\texttt{relation}: Rotula a natureza que define a ponte psicológica a
+entrelaçá-las.
+
+E vamos novamente aninhar nossa ninhada fracionada de volta ao berço em
+\emph{Doc} gerindo-as através da formatação de empacotamento com
+maestria englobada da já conhecida classe \emph{SpanGroup}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cria um objeto SpanGroup a partir dos Spans da lista \textquotesingle{}edu\_spans\textquotesingle{}}
+\NormalTok{edu\_group }\OperatorTok{=}\NormalTok{ SpanGroup(doc}\OperatorTok{=}\NormalTok{doc, name}\OperatorTok{=}\StringTok{"edus"}\NormalTok{, spans}\OperatorTok{=}\NormalTok{edu\_spans)}
+
+\CommentTok{\# Atribui o SpanGroup sob a chave \textquotesingle{}edus\textquotesingle{}}
+\NormalTok{doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ edu\_group}
+\end{Highlighting}
+\end{Shaded}
+
+A etapa do arremate pede apenas que a gente alimente nossos ``tubos de
+ensaio'' vazios com o verdadeiro sangue englobado na matriz inicial (a
+tripla de tuplas guardada carinhosamente no banco com título de
+\texttt{relations}).
+
+Ao puxarmos a lista originária veremos o amparo provido calcado em
+formatação atrelada a ditar ``quem se comunica e como se comunica''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Imprime as cinco primeiras definições de relação da lista \textquotesingle{}relations\textquotesingle{}}
+\NormalTok{relations[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[('preparation', 0, 10),
+ ('circumstance', 1, 2),
+ ('background', 2, 8),
+ ('concession', 3, 2),
+ ('same-unit', 4, 2)]
+\end{verbatim}
+
+Resta a burocracia de encaminhar a transferência distribuindo a papelada
+para a respectiva subseção criada (\texttt{edus} no guarda-chuva de
+\texttt{spans}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Percorre cada tripla da lista \textquotesingle{}relations\textquotesingle{}}
+\ControlFlowTok{for}\NormalTok{ relation }\KeywordTok{in}\NormalTok{ relations:}
+    
+    \CommentTok{\# Desempacota a tripla em três variáveis}
+\NormalTok{    rel\_name, source, target }\OperatorTok{=}\NormalTok{ relation[}\DecValTok{0}\NormalTok{], relation[}\DecValTok{1}\NormalTok{], relation[}\DecValTok{2}\NormalTok{]}
+    
+    \CommentTok{\# Usa o identificador em \textquotesingle{}source\textquotesingle{} para indexar os objetos Span sob a}
+    \CommentTok{\# chave \textquotesingle{}edus\textquotesingle{}. Em seguida, acessa os atributos customizados e define os}
+    \CommentTok{\# valores de \textquotesingle{}edu\_id\textquotesingle{}, \textquotesingle{}target\_id\textquotesingle{} e \textquotesingle{}relation\textquotesingle{}.}
+\NormalTok{    doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][source].\_.edu\_id }\OperatorTok{=}\NormalTok{ source}
+\NormalTok{    doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][source].\_.target\_id }\OperatorTok{=}\NormalTok{ target}
+\NormalTok{    doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][source].\_.relation }\OperatorTok{=}\NormalTok{ rel\_name}
+\end{Highlighting}
+\end{Shaded}
+
+Bingo! A trama retórica se encontra solidamente fixada ao osso da
+engrenagem!
+
+Vamos averigar o status retórico encravado no pedaço catalogado na
+posição sob índice de marcação de número 1:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Recupera o atributo customizado \textquotesingle{}relation\textquotesingle{} do Span no índice 1}
+\NormalTok{doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][}\DecValTok{1}\NormalTok{].\_.relation}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'circumstance'
+\end{verbatim}
+
+Ele acusa operar na pauta ``circunstancial'' ditando o viés dependendo
+de amarras de praxe atreladas ao reduto apontando rumo na outra oração
+da extremidade espelhada balizada ao registro com ``target\_id''. Mas
+quem é o comparsa alvejado na mira do ``target\_id''?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém o Span no índice 1 e o Span referenciado por seu atributo \textquotesingle{}target\_id\textquotesingle{}}
+\NormalTok{doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][}\DecValTok{1}\NormalTok{], doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][doc.spans[}\StringTok{\textquotesingle{}edus\textquotesingle{}}\NormalTok{][}\DecValTok{1}\NormalTok{].\_.target\_id]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(While skydiving,, it is possible)
+\end{verbatim}
+
+Eis os gêmeos siameses desnudados: As porções encadeadas comprovando
+empiricamente e validando as amarras estipuladas entre as unidades
+elementares discursivas atreladas sob preceito referenciando chancelas
+do tipo que dita uma circunstância.
+
+\hypertarget{atalhos-para-importar-formatos-conll-u-para-dentro-do-spacy}{%
+\subsection{Atalhos para importar formatos CoNLL-U para dentro do
+spaCy}\label{atalhos-para-importar-formatos-conll-u-para-dentro-do-spacy}}
+
+Caso não haja o apego emocional no ofício minucioso ao querer incorporar
+customizações artesanais para inflar a estância do modelo atrelada ao
+\texttt{Doc} e a intenção recaia friamente num interesse mecânico de
+fazer um passe mágico com viés restrito na pauta focada convertendo
+CoNLL-U num repositório puro formatado no padrão referenciando ao objeto
+balizado em spaCy, uma luz brilhante te aguarda: o método atalho sob o
+nome em utilitário de plantão chamado \texttt{conllu\_to\_docs()}.
+
+Ele foi cunhado para viver no nicho englobando o amparo em setores base
+de processamentos para \texttt{training}, que figura na alçada balizando
+modelos alimentadores no treinamento focado sob as artérias de bases
+encorpadas pautando aprendizado computacional.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa a função \textquotesingle{}conllu\_to\_docs\textquotesingle{} e a classe Doc}
+\ImportTok{from}\NormalTok{ spacy.training.converters }\ImportTok{import}\NormalTok{ conllu\_to\_docs}
+\ImportTok{from}\NormalTok{ spacy.tokens }\ImportTok{import}\NormalTok{ Doc}
+\end{Highlighting}
+\end{Shaded}
+
+Este artefato ``mastiga'' as entradas fornecidas via formato basilar
+operado na vertente \texttt{string}.
+
+Empregamos no momento a massa bruta \texttt{annotations} fornecendo-a à
+máquina. E para que ela opere ``quietinha'', escoramos o amparo
+chancelando premissas operantes na vertente que manda ela trancar a voz
+no quesito da opção atada e estatuída na marca \texttt{no\_print}
+definida num ``ok'' positivo.
+
+A rotina irá cuspir a produção (sob formato Pythonic em `generator'), de
+modo a requerer do usuário providências para converter tudo à moda
+clássica na moldura para base em formato ``lista'' (list).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fornece a string em \textquotesingle{}annotations\textquotesingle{} à função \textquotesingle{}conllu\_to\_docs\textquotesingle{}.}
+\CommentTok{\# Define \textquotesingle{}no\_print\textquotesingle{} como True e converte o resultado em lista; armazena em \textquotesingle{}docs\textquotesingle{}.}
+\NormalTok{docs }\OperatorTok{=} \BuiltInTok{list}\NormalTok{(conllu\_to\_docs(annotations, no\_print}\OperatorTok{=}\VariableTok{True}\NormalTok{))}
+
+\CommentTok{\# Obtém os dois primeiros itens da lista resultante}
+\NormalTok{docs[:}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[How to Cope With a Double Parachute Failure While skydiving, it is possible (yet extremely unlikely) that both your primary and reserve parachutes will malfunction, leaving you with no method of reducing your velocity. In the vast majority of cases, this will not occur; nevertheless, in this event these coping strategies may assist. Steps Remain calm. This may seem obvious, but deep, even breathing (despite the rushing slipstream) and controlling your heart-rate are essential to your continued survival. Entreat assistance. If both your primary and reserve chutes have malfunctioned, signal immediately to a fellow jumper who has not yet deployed their chute, waving your arms and signalling that your own is not functional. If this is a solo jump, then skip to step 6. ,
+ Prepare for deployment. After linking arms with your fellow jumper, you will need to hook your arms through their chest strap, or through both sides of the front of their harness, as far as you can, then grab onto your own strap. Deploy. The shock of the chute deployment will be intense. The G-forces will multiply your body weight, making it impossible to hold on; this is why hooking your arms through the harness is essential. It is likely that the shock will dislocate or break both your arms; nevertheless this is a small price to pay for your life. Prepare for impact. If your companion's canopy has successfully opened, then both your chances of survival have dramatically increased. ]
+\end{verbatim}
+
+Pronto, criamos as fatias perfeitamente moldadas ao \texttt{Doc}. O
+pequeno tropeço na engrenagem que assombra essa facilidade balizada em
+padrão de fábrica: ela quebra arbitrariamente os documentos em maços
+picotados agrupando as ocorrências pautando-se sob limites focados ao
+amparo englobando 10 em 10 sentenças em caixinhas alocadas independentes
+de \texttt{Doc}s individuais (um tanto desastroso).
+
+Uma fusão coerente focada na reparação recai operando base numa vertente
+ditada a promover aglutinações embasadas a recompor o texto global num
+arcabouço atado na pauta unitária no viés em amarrações ancoradas nas
+chamadas à subrotina originada do artifício balizador estatuído sob a
+função \texttt{from\_docs()} provinda nativa na premissa com chancela
+perante molde embasando no coração \emph{Doc}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Combina os objetos Doc da lista \textquotesingle{}docs\textquotesingle{} em um único Doc; atribui a \textquotesingle{}doc\textquotesingle{}}
+\NormalTok{doc }\OperatorTok{=}\NormalTok{ Doc.from\_docs(docs)}
+
+\CommentTok{\# Verifica o tipo e o tamanho da variável}
+\BuiltInTok{type}\NormalTok{(doc), }\BuiltInTok{len}\NormalTok{(doc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(spacy.tokens.doc.Doc, 890)
+\end{verbatim}
+
+Milagre operado: Um belo e reluzente documento singular composto
+majestosamente em 890 matrizes providas de \emph{Tokens} independentes!
+E é claro, com todas as virtudes de informações linguísticas incrustadas
+de nascença!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Percorre os 8 primeiros Tokens usando a função range()}
+\ControlFlowTok{for}\NormalTok{ token\_ix }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{8}\NormalTok{):}
+    
+    \CommentTok{\# Usa o número atual em \textquotesingle{}token\_ix\textquotesingle{} para buscar um Token no Doc.}
+    \CommentTok{\# Atribui o objeto Token à variável \textquotesingle{}token\textquotesingle{}.}
+\NormalTok{    token }\OperatorTok{=}\NormalTok{ doc[token\_ix]}
+    
+    \CommentTok{\# Imprime o Token e suas anotações linguísticas}
+    \BuiltInTok{print}\NormalTok{(token, token.tag\_, token.pos\_, token.morph, token.dep\_, token.head)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+How WRB SCONJ PronType=Int mark Cope
+to TO PART  mark Cope
+Cope VB VERB VerbForm=Inf ROOT Cope
+With IN ADP  case Failure
+a DT DET Definite=Ind|PronType=Art det Failure
+Double JJ ADJ Degree=Pos amod Failure
+Parachute NN NOUN Number=Sing compound Failure
+Failure NN NOUN Number=Sing obl Cope
+\end{verbatim}
+
+Entretanto, não cante vitória de cara perante as virtudes. Ao esbarrar
+na tentação em requerer e focar em propriedades estatuindo sintagmas
+compostos enquadrando alocações na premissa originária de entidades em
+teor \emph{noun\_chunks}, a interface irá corar de vergonha na sua tela
+gritando e acusando por chancelas atadas em lacunas de dados que
+causarão a fúria em erros (``NotImplementedError'').
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém os sintagmas nominais do Doc}
+\BuiltInTok{list}\NormalTok{(doc.noun\_chunks)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+---------------------------------------------------------------------------
+NotImplementedError                       Traceback (most recent call last)
+Cell In[47], line 2
+      1 # Get the noun chunks in the Doc
+----> 2 list(doc.noun_chunks)
+
+File ~/nlp/lib/python3.9/site-packages/spacy/tokens/doc.pyx:853, in noun_chunks()
+
+NotImplementedError: [E894] The 'noun_chunks' syntax iterator is not implemented for language ''.
+\end{verbatim}
+
+O revés ataca em formato oriundo puramente operando a nível estrito: o
+\texttt{Doc} gestado não porta qualquer cordão umbilical ligando a
+natureza a modelos estatuídos operantes do nível matricial de
+\textbf{Language} (\emph{Vocabulary} e outros parâmetros que determinam
+o que a máquina sabe do idioma). E os extratos ``noun chunks'' em
+essência sugam de praxe, obrigatoriamente, embasamentos providos nestes
+dicionários linguísticos acoplados a suas raízes que chancelam sintaxe
+perante bases que o sistema ignora no instante atual.
+
+Para pautar chancelas de praxe de cura e reabilitação não dispomos da
+possibilidade provida via injeção operando rotinas à força de maneira
+puramente e simplesmente ditar as cartilhas linguísticas à mão. O
+procedimento operante foca em balizas de ``cirurgias'' no armazenamento
+do formato ``disco'' acionando base da estância chamada de pilar
+\emph{DocBin}, abordada em aprofundamento pretérito provido perante o
+horizonte da Parte II.
+
+O pacote englobando as amarrações delineando no esteio pautado na pauta
+oriunda a estância abarcando propriedades base \texttt{DocBin} ostenta
+as prerrogativas chancelando enquadramento estipulando chancelas
+voltadas a transpor dados focados à exportação externa da estrutura
+pronta.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa o objeto DocBin do submódulo \textquotesingle{}tokens\textquotesingle{}}
+\ImportTok{from}\NormalTok{ spacy.tokens }\ImportTok{import}\NormalTok{ DocBin}
+
+\CommentTok{\# Cria um objeto DocBin vazio}
+\NormalTok{doc\_bin }\OperatorTok{=}\NormalTok{ DocBin()}
+
+\CommentTok{\# Adiciona o Doc atual ao DocBin}
+\NormalTok{doc\_bin.add(doc)}
+\end{Highlighting}
+\end{Shaded}
+
+Nesta pauta o revés reside ao invés do despejo em HD de arquivo bruto
+nós faremos o saque na fenda operando o recuo, onde engajaremos o saque
+imediato de volta para a pauta, puxando à luz do dia os extratos usando
+artifícios da técnica invocada em subrotina \texttt{get\_docs()}, só que
+agora empurramos pela guelra da máquina o pacote que traz a carga focada
+em estatuir a língua que baliza o sistema de \texttt{Vocabulary}. O
+artefato que devolve vida inteligente perante amarrações amparadas e
+englobando o idioma no spaCy.
+
+O fruto dessa manobra devolve uma safra ``generator'' e, logo, voltamos
+à lida transformando isso no velho enquadramento em lista
+(\texttt{list}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Usa o método \textquotesingle{}get\_docs\textquotesingle{} para recuperar os Docs do DocBin}
+\NormalTok{docs }\OperatorTok{=} \BuiltInTok{list}\NormalTok{(doc\_bin.get\_docs(vocab}\OperatorTok{=}\NormalTok{nlp.vocab))}
+\end{Highlighting}
+\end{Shaded}
+
+Problema sanado, o acesso volta à tona operando de maneira brilhante! A
+malha atada em viés referencial de propriedades contidas e embutidas sob
+chancela nos redutos amparando embates voltados ao uso da estrutura
+originária ditada por \emph{noun chunks} se submete e jorra farta sem o
+engasgo da interdição perante a falta do idioma.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{list}\NormalTok{(docs[}\DecValTok{0}\NormalTok{].noun\_chunks)[:}\DecValTok{10}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[it,
+ and reserve parachutes,
+ this,
+ these coping strategies,
+ Steps,
+ This,
+ both your primary and reserve chutes,
+ who,
+ this,
+ you]
+\end{verbatim}
+
+Concluímos assim o mapeamento englobando o panorama referencial
+pautando-se sob chancelas a pavimentar vias da sua trilha em lidar e
+aprimorar a exploração das profundezas estruturais ancoradas no trato
+por anotações abrigadas perante o estigma ditado por regras estatuídas
+através da maestria provida nativa no formato operante sob regência do
+esquema abarcado por CoNLL-U operando a nível estrito focando suas
+intersecções atadas nas malhas do ecossistema e viés originário em
+componentes providos ao amparo de funcionalidades estipulando
+enquadramento balizado na estância de spaCy.
+
+\end{document}

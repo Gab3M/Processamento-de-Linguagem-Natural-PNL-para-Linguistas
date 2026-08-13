@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia" />
+  <title>Parte III: Processamento de Linguagem Natural para Linguistas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    /* centralização de figuras e tabelas */
+    figure {
+      margin: 1.5em 0;
+      text-align: center;
+    }
+    figure img {
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.85em;
+      color: #606060;
+      margin-top: 0.4em;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Parte III: Processamento de Linguagem Natural para Linguistas</h1>
+<p class="subtitle">Unidade 4 - Respostas dos Exercícios</p>
+<p class="author">CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia</p>
+<p class="date">Agosto de 2026</p>
+</header>
+<h1 id="respostas-introdução-aos-word-embeddings">Respostas — Introdução aos <em>word embeddings</em></h1>
+<h2 id="parte-a-conceitos">Parte A — Conceitos</h2>
+<p><strong>Resposta 1.</strong></p>
+<p>A hipótese distribucional afirma que <strong>semelhança de significado resulta em semelhança de distribuição linguística</strong>: palavras que ocorrem em contextos semelhantes tendem a ter significados semelhantes.</p>
+<p>A citação de Firth a antecipa ao deslocar o critério de identificação do significado da palavra isolada para sua <strong>companhia</strong>, isto é, para os elementos com que ela coocorre. Firth não formula a hipótese em termos distribucionais quantitativos — isso é feito por Harris (<a href="https://doi.org/10.1080/00437956.1954.11659520">1954</a>) —, mas estabelece o princípio metodológico de que o significado é contextual e, portanto, observável no uso.</p>
+<p><strong>Resposta 2.</strong></p>
+<ul>
+<li>O eixo <strong>sintagmático</strong> é o eixo da <strong>combinação</strong>: descreve como os elementos escolhidos se encadeiam horizontalmente para formar estruturas maiores (<em>Helsinki</em> + <em>is</em> + <em>the capital of</em> + <em>Finland</em>).</li>
+<li>O eixo <strong>paradigmático</strong> é o eixo da <strong>seleção</strong>: descreve o conjunto de alternativas que poderiam ocupar uma mesma posição na estrutura (<em>Helsinki</em> / <em>Tallinn</em> / <em>Estocolmo</em>). As alternativas se definem por oposição.</li>
+</ul>
+<p>Na matriz da seção 2.1:</p>
+<ul>
+<li>Cada <strong>coluna</strong> corresponde a um lema único, isto é, a uma <strong>escolha paradigmática</strong> disponível.</li>
+<li>Cada <strong>linha</strong> corresponde a um <em>Doc</em>, isto é, a uma <strong>estrutura sintagmática</strong> concreta, que registra quais escolhas paradigmáticas foram efetivamente combinadas.</li>
+</ul>
+<p><strong>Resposta 3.</strong></p>
+<p>A representação é chamada de “saco de palavras” porque registra apenas <strong>quais</strong> palavras ocorrem e <strong>quantas vezes</strong>, descartando completamente a informação sobre a <strong>ordem</strong> em que aparecem. É como se as palavras fossem jogadas em um saco e agitadas.</p>
+<p>Duas limitações:</p>
+<ol type="1">
+<li><strong>Perda da ordem e da estrutura.</strong> As orações <em>o cão mordeu o homem</em> e <em>o homem mordeu o cão</em> recebem exatamente o mesmo vetor, embora signifiquem coisas opostas.</li>
+<li><strong>Crescimento da dimensionalidade e esparsidade.</strong> Cada palavra nova do vocabulário exige uma dimensão adicional. Como cada documento contém apenas uma fração ínfima do vocabulário, a esmagadora maioria das dimensões vale zero, o que desperdiça memória e dificulta o cálculo de distâncias significativas.</li>
+</ol>
+<p><strong>Resposta 4.</strong></p>
+<p>Um vetor <strong>esparso</strong> é aquele em que a maior parte das dimensões vale zero e apenas poucas carregam informação — como o vetor one-hot, em que exatamente uma dimensão vale 1. Um vetor <strong>denso</strong> é aquele em que praticamente todas as dimensões têm valores não nulos, cada uma codificando alguma parcela de informação.</p>
+<p>Os embeddings da camada oculta são densos porque a rede é <strong>forçada</strong> a comprimir a informação de 24 dimensões esparsas em apenas 2 dimensões. Como não há espaço para reservar uma dimensão por palavra, cada dimensão precisa passar a codificar informação distribuída sobre a palavra e seu contexto.</p>
+<p><strong>Resposta 5.</strong></p>
+<p>O objetivo final não é dispor de um preditor de palavras vizinhas — essa predição, isoladamente, tem pouca utilidade prática. O objetivo é obter <strong>representações numéricas úteis</strong> das palavras.</p>
+<p>A predição funciona como tarefa substituta porque <strong>só é possível resolvê-la bem se a rede aprender boas representações</strong>. Para prever que <em>the</em> e <em>capital</em> aparecem perto de <em>be</em>, a rede precisa codificar, nos pesos da camada oculta, informação sobre o comportamento distribucional de <em>be</em>. Ao fim do treinamento, descartamos o preditor e ficamos com os pesos — que são os embeddings.</p>
+<p>Trata-se do princípio geral do <strong>aprendizado auto-supervisionado</strong>: o rótulo é extraído do próprio texto, sem anotação humana.</p>
+<p><strong>Resposta 6.</strong></p>
+<p>A camada oculta é um gargalo porque é muito mais estreita (2 neurônios) do que as camadas de entrada e de saída (24 unidades cada). Toda a informação necessária para a predição precisa <strong>passar por essas duas dimensões</strong>.</p>
+<p>Esse estrangulamento é justamente o que produz o aprendizado. Se a camada oculta tivesse 24 neurônios, a rede poderia simplesmente copiar a entrada, memorizando cada palavra individualmente, sem generalizar nada. Ao ser obrigada a comprimir, a rede é forçada a <strong>agrupar palavras com comportamento distribucional semelhante</strong> na mesma região do espaço — que é exatamente o que a hipótese distribucional prevê.</p>
+<h2 id="parte-b-programação">Parte B — Programação</h2>
+<p><strong>Resposta 7.</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="co"># Compara os vetores dos Docs nos índices 3 e 4</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>cosine_similarity([df.values[<span class="dv">3</span>]], [df.values[<span class="dv">4</span>]])</span></code></pre></div>
+<pre><code>array([[0.37796447]])</code></pre>
+<p>O valor é coerente. As orações são:</p>
+<pre><code>Travelling between Helsinki and Tallinn takes about two hours
+Ferries depart from downtown Helsinki and Tallinn</code></pre>
+<p>Elas compartilham três lemas — <code>Helsinki</code>, <code>and</code> e <code>Tallinn</code> —, o que produz uma similaridade moderada (0,38). Esse valor é claramente inferior ao dos <em>Docs</em> 0 e 1 (0,67), que compartilham quatro lemas em uma estrutura sintagmática idêntica (<em>is the capital of</em>), mas superior ao dos pares que quase nada compartilham.</p>
+<p><strong>Resposta 8.</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Acrescenta a nova oração à lista</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>examples.append(<span class="st">&quot;Stockholm is the capital of Sweden&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="co"># Reprocessa toda a lista</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>docs <span class="op">=</span> <span class="bu">list</span>(nlp.pipe(examples))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="co"># Reconta os lemas</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>lemma_counts <span class="op">=</span> {i: doc.count_by(LEMMA) <span class="cf">for</span> i, doc <span class="kw">in</span> <span class="bu">enumerate</span>(docs)}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>lemma_counts <span class="op">=</span> {i: {docs[i].vocab[k].text: v <span class="cf">for</span> k, v <span class="kw">in</span> counter.items()}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>                <span class="cf">for</span> i, counter <span class="kw">in</span> lemma_counts.items()}</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co"># Reconstrói o DataFrame</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a>df <span class="op">=</span> pd.DataFrame.from_dict(lemma_counts).sort_index(ascending<span class="op">=</span><span class="va">True</span>).fillna(<span class="dv">0</span>).T</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="co"># Verifica o formato</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a><span class="bu">print</span>(df.shape)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a><span class="co"># Recalcula a matriz de similaridade</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a>sim <span class="op">=</span> cosine_similarity(df.values)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a><span class="bu">print</span>(sim[<span class="dv">5</span>])</span></code></pre></div>
+<pre><code>(6, 26)
+[0.66666667 0.66666667 0.40824829 0.         0.         1.        ]</code></pre>
+<p>O <em>DataFrame</em> passa a ter <strong>26 colunas</strong>: as 24 originais mais os dois lemas novos, <code>Stockholm</code> e <code>Sweden</code>.</p>
+<p>Os <em>Docs</em> 0 e 1 tornam-se <strong>igualmente</strong> os mais similares ao novo <em>Doc</em> 5, ambos com 0,67. Isso faz sentido: as três orações compartilham exatamente a mesma estrutura sintagmática (<em>X is the capital of Y</em>), diferindo apenas nos dois nomes próprios. É precisamente a previsão da hipótese distribucional: <code>Helsinki</code>, <code>Tallinn</code> e <code>Stockholm</code> são alternativas paradigmáticas de uma mesma posição.</p>
+<p><strong>Resposta 9.</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># Similaridade entre &#39;capital&#39; e &#39;the&#39;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="bu">print</span>(cosine_similarity([lemma_df[<span class="st">&#39;capital&#39;</span>].values], [lemma_df[<span class="st">&#39;the&#39;</span>].values]))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="co"># Similaridade entre &#39;Helsinki&#39; e &#39;ferry&#39;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="bu">print</span>(cosine_similarity([lemma_df[<span class="st">&#39;Helsinki&#39;</span>].values], [lemma_df[<span class="st">&#39;ferry&#39;</span>].values]))</span></code></pre></div>
+<pre><code>array([[0.53846154]])
+array([[0.13363062]])</code></pre>
+<p><strong>Comentário.</strong> O par <code>capital</code> / <code>the</code> apresenta similaridade alta (0,54) porque ambos ocorrem repetidamente nos mesmos contextos locais (<em>the capital of</em>), compartilhando vizinhos como <code>be</code>, <code>of</code> e um ao outro. Isso ilustra um ponto importante: a hipótese distribucional captura <strong>similaridade de distribuição</strong>, que nem sempre corresponde a similaridade de significado — um determinante e um substantivo não são sinônimos.</p>
+<p>O par <code>Helsinki</code> / <code>ferry</code> apresenta similaridade baixa (0,13): as duas palavras ocorrem em vizinhanças bastante distintas no nosso pequeno corpus.</p>
+<p><strong>Resposta 10.</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co"># Recria o DataFrame vazio</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>lemma_df_3 <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>unique_lemmas, columns<span class="op">=</span>unique_lemmas).fillna(<span class="dv">0</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="co"># Percorre os Tokens, agora com janela de três palavras de cada lado</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> combined_docs:</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>    <span class="co"># Note o intervalo ampliado de posições</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>    <span class="cf">for</span> position <span class="kw">in</span> [<span class="op">-</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]:</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a>        <span class="cf">try</span>:</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a>            nbor_lemma <span class="op">=</span> token.nbor(position).lemma_</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a>            lemma_df_3.at[token.lemma_, nbor_lemma] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true"></a>        <span class="cf">except</span> <span class="pp">IndexError</span>:</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true"></a>            <span class="cf">continue</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true"></a><span class="co"># Recalcula a similaridade</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true"></a>cosine_similarity([lemma_df_3[<span class="st">&#39;Tallinn&#39;</span>].values], [lemma_df_3[<span class="st">&#39;Helsinki&#39;</span>].values])</span></code></pre></div>
+<pre><code>array([[0.56577895]])</code></pre>
+<p><strong>Comparação.</strong> Com janela 2, a similaridade era de <strong>0,43</strong>; com janela 3, sobe para <strong>0,57</strong>. Ampliar a janela aumenta o número de vizinhos compartilhados registrados e, portanto, o número de dimensões não nulas em comum, elevando a similaridade.</p>
+<p>De modo geral, janelas menores tendem a capturar relações mais <strong>sintáticas</strong> (colocações imediatas), enquanto janelas maiores capturam relações mais <strong>temáticas</strong> ou tópicas. A escolha da janela é, portanto, uma decisão analítica, não um detalhe técnico.</p>
+<p><strong>Resposta 11.</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="kw">def</span> one_hot(lemma, vocabulary):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>    <span class="co">&quot;&quot;&quot;Devolve o vetor one-hot de um lema em relação a um vocabulário.</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a><span class="co">    Parâmetros:</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="co">        lemma: string com o lema a ser codificado</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="co">        vocabulary: lista de lemas únicos</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a><span class="co">    Devolve:</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a><span class="co">        Um array NumPy do tamanho do vocabulário.</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true"></a>    <span class="co"># Verifica se o lema pertence ao vocabulário</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true"></a>    <span class="cf">if</span> lemma <span class="kw">not</span> <span class="kw">in</span> vocabulary:</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true"></a>        <span class="co"># Levanta um erro informativo caso contrário</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f&quot;O lema &#39;</span><span class="sc">{</span>lemma<span class="sc">}</span><span class="ss">&#39; não está no vocabulário.&quot;</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true"></a>    <span class="co"># Cria um vetor de zeros com o tamanho do vocabulário</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true"></a>    vector <span class="op">=</span> np.zeros(shape<span class="op">=</span><span class="bu">len</span>(vocabulary))</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true"></a>    <span class="co"># Define como 1 a posição correspondente ao lema</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true"></a>    vector[vocabulary.index(lemma)] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true"></a>    <span class="cf">return</span> vector</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true"></a><span class="co"># Testes</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true"></a><span class="bu">print</span>(one_hot(<span class="st">&#39;Helsinki&#39;</span>, unique_lemmas))</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true"></a><span class="bu">print</span>(one_hot(<span class="st">&#39;Curitiba&#39;</span>, unique_lemmas))</span></code></pre></div>
+<pre><code>[0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ValueError: O lema &#39;Curitiba&#39; não está no vocabulário.</code></pre>
+<p><strong>Resposta 12.</strong></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Reconstrói a rede com quatro neurônios na camada oculta</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>network_input <span class="op">=</span> keras.Input(shape<span class="op">=</span>targets.shape[<span class="dv">1</span>], name<span class="op">=</span><span class="st">&#39;input_layer&#39;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="co"># Apenas o argumento &#39;units&#39; muda</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>hidden_layer <span class="op">=</span> Dense(units<span class="op">=</span><span class="dv">4</span>, activation<span class="op">=</span><span class="va">None</span>, name<span class="op">=</span><span class="st">&#39;hidden_layer&#39;</span>)(network_input)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>output_layer <span class="op">=</span> Dense(units<span class="op">=</span>context.shape[<span class="dv">1</span>], activation<span class="op">=</span><span class="st">&#39;softmax&#39;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>                     name<span class="op">=</span><span class="st">&#39;output_layer&#39;</span>)(hidden_layer)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>model_4d <span class="op">=</span> keras.Model(inputs<span class="op">=</span>network_input, outputs<span class="op">=</span>output_layer)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a>model_4d.<span class="bu">compile</span>(loss<span class="op">=</span><span class="st">&#39;categorical_crossentropy&#39;</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a>model_4d.fit(x<span class="op">=</span>targets, y<span class="op">=</span>context, batch_size<span class="op">=</span><span class="dv">64</span>, epochs<span class="op">=</span><span class="dv">1500</span>, verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a><span class="co"># Verifica o formato dos pesos da camada oculta</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a>weights_4d <span class="op">=</span> model_4d.get_weights()[<span class="dv">0</span>]</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a><span class="bu">print</span>(weights_4d.shape)</span></code></pre></div>
+<pre><code>(24, 4)</code></pre>
+<p>A matriz de pesos passa a ter formato <code>(24, 4)</code>: cada um dos 24 lemas é agora representado por um vetor de <strong>quatro</strong> dimensões.</p>
+<p>Já não é possível plotar o espaço diretamente porque um gráfico de dispersão só dispõe de dois eixos, e teríamos quatro coordenadas por ponto. Para visualizar, seria necessário aplicar uma técnica de <strong>redução de dimensionalidade</strong> — como PCA ou t-SNE — que projeta os vetores de quatro dimensões em duas, preservando aproximadamente as distâncias relativas. Essa é exatamente a abordagem adotada na próxima unidade, ao visualizar os embeddings do spaCy, que têm centenas de dimensões.</p>
+<p><strong>Resposta 13.</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="co"># Localiza os índices dos dois lemas</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>i_hel <span class="op">=</span> unique_lemmas.index(<span class="st">&#39;Helsinki&#39;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>i_tal <span class="op">=</span> unique_lemmas.index(<span class="st">&#39;Tallinn&#39;</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="co"># Compara os embeddings aprendidos</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>cosine_similarity([hidden_layer_weights[i_hel]], [hidden_layer_weights[i_tal]])</span></code></pre></div>
+<pre><code>array([[0.60469307]])</code></pre>
+<p><strong>Comparação.</strong> A similaridade calculada a partir da matriz de coocorrência era de <strong>0,43</strong>; a partir dos embeddings aprendidos, obtemos aproximadamente <strong>0,60</strong>.</p>
+<p>Duas ressalvas importantes:</p>
+<ol type="1">
+<li>O valor exato <strong>varia entre execuções</strong>, pois os pesos são inicializados aleatoriamente. O que se deve observar é a tendência, não o número.</li>
+<li>Em apenas duas dimensões, quaisquer dois vetores tendem a apresentar similaridade de cossenos relativamente alta, simplesmente porque há pouco espaço para que fiquem distantes. Comparar valores absolutos entre espaços de dimensionalidades diferentes é, portanto, enganoso.</li>
+</ol>
+<p><strong>Resposta 14.</strong></p>
+<ol type="1">
+<li><p><strong>Vocabulário insuficiente para generalizar.</strong> Com 24 lemas e 118 pares, quase todas as palavras ocorrem uma ou duas vezes. A rede não tem evidência estatística suficiente para distinguir regularidade de acaso: uma única coocorrência tem o mesmo peso que um padrão sistemático.</p></li>
+<li><p><strong>Sobreajuste ao exemplo específico.</strong> O modelo aprende as cinco orações particulares, não a língua inglesa. <code>Helsinki</code> e <code>Tallinn</code> ficam próximos porque aparecem literalmente lado a lado nos dados, e não porque o modelo tenha inferido que ambos são capitais bálticas.</p></li>
+<li><p><strong>Ausência de palavras funcionais em contexto variado.</strong> Palavras como <code>the</code> e <code>of</code> ocorrem em pouquíssimos contextos distintos, quando na realidade sua característica definidora é ocorrer em uma enorme variedade deles. Suas representações ficam, portanto, distorcidas — e, como são frequentes, distorcem também as representações das palavras vizinhas.</p></li>
+</ol>
+<p>Uma quarta consequência, mais sutil: as próprias métricas de avaliação tornam-se pouco informativas, já que não há dados retidos para teste.</p>
+<p><strong>Resposta 15.</strong></p>
+<p>O modelo é incapaz de fazer a distinção porque atribui <strong>exatamente um vetor a cada forma lexical</strong>. O dicionário <code>lemma_vectors</code> mapeia a <em>string</em> <code>'banco'</code> a um único vetor one-hot, e a camada oculta produz um único embedding correspondente. As duas acepções de “banco” são, para o modelo, literalmente a mesma entrada — e o vetor resultante acaba sendo uma média confusa dos dois contextos de uso.</p>
+<p>Esse é o limite dos chamados embeddings <strong>estáticos</strong> (Word2vec, GloVe, fastText): um tipo lexical, um vetor.</p>
+<p>Para superá-lo é necessário produzir embeddings <strong>contextuais</strong>, em que a representação de uma palavra depende da sentença em que ela ocorre. Isso exige:</p>
+<ul>
+<li>Uma arquitetura capaz de <strong>ler a sentença inteira</strong> ao codificar cada palavra — tipicamente um <em>Transformer</em> com mecanismo de atenção, em vez de uma rede que recebe uma única palavra isolada como entrada.</li>
+<li>Uma tarefa de treinamento que <strong>force o uso do contexto</strong>, como prever uma palavra mascarada a partir de toda a sentença (o objetivo de <em>masked language modelling</em> usado pelo BERT).</li>
+<li>Volume muito maior de dados e de parâmetros, para que os diferentes contextos de uso de cada forma sejam efetivamente observados.</li>
+</ul>
+<p>Nesses modelos, as ocorrências de “banco” em <em>sentei no banco</em> e em <em>fui ao banco</em> recebem vetores distintos, pois cada representação é computada em função das palavras que a cercam. Os embeddings contextuais obtidos de <em>Transformers</em> são o tema da próxima unidade.</p>
+</body>
+</html>

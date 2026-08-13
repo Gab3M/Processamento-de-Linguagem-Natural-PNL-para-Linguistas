@@ -1,0 +1,117 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 1 - Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{exercuxedcios-pruxe1ticos-processamento-de-linguagem-natural-para-linguistas}{%
+\section{Exercícios Práticos: Processamento de Linguagem Natural para
+Linguistas}\label{exercuxedcios-pruxe1ticos-processamento-de-linguagem-natural-para-linguistas}}
+
+Este documento contém exercícios práticos baseados na unidade
+``Processando Diversos Idiomas''.
+
+\hypertarget{muxf3dulo-1-processando-diversos-idiomas}{%
+\subsection{Módulo 1: Processando Diversos
+Idiomas}\label{muxf3dulo-1-processando-diversos-idiomas}}
+
+\textbf{Exercício 1:} Historicamente, as ferramentas de Processamento de
+Linguagem Natural (PNL) foram desenvolvidas com forte foco no idioma
+inglês. Explique dois desafios estruturais significativos encontrados ao
+tentar aplicar essas mesmas ferramentas convencionais para outros
+idiomas, como o finlandês, turco ou o japonês.
+
+\textbf{Exercício 2:} Utilizando a biblioteca Stanza, escreva o código
+Python necessário para fazer o download do modelo de linguagem para o
+idioma finlandês (código de idioma
+\texttt{\textquotesingle{}fi\textquotesingle{}}). Em seguida, inicialize
+um pipeline (\emph{Pipeline}) que inclua exclusivamente os processadores
+de tokenização e etiquetagem de classes gramaticais (POS).
+
+\textbf{Exercício 3:} Após processar um texto no Stanza, a saída gerada
+para uma sentença não é uma lista comum do Python, mas um objeto
+\emph{Sentence}. Qual método nativo da biblioteca você pode utilizar
+para converter as anotações linguísticas desse objeto em uma lista de
+dicionários Python, facilitando a interação com as anaves/valores?
+
+\textbf{Exercício 4:} Qual é a maneira mais eficiente, em termos de
+custo computacional e estruturação de código, para processar múltiplos
+textos (documentos) de uma só vez utilizando o Stanza? Descreva os
+passos técnicos utilizando a sintaxe de compreensão de listas
+(\emph{list comprehension}).
+
+\textbf{Exercício 5:} A biblioteca \texttt{spacy-stanza} é uma excelente
+ferramenta para integrar os modelos pesados do Stanza dentro do
+ecossistema familiar do spaCy. Apesar dessa vantagem, o texto menciona
+uma ``grande limitação'' para o seu uso. Qual é essa limitação? Dê um
+exemplo de idioma que ilustra esse problema.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\end{document}

@@ -1,0 +1,470 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 3 - Respostas dos Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{respostas-encontrando-padruxf5es-linguuxedsticos-com-o-spacy}{%
+\section{Respostas --- Encontrando padrões linguísticos com o
+spaCy}\label{respostas-encontrando-padruxf5es-linguuxedsticos-com-o-spacy}}
+
+\hypertarget{parte-a-conceitos}{%
+\subsection{Parte A --- Conceitos}\label{parte-a-conceitos}}
+
+\textbf{Resposta 1.}
+
+\begin{itemize}
+\tightlist
+\item
+  O \emph{Matcher} casa \textbf{sequências lineares de \emph{Tokens}}
+  com base em seus atributos (classe gramatical, traços morfológicos,
+  forma, lema etc.). É adequado, por exemplo, para localizar sequências
+  ``pronome + verbo''.
+\item
+  O \emph{DependencyMatcher} casa \textbf{padrões na árvore de
+  dependências}, isto é, relações de cabeça e dependente. É adequado
+  para localizar, por exemplo, todos os sujeitos nominais de verbos,
+  independentemente da ordem linear das palavras.
+\item
+  O \emph{PhraseMatcher} casa \textbf{objetos \emph{Doc} contra objetos
+  \emph{Doc}} e é otimizado para listas grandes de termos fixos. É
+  adequado, por exemplo, para localizar milhares de nomes de
+  medicamentos ou de topônimos em um corpus.
+\end{itemize}
+
+\textbf{Resposta 2.}
+
+A chave \texttt{OP} define a \textbf{quantificação} de um padrão de
+\emph{Token}:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{!} --- nega o padrão; ele deve ocorrer exatamente zero vezes.
+\item
+  \texttt{?} --- torna o padrão opcional; pode ocorrer zero ou uma vez.
+\item
+  \texttt{+} --- exige uma ou mais ocorrências.
+\item
+  \texttt{*} --- permite zero ou mais ocorrências.
+\end{itemize}
+
+O operador \texttt{?} é preferível ao \texttt{+} quando o elemento é
+\textbf{facultativo, mas não repetível}, como o determinante em um
+sintagma nominal do inglês:
+\texttt{{[}\{\textquotesingle{}POS\textquotesingle{}:\ \textquotesingle{}DET\textquotesingle{},\ \textquotesingle{}OP\textquotesingle{}:\ \textquotesingle{}?\textquotesingle{}\},\ \{\textquotesingle{}POS\textquotesingle{}:\ \textquotesingle{}NOUN\textquotesingle{}\}{]}}
+casa tanto \emph{the capital} quanto \emph{capitals}, mas não permitiria
+uma sequência de determinantes.
+
+\textbf{Resposta 3.}
+
+\texttt{POS} refere-se à etiqueta \textbf{geral} (\emph{coarse-grained})
+de classe gramatical, definida pelo conjunto universal das Dependências
+Universais (\texttt{NOUN}, \texttt{VERB}, \texttt{ADJ}, \texttt{PROPN}
+etc.). \texttt{TAG} refere-se à etiqueta \textbf{refinada}
+(\emph{fine-grained}), específica do corpus de treinamento do modelo ---
+no caso do inglês, o conjunto do Penn Treebank (\texttt{NN},
+\texttt{NNS}, \texttt{NNP}, \texttt{VBD} etc.).
+
+\texttt{NNP} é uma etiqueta do Penn Treebank e, portanto, só é válida
+como valor de \texttt{TAG}. O equivalente geral seria \texttt{PROPN} em
+\texttt{POS}, mas \texttt{NNP} é mais específico, pois distingue nome
+próprio singular de plural (\texttt{NNPS}).
+
+\textbf{Resposta 4.}
+
+Quando o valor de \texttt{MORPH} é uma \emph{string}, o spaCy exige uma
+correspondência \textbf{exata} de todo o conjunto de traços
+morfológicos. Com \texttt{IS\_SUPERSET}, o spaCy verifica se o conjunto
+de traços do \emph{Token} \textbf{contém} o conjunto fornecido no
+padrão, ou seja, se é um superconjunto dele.
+
+Isso é necessário porque quase nunca conhecemos de antemão a combinação
+completa de traços de um \emph{Token}. Ao buscar apenas verbos no
+passado, por exemplo, queremos casar tanto
+\texttt{Tense=Past\textbar{}VerbForm=Fin} quanto
+\texttt{Aspect=Perf\textbar{}Tense=Past\textbar{}VerbForm=Part}; um
+único traço, \texttt{Tense=Past}, basta como critério.
+
+\textbf{Resposta 5.}
+
+\texttt{RIGHT\_ID} é o \textbf{nome do padrão atual}, usado para que
+padrões posteriores possam referenciá-lo. \texttt{LEFT\_ID} é a
+\textbf{referência a um padrão já definido}, ao qual o padrão atual se
+conecta por meio do operador relacional em \texttt{REL\_OP}.
+
+O primeiro dicionário não possui \texttt{LEFT\_ID} porque é a
+\textbf{âncora}: não há nenhum padrão anterior ao qual ele possa se
+ligar. A âncora é o ponto de partida da corrente.
+
+\textbf{Resposta 6.}
+
+Um objeto \emph{Span} representa uma \textbf{fatia contígua} de um
+objeto \emph{Doc}, definida por um índice inicial e um final.
+Correspondências de dependência, porém, ligam \emph{Tokens} que podem
+estar arbitrariamente distantes na ordem linear e com material
+interveniente que não faz parte da correspondência (por exemplo, em
+\emph{the movement in New York began}, o sujeito \texttt{movement} e o
+verbo \texttt{began} não são adjacentes). Como não formam uma fatia
+contígua, não podem ser representados por um \emph{Span}; por isso o
+spaCy devolve os índices individuais dos \emph{Tokens}.
+
+\hypertarget{parte-b-programauxe7uxe3o}{%
+\subsection{Parte B --- Programação}\label{parte-b-programauxe7uxe3o}}
+
+\textbf{Resposta 7.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ spacy.matcher }\ImportTok{import}\NormalTok{ Matcher}
+
+\CommentTok{\# Cria um novo Matcher com o vocabulário do modelo}
+\NormalTok{adj\_matcher }\OperatorTok{=}\NormalTok{ Matcher(vocab}\OperatorTok{=}\NormalTok{nlp.vocab)}
+
+\CommentTok{\# Define o padrão: um adjetivo seguido de um substantivo}
+\NormalTok{adj\_noun }\OperatorTok{=}\NormalTok{ [\{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}ADJ\textquotesingle{}}\NormalTok{\}, \{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}NOUN\textquotesingle{}}\NormalTok{\}]}
+
+\CommentTok{\# Adiciona o padrão ao Matcher}
+\NormalTok{adj\_matcher.add(}\StringTok{\textquotesingle{}adj+noun\textquotesingle{}}\NormalTok{, patterns}\OperatorTok{=}\NormalTok{[adj\_noun])}
+
+\CommentTok{\# Aplica o Matcher ao Doc e obtém os resultados como Spans}
+\NormalTok{adj\_results }\OperatorTok{=}\NormalTok{ adj\_matcher(doc, as\_spans}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+
+\CommentTok{\# Imprime as 20 primeiras correspondências}
+\ControlFlowTok{for}\NormalTok{ result }\KeywordTok{in}\NormalTok{ adj\_results[:}\DecValTok{20}\NormalTok{]:}
+    \BuiltInTok{print}\NormalTok{(result)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Resposta 8.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Permite um ou mais adjetivos antes do substantivo}
+\NormalTok{adj\_noun\_plus }\OperatorTok{=}\NormalTok{ [\{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}ADJ\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}OP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}+\textquotesingle{}}\NormalTok{\}, \{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}NOUN\textquotesingle{}}\NormalTok{\}]}
+
+\CommentTok{\# Versão sem \textquotesingle{}greedy\textquotesingle{}}
+\NormalTok{matcher\_a }\OperatorTok{=}\NormalTok{ Matcher(vocab}\OperatorTok{=}\NormalTok{nlp.vocab)}
+\NormalTok{matcher\_a.add(}\StringTok{\textquotesingle{}adj+noun\textquotesingle{}}\NormalTok{, patterns}\OperatorTok{=}\NormalTok{[adj\_noun\_plus])}
+\NormalTok{results\_a }\OperatorTok{=}\NormalTok{ matcher\_a(doc, as\_spans}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+
+\CommentTok{\# Versão com \textquotesingle{}greedy\textquotesingle{}}
+\NormalTok{matcher\_b }\OperatorTok{=}\NormalTok{ Matcher(vocab}\OperatorTok{=}\NormalTok{nlp.vocab)}
+\NormalTok{matcher\_b.add(}\StringTok{\textquotesingle{}adj+noun\textquotesingle{}}\NormalTok{, patterns}\OperatorTok{=}\NormalTok{[adj\_noun\_plus], greedy}\OperatorTok{=}\StringTok{\textquotesingle{}LONGEST\textquotesingle{}}\NormalTok{)}
+\NormalTok{results\_b }\OperatorTok{=}\NormalTok{ matcher\_b(doc, as\_spans}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+
+\BuiltInTok{print}\NormalTok{(}\StringTok{\textquotesingle{}Sem greedy:\textquotesingle{}}\NormalTok{, }\BuiltInTok{len}\NormalTok{(results\_a))}
+\BuiltInTok{print}\NormalTok{(}\StringTok{\textquotesingle{}Com greedy:\textquotesingle{}}\NormalTok{, }\BuiltInTok{len}\NormalTok{(results\_b))}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Explicação.} Sem \texttt{greedy}, o operador \texttt{+} devolve
+uma correspondência a \emph{cada} posição em que o padrão pode ser
+satisfeito: para a sequência \emph{large public space}, o spaCy devolve
+tanto \texttt{public\ space} quanto \texttt{large\ public\ space}. Com
+\texttt{greedy=\textquotesingle{}LONGEST\textquotesingle{}}, o spaCy
+filtra as correspondências sobrepostas e mantém apenas a mais longa de
+cada grupo, reduzindo o total de resultados.
+
+\textbf{Resposta 9.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cria um Matcher para traços morfológicos}
+\NormalTok{plural\_matcher }\OperatorTok{=}\NormalTok{ Matcher(vocab}\OperatorTok{=}\NormalTok{nlp.vocab)}
+
+\CommentTok{\# Define o padrão: substantivos cujos traços contenham Number=Plur}
+\NormalTok{plural\_noun }\OperatorTok{=}\NormalTok{ [\{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}NOUN\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}MORPH\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}IS\_SUPERSET\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}Number=Plur\textquotesingle{}}\NormalTok{]\}\}]}
+
+\CommentTok{\# Adiciona o padrão ao Matcher}
+\NormalTok{plural\_matcher.add(}\StringTok{\textquotesingle{}plural\_noun\textquotesingle{}}\NormalTok{, patterns}\OperatorTok{=}\NormalTok{[plural\_noun])}
+
+\CommentTok{\# Aplica o Matcher ao Doc}
+\NormalTok{plural\_results }\OperatorTok{=}\NormalTok{ plural\_matcher(doc, as\_spans}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+
+\CommentTok{\# Imprime as 15 primeiras correspondências e seus traços morfológicos}
+\ControlFlowTok{for}\NormalTok{ result }\KeywordTok{in}\NormalTok{ plural\_results[:}\DecValTok{15}\NormalTok{]:}
+    \BuiltInTok{print}\NormalTok{(result, }\StringTok{\textquotesingle{}}\CharTok{\textbackslash{}t}\StringTok{\textquotesingle{}}\NormalTok{, result[}\DecValTok{0}\NormalTok{].morph)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Resposta 10.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ spacy.matcher }\ImportTok{import}\NormalTok{ DependencyMatcher}
+
+\CommentTok{\# Cria um novo DependencyMatcher}
+\NormalTok{obj\_matcher }\OperatorTok{=}\NormalTok{ DependencyMatcher(vocab}\OperatorTok{=}\NormalTok{nlp.vocab)}
+
+\CommentTok{\# Define a corrente: âncora (verbo) e seu objeto direto}
+\NormalTok{verb\_dobj }\OperatorTok{=}\NormalTok{ [\{}\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}verb\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}VERB\textquotesingle{}}\NormalTok{\}\},}
+\NormalTok{             \{}\StringTok{\textquotesingle{}LEFT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}verb\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}REL\_OP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}\textgreater{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}d\_object\textquotesingle{}}\NormalTok{,}
+              \StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}DEP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}dobj\textquotesingle{}}\NormalTok{\}\}}
+\NormalTok{            ]}
+
+\CommentTok{\# Adiciona o padrão ao matcher}
+\NormalTok{obj\_matcher.add(}\StringTok{\textquotesingle{}verb\_dobj\textquotesingle{}}\NormalTok{, patterns}\OperatorTok{=}\NormalTok{[verb\_dobj])}
+
+\CommentTok{\# Aplica o matcher ao Doc}
+\NormalTok{obj\_matches }\OperatorTok{=}\NormalTok{ obj\_matcher(doc)}
+
+\CommentTok{\# Imprime as 20 primeiras correspondências}
+\ControlFlowTok{for}\NormalTok{ match }\KeywordTok{in}\NormalTok{ obj\_matches[:}\DecValTok{20}\NormalTok{]:}
+
+    \CommentTok{\# Desempacota a tupla em nome do padrão e lista de índices}
+\NormalTok{    pattern\_name, matches }\OperatorTok{=}\NormalTok{ match[}\DecValTok{0}\NormalTok{], match[}\DecValTok{1}\NormalTok{]}
+
+    \CommentTok{\# Os índices seguem a ordem em que os padrões foram definidos}
+\NormalTok{    verb, dobject }\OperatorTok{=}\NormalTok{ matches[}\DecValTok{0}\NormalTok{], matches[}\DecValTok{1}\NormalTok{]}
+
+    \BuiltInTok{print}\NormalTok{(nlp.vocab[pattern\_name].text, }\StringTok{\textquotesingle{}}\CharTok{\textbackslash{}t}\StringTok{\textquotesingle{}}\NormalTok{, doc[verb], }\StringTok{\textquotesingle{}...\textquotesingle{}}\NormalTok{, doc[dobject])}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Resposta 11.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# O terceiro elo parte de \textquotesingle{}d\_object\textquotesingle{}, e não da âncora \textquotesingle{}verb\textquotesingle{}}
+\NormalTok{verb\_dobj\_det }\OperatorTok{=}\NormalTok{ [\{}\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}verb\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}VERB\textquotesingle{}}\NormalTok{\}\},}
+\NormalTok{                 \{}\StringTok{\textquotesingle{}LEFT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}verb\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}REL\_OP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}\textgreater{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}d\_object\textquotesingle{}}\NormalTok{,}
+                  \StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}DEP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}dobj\textquotesingle{}}\NormalTok{\}\},}
+\NormalTok{                 \{}\StringTok{\textquotesingle{}LEFT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}d\_object\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}REL\_OP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}\textgreater{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}determiner\textquotesingle{}}\NormalTok{,}
+                  \StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}DEP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}det\textquotesingle{}}\NormalTok{\}\}}
+\NormalTok{                ]}
+
+\CommentTok{\# Cria um matcher novo para evitar misturar com padrões anteriores}
+\NormalTok{det\_matcher }\OperatorTok{=}\NormalTok{ DependencyMatcher(vocab}\OperatorTok{=}\NormalTok{nlp.vocab)}
+\NormalTok{det\_matcher.add(}\StringTok{\textquotesingle{}verb\_dobj\_det\textquotesingle{}}\NormalTok{, patterns}\OperatorTok{=}\NormalTok{[verb\_dobj\_det])}
+
+\NormalTok{det\_matches }\OperatorTok{=}\NormalTok{ det\_matcher(doc)}
+
+\ControlFlowTok{for}\NormalTok{ match }\KeywordTok{in}\NormalTok{ det\_matches[:}\DecValTok{20}\NormalTok{]:}
+
+\NormalTok{    pattern\_name, matches }\OperatorTok{=}\NormalTok{ match[}\DecValTok{0}\NormalTok{], match[}\DecValTok{1}\NormalTok{]}
+
+    \CommentTok{\# A ordem dos índices segue a ordem de definição dos padrões}
+\NormalTok{    verb, dobject, determiner }\OperatorTok{=}\NormalTok{ matches[}\DecValTok{0}\NormalTok{], matches[}\DecValTok{1}\NormalTok{], matches[}\DecValTok{2}\NormalTok{]}
+
+    \BuiltInTok{print}\NormalTok{(nlp.vocab[pattern\_name].text, }\StringTok{\textquotesingle{}}\CharTok{\textbackslash{}t}\StringTok{\textquotesingle{}}\NormalTok{,}
+\NormalTok{          doc[verb], }\StringTok{\textquotesingle{}...\textquotesingle{}}\NormalTok{, doc[determiner], doc[dobject])}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Explicação.} O determinante é dependente do
+\textbf{substantivo}, não do verbo. Por isso \texttt{LEFT\_ID} deve ser
+\texttt{d\_object}: estamos prolongando a corrente para a direita a
+partir do objeto direto, e não abrindo uma nova corrente a partir da
+âncora.
+
+\textbf{Resposta 12.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ wasabi }\ImportTok{import}\NormalTok{ Printer}
+
+\CommentTok{\# Inicializa o Printer}
+\NormalTok{match }\OperatorTok{=}\NormalTok{ Printer()}
+
+\CommentTok{\# Percorre as correspondências mantendo a contagem}
+\ControlFlowTok{for}\NormalTok{ i, result }\KeywordTok{in} \BuiltInTok{enumerate}\NormalTok{(adj\_results, start}\OperatorTok{=}\DecValTok{1}\NormalTok{):}
+
+    \BuiltInTok{print}\NormalTok{(i,}
+\NormalTok{          doc[result.start }\OperatorTok{{-}} \DecValTok{5}\NormalTok{: result.start],   }\CommentTok{\# contexto à esquerda}
+\NormalTok{          match.text(result, color}\OperatorTok{=}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{, no\_print}\OperatorTok{=}\VariableTok{True}\NormalTok{),  }\CommentTok{\# correspondência em azul}
+\NormalTok{          doc[result.end: result.end }\OperatorTok{+} \DecValTok{5}\NormalTok{]        }\CommentTok{\# contexto à direita}
+\NormalTok{         )}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{parte-c-reflexuxe3o}{%
+\subsection{Parte C --- Reflexão}\label{parte-c-reflexuxe3o}}
+
+\textbf{Resposta 13.}
+
+O texto de origem contém quebras de linha (\texttt{\textbackslash{}n})
+que o spaCy preserva como \emph{Tokens}. Quando uma dessas quebras cai
+na janela de contexto, ela é impressa literalmente e desloca a saída
+para outra linha.
+
+Uma solução é substituir os caracteres de espaçamento pelo caractere de
+espaço antes de imprimir:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ i, result }\KeywordTok{in} \BuiltInTok{enumerate}\NormalTok{(adj\_results, start}\OperatorTok{=}\DecValTok{1}\NormalTok{):}
+
+    \CommentTok{\# Converte as fatias em texto e normaliza os espaços em branco}
+\NormalTok{    left }\OperatorTok{=} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{.join(doc[result.start }\OperatorTok{{-}} \DecValTok{5}\NormalTok{: result.start].text.split())}
+\NormalTok{    right }\OperatorTok{=} \StringTok{\textquotesingle{} \textquotesingle{}}\NormalTok{.join(doc[result.end: result.end }\OperatorTok{+} \DecValTok{5}\NormalTok{].text.split())}
+
+    \BuiltInTok{print}\NormalTok{(i, left, match.text(result, color}\OperatorTok{=}\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{, no\_print}\OperatorTok{=}\VariableTok{True}\NormalTok{), right)}
+\end{Highlighting}
+\end{Shaded}
+
+O método \texttt{split()} sem argumentos divide a \emph{string} em
+qualquer sequência de espaços em branco --- incluindo
+\texttt{\textbackslash{}n} e \texttt{\textbackslash{}t} --- e
+\texttt{join()} a reconstitui com espaços simples.
+
+Alternativamente, poderíamos limpar o texto antes de fornecê-lo ao
+modelo de linguagem, ou filtrar os \emph{Tokens} cujo atributo
+\texttt{is\_space} seja \texttt{True}.
+
+\textbf{Resposta 14.}
+
+A construção envolve uma relação \textbf{sintática}, e não meramente
+linear: o sintagma nominal é o objeto da preposição, que por sua vez é
+dependente do verbo. Palavras podem intervir entre os elementos
+(\emph{depend heavily on the government}), o que torna o \emph{Matcher}
+linear frágil. Portanto, a escolha adequada é o
+\textbf{DependencyMatcher}.
+
+A regra teria três elos:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{verb\_prep\_np }\OperatorTok{=}\NormalTok{ [}
+    \CommentTok{\# Âncora: o verbo}
+\NormalTok{    \{}\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}verb\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}POS\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}VERB\textquotesingle{}}\NormalTok{\}\},}
+
+    \CommentTok{\# A preposição é dependente do verbo, com a relação \textquotesingle{}prep\textquotesingle{}}
+\NormalTok{    \{}\StringTok{\textquotesingle{}LEFT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}verb\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}REL\_OP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}\textgreater{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}preposition\textquotesingle{}}\NormalTok{,}
+     \StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}DEP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}prep\textquotesingle{}}\NormalTok{\}\},}
+
+    \CommentTok{\# O objeto da preposição é dependente da preposição, com a relação \textquotesingle{}pobj\textquotesingle{}}
+\NormalTok{    \{}\StringTok{\textquotesingle{}LEFT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}preposition\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}REL\_OP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}\textgreater{}\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}RIGHT\_ID\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}prep\_object\textquotesingle{}}\NormalTok{,}
+     \StringTok{\textquotesingle{}RIGHT\_ATTRS\textquotesingle{}}\NormalTok{: \{}\StringTok{\textquotesingle{}DEP\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}pobj\textquotesingle{}}\NormalTok{\}\}}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Justificativa das escolhas:}
+
+\begin{itemize}
+\tightlist
+\item
+  A âncora é o verbo, porque é o elemento em torno do qual a construção
+  se organiza.
+\item
+  O segundo elo parte do verbo
+  (\texttt{LEFT\_ID:\ \textquotesingle{}verb\textquotesingle{}}), pois a
+  preposição é dependente dele.
+\item
+  O terceiro elo parte da preposição
+  (\texttt{LEFT\_ID:\ \textquotesingle{}preposition\textquotesingle{}}),
+  e \textbf{não} do verbo, porque o sintagma nominal é dependente da
+  preposição --- trata-se de um prolongamento da mesma corrente.
+\item
+  Se quiséssemos restringir o verbo a um lema específico, bastaria
+  acrescentar
+  \texttt{\textquotesingle{}LEMMA\textquotesingle{}:\ \textquotesingle{}depend\textquotesingle{}}
+  ao dicionário \texttt{RIGHT\_ATTRS} da âncora.
+\end{itemize}
+
+\end{document}

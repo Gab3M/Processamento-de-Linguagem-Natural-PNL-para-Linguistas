@@ -1,0 +1,1917 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 1 - Processando Diversos Idiomas}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{processando-diversos-idiomas}{%
+\section{Processando Diversos
+Idiomas}\label{processando-diversos-idiomas}}
+
+\hypertarget{objetivos-de-aprendizagem}{%
+\subsection{Objetivos de Aprendizagem}\label{objetivos-de-aprendizagem}}
+
+Neste módulo, você será capaz de:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Compreender a necessidade da diversidade linguística:}
+  Entender os desafios e a importância de aplicar técnicas de
+  Processamento de Linguagem Natural (PNL) em múltiplos idiomas,
+  expandindo além das ferramentas tradicionais focadas exclusivamente no
+  inglês.
+\item
+  \textbf{Conhecer a biblioteca Stanza:} Explorar a ferramenta de PNL
+  desenvolvida pelo Stanford NLP Group, compreendendo como ela utiliza
+  modelos de redes neurais para oferecer suporte nativo a dezenas de
+  línguas.
+\item
+  \textbf{Integrar ecossistemas (Stanza + spaCy):} Aprender a utilizar o
+  pacote \texttt{spacy-stanza} para carregar e executar os modelos
+  pesados do Stanza sem precisar abandonar a sintaxe, os objetos e o
+  fluxo de trabalho já familiares do spaCy.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{introduuxe7uxe3o}{%
+\subsection{1. Introdução}\label{introduuxe7uxe3o}}
+
+Historicamente, a maior parte da pesquisa, do desenvolvimento de
+ferramentas e da criação de conjuntos de dados em Processamento de
+Linguagem Natural (PNL) concentrou-se fortemente no idioma inglês.
+
+No entanto, o inglês representa apenas uma pequena fração da diversidade
+linguística mundial. Quando tentamos aplicar as mesmas abordagens do
+inglês para outros idiomas, encontramos desafios estruturais
+significativos:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Morfologia complexa:} Idiomas como o finlandês ou o turco são
+  aglutinativos, o que significa que uma única palavra pode conter a
+  raiz, o tempo verbal, marcadores de caso e pronomes, todos combinados.
+\item
+  \textbf{Ordem das palavras (Sintaxe):} Enquanto o inglês segue uma
+  ordem razoavelmente rigorosa de Sujeito-Verbo-Objeto (SVO), muitos
+  outros idiomas possuem ordens muito mais flexíveis ou adotam
+  estruturas diferentes, como Sujeito-Objeto-Verbo (SOV), comum no
+  japonês.
+\end{itemize}
+
+Para que possamos construir aplicações globais e analisar textos de
+diferentes culturas de forma precisa, precisamos de ecossistemas de PNL
+que sejam nativamente projetados para lidar com essa vasta variedade de
+estruturas gramaticais. É nesse contexto que surgem ferramentas modernas
+de anotação multilíngue.
+
+\hypertarget{stanza-uma-biblioteca-python-para-processar-muitos-idiomas}{%
+\subsection{2. Stanza: Uma biblioteca Python para processar muitos
+idiomas}\label{stanza-uma-biblioteca-python-para-processar-muitos-idiomas}}
+
+Para começar a trabalhar com outros idiomas além do inglês, podemos usar
+uma biblioteca chamada Stanza.
+
+\href{https://stanfordnlp.github.io/stanza/}{Stanza} é uma biblioteca
+Python para processamento de linguagem natural que fornece modelos de
+linguagem pré-treinados para muitos idiomas (Qi et
+al.~\href{https://www.aclweb.org/anthology/2020.acl-demos.14/}{2020}).
+
+Os modelos de linguagem do Stanza são treinados em corpora anotados
+usando o formalismo de
+\href{https://universaldependencies.org/}{Dependências Universais}, o
+que significa que esses modelos podem executar tarefas como tokenização,
+etiquetagem de classes gramaticais, etiquetagem morfológica e análise de
+dependências.
+
+Estas são essencialmente as mesmas tarefas que exploramos usando a
+biblioteca de processamento de linguagem natural spaCy na Parte II.
+
+Vamos começar a explorar o Stanza importando a biblioteca.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa a biblioteca Stanza}
+\ImportTok{import}\NormalTok{ stanza}
+\end{Highlighting}
+\end{Shaded}
+
+Para processar um determinado idioma, devemos primeiro baixar um modelo
+de linguagem do Stanza usando a função \texttt{download()}.
+
+A função \texttt{download()} requer um único argumento, \texttt{lang},
+que define o modelo de linguagem a ser baixado.
+
+Para baixar um modelo de linguagem para um determinado idioma, recupere
+o código de idioma de duas letras (por exemplo, \texttt{wo}) para o
+idioma da lista de modelos de linguagem disponíveis e passe o código do
+idioma como um objeto de string para o argumento \texttt{lang}.
+
+Por exemplo, o código a seguir baixaria um modelo para o Wolof, um
+idioma falado na África Ocidental que pertence à família de línguas
+nigero-congolesas. Este modelo foi treinado usando o treebank Wolof
+(Dione \href{https://www.aclweb.org/anthology/W19-8003/}{2019}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Baixa o modelo de linguagem do Stanza para o Wolof}
+\NormalTok{stanza.download(lang}\OperatorTok{=}\StringTok{\textquotesingle{}wo\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Para alguns idiomas, o Stanza fornece modelos que foram treinados em
+diferentes conjuntos de dados. O Stanza se refere a modelos treinados em
+diferentes conjuntos de dados como \emph{packages} (pacotes). Por
+padrão, o Stanza baixa automaticamente o pacote com o modelo treinado no
+maior conjunto de dados disponível para o idioma em questão.
+
+Para selecionar um modelo treinado em um conjunto de dados específico,
+passe o nome do seu pacote como um objeto de string para o argumento
+\texttt{package}.
+
+Para exemplificar, o comando a seguir baixaria um modelo para o
+finlandês treinado no conjunto de dados \emph{FinnTreeBank} (pacote:
+\texttt{ftb}) em vez do modelo padrão, que é treinado no conjunto de
+dados \emph{Turku Dependency Treebank} (pacote: \texttt{tbt}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Baixa um modelo de linguagem do Stanza para o finlandês treinado usando o FinnTreeBank (pacote \textquotesingle{}ftb\textquotesingle{})}
+\NormalTok{stanza.download(lang}\OperatorTok{=}\StringTok{\textquotesingle{}fi\textquotesingle{}}\NormalTok{, package}\OperatorTok{=}\StringTok{\textquotesingle{}ftb\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Os nomes dos pacotes são fornecidos na lista de modelos de linguagem
+disponíveis para o Stanza. \#\#\# 2.1. Carregando um modelo de linguagem
+no Stanza
+
+Para carregar um modelo de linguagem do Stanza no Python, devemos
+primeiro criar um objeto \emph{Pipeline} inicializando uma instância da
+classe \texttt{Pipeline()} do módulo \texttt{stanza}.
+
+Para exemplificar este procedimento, vamos inicializar um pipeline com
+um modelo de linguagem para o Wolof.
+
+Para carregar um modelo de linguagem para o Wolof no pipeline, devemos
+fornecer a string \texttt{\textquotesingle{}wo\textquotesingle{}} para o
+argumento \texttt{lang} da função \texttt{Pipeline()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Inicializa um pipeline do Stanza com um modelo de linguagem para o Wolof;}
+\CommentTok{\# atribui o modelo à variável \textquotesingle{}nlp\_wo\textquotesingle{}.}
+\NormalTok{nlp\_wo }\OperatorTok{=}\NormalTok{ stanza.Pipeline(lang}\OperatorTok{=}\StringTok{\textquotesingle{}wo\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Chama a variável para examinar a saída}
+\NormalTok{nlp\_wo}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+<stanza.pipeline.core.Pipeline at 0x127f94eb0>
+\end{verbatim}
+
+Carregar um modelo de linguagem no Stanza retorna um objeto
+\emph{Pipeline}, que consiste em uma série de \emph{processadores} que
+executam várias tarefas de processamento de linguagem natural.
+
+A saída acima lista os processadores sob o cabeçalho de mesmo nome,
+juntamente com os nomes dos pacotes usados para treinar esses
+processadores.
+
+Como aprendemos na Parte II, nem sempre é necessário ter todas as
+anotações linguísticas criadas por um modelo, pois elas sempre têm um
+custo computacional.
+
+Para acelerar o processamento, você pode definir os processadores a
+serem incluídos no objeto \emph{Pipeline} fornecendo ao argumento
+\texttt{processors} um objeto de string contendo os
+\href{https://stanfordnlp.github.io/stanza/pipeline.html\#processors}{nomes
+dos processadores} a serem incluídos no pipeline, que devem ser
+separados por vírgulas.
+
+Por exemplo, criar um \emph{Pipeline} usando o comando abaixo incluiria
+apenas os processadores para tokenização e etiquetagem de classes
+gramaticais (part-of-speech tagging) no pipeline.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Inicializa um pipeline do Stanza com um modelo de linguagem para o Wolof;}
+\CommentTok{\# atribui o modelo à variável \textquotesingle{}nlp\_wo\textquotesingle{}. Inclui apenas o tokenizador }
+\CommentTok{\# e o etiquetador de classes gramaticais.}
+\NormalTok{nlp\_wo }\OperatorTok{=}\NormalTok{ stanza.Pipeline(lang}\OperatorTok{=}\StringTok{\textquotesingle{}wo\textquotesingle{}}\NormalTok{, processors}\OperatorTok{=}\StringTok{\textquotesingle{}tokenize, pos\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{processando-texto-usando-o-stanza}{%
+\subsubsection{2.2. Processando texto usando o
+Stanza}\label{processando-texto-usando-o-stanza}}
+
+Agora que inicializamos um \emph{Pipeline} do Stanza com um modelo de
+linguagem, podemos fornecer um texto em Wolof para o modelo sob a
+variável \texttt{nlp\_wo} como um objeto de string.
+
+Armazenamos o resultado na variável \texttt{doc\_wo}.
+
+\begin{verbatim}
+python
+# Fornece o texto para o modelo sob 'nlp_wo'; armazena o resultado na variável 'doc'
+doc_wo = nlp_wo("Réew maa ngi lebe turam wi ci dex gi ko peek ci penku ak bëj-gànnaar, te ab balluwaayam bawoo ca Fuuta Jallon ca Ginne, di Dexug Senegaal. Ab kilimaam bu gëwéel la te di bu fendi te yor ñaari jamono: jamonoy nawet (jamonoy taw) ak ju noor (jamonoy fendi).")
+
+# Verifica o tipo da saída
+type(doc_wo)
+\end{verbatim}
+
+\begin{verbatim}
+text
+stanza.models.common.doc.Document
+\end{verbatim}
+
+Isso retorna um objeto
+\href{https://stanfordnlp.github.io/stanza/data_objects.html\#document}{\emph{Document}}
+do Stanza, que contém as anotações linguísticas criadas ao passar o
+texto pelo pipeline.
+
+O atributo \texttt{sentences} de um objeto \emph{Document} do Stanza
+contém uma lista onde cada item representa uma única sentença.
+
+Portanto, podemos usar colchetes para acessar o primeiro item
+\texttt{{[}0{]}} da lista.
+
+\begin{verbatim}
+python
+# Obtém o primeiro item da lista de sentenças
+doc_wo.sentences[0]
+\end{verbatim}
+
+\begin{verbatim}
+text
+[
+  {
+    "id": 1,
+    "text": "Réew",
+    "lemma": "réew",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "head": 4,
+    "deprel": "nsubj",
+    "start_char": 0,
+    "end_char": 4
+  },
+  {
+    "id": 2,
+    "text": "maa",
+    "lemma": "a",
+    "upos": "AUX",
+    "xpos": "AUX",
+    "feats": "PronType=Prs",
+    "head": 4,
+    "deprel": "aux",
+    "start_char": 5,
+    "end_char": 8
+  },
+  {
+    "id": 3,
+    "text": "ngi",
+    "lemma": "ngi",
+    "upos": "AUX",
+    "xpos": "AUX",
+    "feats": "Aspect=Prog",
+    "head": 4,
+    "deprel": "aux",
+    "start_char": 9,
+    "end_char": 12
+  },
+  {
+    "id": 4,
+    "text": "lebe",
+    "lemma": "lebe",
+    "upos": "VERB",
+    "xpos": "VERB",
+    "feats": "Mood=Ind|VerbForm=Fin",
+    "head": 0,
+    "deprel": "root",
+    "start_char": 13,
+    "end_char": 17
+  },
+  {
+    "id": 5,
+    "text": "turam",
+    "lemma": "tur",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "feats": "Number=Sing|Poss=Yes",
+    "head": 4,
+    "deprel": "obj",
+    "start_char": 18,
+    "end_char": 23
+  },
+  {
+    "id": 6,
+    "text": "wi",
+    "lemma": "bi",
+    "upos": "DET",
+    "xpos": "DET",
+    "feats": "Definite=Def|Deixis=Prox|NounClass=Wol10|Number=Sing|PronType=Art",
+    "head": 5,
+    "deprel": "det",
+    "start_char": 24,
+    "end_char": 26
+  },
+  {
+    "id": 7,
+    "text": "ci",
+    "lemma": "ci",
+    "upos": "ADP",
+    "xpos": "PREP",
+    "head": 8,
+    "deprel": "case",
+    "start_char": 27,
+    "end_char": 29
+  },
+  {
+    "id": 8,
+    "text": "dex",
+    "lemma": "dex",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "head": 4,
+    "deprel": "obl",
+    "start_char": 30,
+    "end_char": 33
+  },
+  {
+    "id": 9,
+    "text": "gi",
+    "lemma": "bi",
+    "upos": "PRON",
+    "xpos": "PRON",
+    "feats": "Definite=Def|Deixis=Prox|NounClass=Wol3|Number=Sing|Person=3|PronType=Rel",
+    "head": 11,
+    "deprel": "nsubj",
+    "start_char": 34,
+    "end_char": 36
+  },
+  {
+    "id": 10,
+    "text": "ko",
+    "lemma": "ko",
+    "upos": "PRON",
+    "xpos": "CL",
+    "feats": "Case=Acc|Number=Sing|Person=3|PronType=Prs",
+    "head": 11,
+    "deprel": "obj",
+    "start_char": 37,
+    "end_char": 39
+  },
+  {
+    "id": 11,
+    "text": "peek",
+    "lemma": "peek",
+    "upos": "VERB",
+    "xpos": "VERB",
+    "feats": "Mood=Ind|VerbForm=Fin",
+    "head": 8,
+    "deprel": "acl:relcl",
+    "start_char": 40,
+    "end_char": 44
+  },
+  {
+    "id": 12,
+    "text": "ci",
+    "lemma": "ci",
+    "upos": "ADP",
+    "xpos": "PREP",
+    "head": 13,
+    "deprel": "case",
+    "start_char": 45,
+    "end_char": 47
+  },
+  {
+    "id": 13,
+    "text": "penku",
+    "lemma": "penku",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "head": 11,
+    "deprel": "obl",
+    "start_char": 48,
+    "end_char": 53
+  },
+  {
+    "id": 14,
+    "text": "ak",
+    "lemma": "ak",
+    "upos": "CCONJ",
+    "xpos": "CONJ",
+    "head": 15,
+    "deprel": "cc",
+    "start_char": 54,
+    "end_char": 56
+  },
+  {
+    "id": 15,
+    "text": "bëj-gànnaar",
+    "lemma": "bëj-gànnaar",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "head": 13,
+    "deprel": "conj",
+    "start_char": 57,
+    "end_char": 68
+  },
+  {
+    "id": 16,
+    "text": ",",
+    "lemma": ",",
+    "upos": "PUNCT",
+    "xpos": "COMMA",
+    "head": 20,
+    "deprel": "punct",
+    "start_char": 68,
+    "end_char": 69
+  },
+  {
+    "id": 17,
+    "text": "te",
+    "lemma": "te",
+    "upos": "CCONJ",
+    "xpos": "CONJ",
+    "head": 20,
+    "deprel": "cc",
+    "start_char": 70,
+    "end_char": 72
+  },
+  {
+    "id": 18,
+    "text": "ab",
+    "lemma": "ab",
+    "upos": "DET",
+    "xpos": "DET",
+    "feats": "Definite=Ind|NounClass=Wol5|Number=Sing|PronType=Art",
+    "head": 19,
+    "deprel": "det",
+    "start_char": 73,
+    "end_char": 75
+  },
+  {
+    "id": 19,
+    "text": "balluwaayam",
+    "lemma": "balluwaay",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "feats": "Number=Sing|Poss=Yes",
+    "head": 20,
+    "deprel": "nsubj",
+    "start_char": 76,
+    "end_char": 87
+  },
+  {
+    "id": 20,
+    "text": "bawoo",
+    "lemma": "bawoo",
+    "upos": "VERB",
+    "xpos": "VERB",
+    "feats": "Mood=Ind|VerbForm=Fin",
+    "head": 4,
+    "deprel": "conj",
+    "start_char": 88,
+    "end_char": 93
+  },
+  {
+    "id": 21,
+    "text": "ca",
+    "lemma": "ca",
+    "upos": "ADP",
+    "xpos": "PREP",
+    "head": 22,
+    "deprel": "case",
+    "start_char": 94,
+    "end_char": 96
+  },
+  {
+    "id": 22,
+    "text": "Fuuta",
+    "lemma": "Fuuta",
+    "upos": "PROPN",
+    "xpos": "NAME",
+    "head": 20,
+    "deprel": "obl",
+    "start_char": 97,
+    "end_char": 102
+  },
+  {
+    "id": 23,
+    "text": "Jallon",
+    "lemma": "Jallon",
+    "upos": "PROPN",
+    "xpos": "NAME",
+    "head": 22,
+    "deprel": "flat",
+    "start_char": 103,
+    "end_char": 109
+  },
+  {
+    "id": 24,
+    "text": "ca",
+    "lemma": "ca",
+    "upos": "ADP",
+    "xpos": "PREP",
+    "head": 25,
+    "deprel": "case",
+    "start_char": 110,
+    "end_char": 112
+  },
+  {
+    "id": 25,
+    "text": "Ginne",
+    "lemma": "Ginne",
+    "upos": "PROPN",
+    "xpos": "NAME",
+    "head": 20,
+    "deprel": "obl",
+    "start_char": 113,
+    "end_char": 118
+  },
+  {
+    "id": 26,
+    "text": ",",
+    "lemma": ",",
+    "upos": "PUNCT",
+    "xpos": "COMMA",
+    "head": 28,
+    "deprel": "punct",
+    "start_char": 118,
+    "end_char": 119
+  },
+  {
+    "id": 27,
+    "text": "di",
+    "lemma": "di",
+    "upos": "AUX",
+    "xpos": "COP",
+    "feats": "Aspect=Imp|Mood=Ind|Tense=Pres|VerbForm=Fin",
+    "head": 28,
+    "deprel": "cop",
+    "start_char": 120,
+    "end_char": 122
+  },
+  {
+    "id": 28,
+    "text": "Dexug",
+    "lemma": "dex",
+    "upos": "NOUN",
+    "xpos": "NOUN",
+    "feats": "Case=Gen|Number=Sing",
+    "head": 22,
+    "deprel": "appos",
+    "start_char": 123,
+    "end_char": 128
+  },
+  {
+    "id": 29,
+    "text": "Senegaal",
+    "lemma": "Senegaal",
+    "upos": "PROPN",
+    "xpos": "NAME",
+    "head": 28,
+    "deprel": "nmod",
+    "start_char": 129,
+    "end_char": 137
+  },
+  {
+    "id": 30,
+    "text": ".",
+    "lemma": ".",
+    "upos": "PUNCT",
+    "xpos": "PERIOD",
+    "head": 4,
+    "deprel": "punct",
+    "start_char": 137,
+    "end_char": 138
+  }
+]
+\end{verbatim}
+
+Embora a saída contenha colchetes \texttt{{[}{]}} e chaves
+\texttt{\{\}}, que o Python normalmente usa para marcar listas e
+dicionários, respectivamente, a saída não é uma lista com dicionários
+aninhados, mas um objeto
+\href{https://stanfordnlp.github.io/stanza/data_objects.html\#sentence}{\emph{Sentence}}
+do Stanza.
+
+\begin{verbatim}
+python
+# Verifica o tipo do primeiro item no objeto Document
+type(doc_wo.sentences[0])
+\end{verbatim}
+
+\begin{verbatim}
+text
+stanza.models.common.doc.Sentence
+\end{verbatim}
+
+O objeto \emph{Sentence} contém
+\href{https://stanfordnlp.github.io/stanza/data_objects.html\#sentence}{vários
+atributos e métodos} para acessar as anotações linguísticas criadas pelo
+modelo de linguagem.
+
+Se quisermos interagir com as anotações usando estruturas de dados
+nativas do Python, podemos usar o método \texttt{to\_dict()} para
+converter as anotações em uma lista de dicionários, na qual cada
+dicionário representa um único objeto
+\href{https://stanfordnlp.github.io/stanza/data_objects.html\#token}{\emph{Token}}
+do Stanza.
+
+Os pares de \emph{chave} e \emph{valor} nesses dicionários contêm as
+anotações linguísticas para cada \emph{Token}.
+
+\begin{verbatim}
+python
+# Converte o primeiro objeto Sentence em um dicionário Python; armazena na variável 'doc_dict'
+doc_dict = doc_wo.sentences[0].to_dict()
+
+# Obtém o dicionário para o primeiro Token
+doc_dict[0]
+\end{verbatim}
+
+\begin{verbatim}
+text
+{'id': 1,
+ 'text': 'Réew',
+ 'lemma': 'réew',
+ 'upos': 'NOUN',
+ 'xpos': 'NOUN',
+ 'head': 4,
+ 'deprel': 'nsubj',
+ 'start_char': 0,
+ 'end_char': 4}
+\end{verbatim}
+
+Como você pode ver, o dicionário consiste em pares de chave e valor, que
+mantêm as anotações linguísticas.
+
+Podemos recuperar uma lista de chaves disponíveis para um dicionário
+Python usando o método \texttt{keys()}.
+
+\begin{verbatim}
+python
+# Obtém uma lista de chaves para o primeiro Token no dicionário 'doc_dict'
+doc_dict[0].keys()
+\end{verbatim}
+
+\begin{verbatim}
+text
+dict_keys(['id', 'text', 'lemma', 'upos', 'xpos', 'head', 'deprel', 'start_char', 'end_char'])
+\end{verbatim}
+
+Agora que listamos as chaves, vamos recuperar o valor sob a chave
+\texttt{lemma}.
+
+\begin{verbatim}
+python
+# Obtém o valor sob a chave 'lemma' para o primeiro item [0] no dicionário 'doc_dict'
+doc_dict[0]['lemma']
+\end{verbatim}
+
+\begin{verbatim}
+text
+'réew'
+\end{verbatim}
+
+Isso retorna o lema da palavra ``réew'', que significa ``país''.
+
+\hypertarget{processando-muxfaltiplos-textos-usando-o-stanza}{%
+\subsubsection{2.3. Processando múltiplos textos usando o
+Stanza}\label{processando-muxfaltiplos-textos-usando-o-stanza}}
+
+Para processar múltiplos documentos com o Stanza, a maneira mais
+eficiente é primeiro coletar os documentos como objetos de string em uma
+lista Python.
+
+Vamos definir um pequeno exemplo com alguns documentos de exemplo em
+Wolof e armazená-los como objetos de string em uma lista sob a variável
+\texttt{str\_docs}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Define uma lista Python consistindo em duas strings}
+\NormalTok{str\_docs }\OperatorTok{=}\NormalTok{ [}\StringTok{\textquotesingle{}Lislaam a ngi njëkk a tàbbi ci Senegaal ci diggante VIIIeelu xarnu ak IXeelu xarnu, ña ko fa dugal di ay yaxantukat yu araab{-}yu{-}berber.\textquotesingle{}}\NormalTok{,}
+            \StringTok{\textquotesingle{}Li ëpp ci gëstu yi ñu def ci wàllug Gëstu{-}askan (walla demogaraafi) ci Senegaal dafa sukkandiku ci Waññ (recensement) yi ñu jotoon a def ci 1976, 1988 rawati na 2002.\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Em seguida, criamos uma lista de objetos \emph{Document} do Stanza
+usando uma compreensão de lista (\emph{list comprehension}) do Python.
+Esses objetos \emph{Document} são anotados para seus recursos
+linguísticos quando são passados por um objeto \emph{Pipeline}.
+
+Nesta fase, nós simplesmente convertemos cada string na lista
+\texttt{str\_docs} em um objeto \emph{Document} do Stanza. Armazenamos o
+resultado em uma lista chamada \texttt{docs\_wo\_in}.
+
+Antes de prosseguir com a criação dos objetos \emph{Document}, vamos
+examinar como a compreensão de lista é estruturada, desmontando sua
+sintaxe passo a passo.
+
+A compreensão de lista é como um loop \texttt{for}, que foi introduzido
+na Parte II, que usa o conteúdo de uma lista existente para criar uma
+nova lista.
+
+Para começar, assim como as listas, as compreensões de lista são
+marcadas usando colchetes \texttt{{[}{]}}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{docs\_wo\_in }\OperatorTok{=}\NormalTok{ []}
+\end{Highlighting}
+\end{Shaded}
+
+Em seguida, no lado direito da declaração \texttt{for}, usamos a
+variável \texttt{doc} para nos referir aos itens da lista
+\texttt{str\_docs} sobre a qual estamos iterando.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{docs\_wo\_in }\OperatorTok{=}\NormalTok{ [... }\ControlFlowTok{for}\NormalTok{ doc }\KeywordTok{in}\NormalTok{ str\_docs]}
+\end{Highlighting}
+\end{Shaded}
+
+Agora que podemos nos referir aos itens da lista usando a variável
+\texttt{doc}, podemos definir o que fazemos com cada item no lado
+esquerdo da declaração \texttt{for}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{docs\_wo\_in }\OperatorTok{=}\NormalTok{ [stanza.Document([], text}\OperatorTok{=}\NormalTok{doc) }\ControlFlowTok{for}\NormalTok{ doc }\KeywordTok{in}\NormalTok{ str\_docs]}
+\end{Highlighting}
+\end{Shaded}
+
+Para cada item na lista \texttt{str\_docs}, inicializamos um objeto
+\texttt{Document} vazio e passamos duas entradas para este objeto:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  uma lista vazia \texttt{{[}{]}} que será preenchida com anotações
+  linguísticas,
+\item
+  o conteúdo da variável de string sob \texttt{doc} para o argumento
+  \texttt{text}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Usa uma compreensão de lista para criar uma lista Python com objetos Document do Stanza.}
+\NormalTok{docs\_wo\_in }\OperatorTok{=}\NormalTok{ [stanza.Document([], text}\OperatorTok{=}\NormalTok{doc) }\ControlFlowTok{for}\NormalTok{ doc }\KeywordTok{in}\NormalTok{ str\_docs]}
+
+\CommentTok{\# Chama a variável para verificar a saída}
+\NormalTok{docs\_wo\_in}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[[], []]
+\end{verbatim}
+
+Não deixe a saída te enganar aqui: o que parecem ser duas listas Python
+vazias aninhadas dentro de uma lista são, na verdade, objetos
+\emph{Document} do Stanza.
+
+Vamos usar os colchetes para acessar e examinar o primeiro objeto
+\emph{Document} na lista \texttt{docs\_wo\_in}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verifica o tipo do primeiro item na lista \textquotesingle{}docs\_wo\_in\textquotesingle{}}
+\BuiltInTok{type}\NormalTok{(docs\_wo\_in[}\DecValTok{0}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+stanza.models.common.doc.Document
+\end{verbatim}
+
+Como você pode ver, o objeto é de fato um objeto \emph{Document} do
+Stanza.
+
+Podemos verificar se nossos textos de entrada chegaram a este documento
+examinando o atributo \texttt{text}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verifica o conteúdo do atributo \textquotesingle{}text\textquotesingle{} sob a}
+\CommentTok{\# primeira Sentença na lista \textquotesingle{}docs\_wo\_in\textquotesingle{}}
+\NormalTok{docs\_wo\_in[}\DecValTok{0}\NormalTok{].text}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'Lislaam a ngi njëkk a tàbbi ci Senegaal ci diggante VIIIeelu xarnu ak IXeelu xarnu, ña ko fa dugal di ay yaxantukat yu araab-yu-berber.'
+\end{verbatim}
+
+Agora que temos uma lista de objetos \emph{Document} do Stanza, podemos
+passá-los todos de uma vez para o modelo de linguagem para anotação.
+
+Isso pode ser alcançado simplesmente fornecendo a lista como entrada
+para o modelo de linguagem Wolof armazenado em \texttt{nlp\_wo}.
+
+Em seguida, armazenamos os objetos \emph{Document} do Stanza anotados na
+variável \texttt{docs\_wo\_out}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Passa a lista de objetos Document para o modelo de linguagem \textquotesingle{}nlp\_wo\textquotesingle{}}
+\CommentTok{\# para anotação.}
+\NormalTok{docs\_wo\_out }\OperatorTok{=}\NormalTok{ nlp\_wo(docs\_wo\_in)}
+
+\CommentTok{\# Chama a variável para verificar a saída}
+\NormalTok{docs\_wo\_out}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[[
+   [
+     {
+       "id": 1,
+       "text": "Lislaam",
+       "lemma": "Lislaam",
+       "upos": "PROPN",
+       "xpos": "NAME",
+       "head": 4,
+       "deprel": "nsubj",
+       "start_char": 0,
+       "end_char": 7
+     },
+     {
+       "id": 2,
+       "text": "a",
+       "lemma": "a",
+       "upos": "AUX",
+       "xpos": "AUX",
+       "feats": "PronType=Prs",
+       "head": 4,
+       "deprel": "aux",
+       "start_char": 8,
+       "end_char": 9
+     },
+     {
+       "id": 3,
+       "text": "ngi",
+       "lemma": "ngi",
+       "upos": "AUX",
+       "xpos": "AUX",
+       "feats": "Aspect=Prog",
+       "head": 4,
+       "deprel": "aux",
+       "start_char": 10,
+       "end_char": 13
+     },
+     {
+       "id": 4,
+       "text": "njëkk",
+       "lemma": "njëkk",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|VerbForm=Fin",
+       "head": 0,
+       "deprel": "root",
+       "start_char": 14,
+       "end_char": 19
+     },
+     {
+       "id": 5,
+       "text": "a",
+       "lemma": "a",
+       "upos": "PART",
+       "xpos": "PART",
+       "head": 6,
+       "deprel": "mark",
+       "start_char": 20,
+       "end_char": 21
+     },
+     {
+       "id": 6,
+       "text": "tàbbi",
+       "lemma": "tàbbi",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "VerbForm=Inf",
+       "head": 4,
+       "deprel": "xcomp",
+       "start_char": 22,
+       "end_char": 27
+     },
+     {
+       "id": 7,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 8,
+       "deprel": "case",
+       "start_char": 28,
+       "end_char": 30
+     },
+     {
+       "id": 8,
+       "text": "Senegaal",
+       "lemma": "Senegaal",
+       "upos": "PROPN",
+       "xpos": "NAME",
+       "head": 6,
+       "deprel": "obl",
+       "start_char": 31,
+       "end_char": 39
+     },
+     {
+       "id": 9,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 12,
+       "deprel": "case",
+       "start_char": 40,
+       "end_char": 42
+     },
+     {
+       "id": 10,
+       "text": "diggante",
+       "lemma": "diggante",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 9,
+       "deprel": "fixed",
+       "start_char": 43,
+       "end_char": 51
+     },
+     {
+       "id": 11,
+       "text": "VIIIeelu",
+       "lemma": "VIII",
+       "upos": "NUM",
+       "xpos": "NUMBER",
+       "feats": "NumType=Ord",
+       "head": 12,
+       "deprel": "nummod",
+       "start_char": 52,
+       "end_char": 60
+     },
+     {
+       "id": 12,
+       "text": "xarnu",
+       "lemma": "xarnu",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 6,
+       "deprel": "obl",
+       "start_char": 61,
+       "end_char": 66
+     },
+     {
+       "id": 13,
+       "text": "ak",
+       "lemma": "ak",
+       "upos": "CCONJ",
+       "xpos": "CONJ",
+       "head": 14,
+       "deprel": "cc",
+       "start_char": 67,
+       "end_char": 69
+     },
+     {
+       "id": 14,
+       "text": "IXeelu",
+       "lemma": "IX",
+       "upos": "NUM",
+       "xpos": "NUMBER",
+       "feats": "NumType=Ord",
+       "head": 15,
+       "deprel": "nummod",
+       "start_char": 70,
+       "end_char": 76
+     },
+     {
+       "id": 15,
+       "text": "xarnu",
+       "lemma": "xarnu",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 12,
+       "deprel": "conj",
+       "start_char": 77,
+       "end_char": 82
+     },
+     {
+       "id": 16,
+       "text": ",",
+       "lemma": ",",
+       "upos": "PUNCT",
+       "xpos": "COMMA",
+       "head": 23,
+       "deprel": "punct",
+       "start_char": 82,
+       "end_char": 83
+     },
+     {
+       "id": 17,
+       "text": "ña",
+       "lemma": "ba",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Definite=Def|Deixis=Remt|NounClass=Wol2|Number=Plur|Person=3|PronType=Rel",
+       "head": 23,
+       "deprel": "nsubj",
+       "start_char": 84,
+       "end_char": 86
+     },
+     {
+       "id": 18,
+       "text": "ko",
+       "lemma": "ko",
+       "upos": "PRON",
+       "xpos": "CL",
+       "feats": "Case=Acc|Number=Sing|Person=3|PronType=Prs",
+       "head": 20,
+       "deprel": "obj",
+       "start_char": 87,
+       "end_char": 89
+     },
+     {
+       "id": 19,
+       "text": "fa",
+       "lemma": "fa",
+       "upos": "ADV",
+       "xpos": "ADV",
+       "feats": "Deixis=Remt|NounClass=Wol11|PronType=Dem",
+       "head": 20,
+       "deprel": "advmod",
+       "start_char": 90,
+       "end_char": 92
+     },
+     {
+       "id": 20,
+       "text": "dugal",
+       "lemma": "dugal",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|VerbForm=Fin",
+       "head": 17,
+       "deprel": "acl:relcl",
+       "start_char": 93,
+       "end_char": 98
+     },
+     {
+       "id": 21,
+       "text": "di",
+       "lemma": "di",
+       "upos": "AUX",
+       "xpos": "COP",
+       "feats": "Aspect=Imp|Mood=Ind|Tense=Pres|VerbForm=Fin",
+       "head": 23,
+       "deprel": "cop",
+       "start_char": 99,
+       "end_char": 101
+     },
+     {
+       "id": 22,
+       "text": "ay",
+       "lemma": "ab",
+       "upos": "DET",
+       "xpos": "DET",
+       "feats": "Definite=Ind|NounClass=Wol8|Number=Plur|PronType=Art",
+       "head": 23,
+       "deprel": "det",
+       "start_char": 102,
+       "end_char": 104
+     },
+     {
+       "id": 23,
+       "text": "yaxantukat",
+       "lemma": "yaxantukat",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 4,
+       "deprel": "conj",
+       "start_char": 105,
+       "end_char": 115
+     },
+     {
+       "id": 24,
+       "text": "yu",
+       "lemma": "yu",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 25,
+       "deprel": "case",
+       "start_char": 116,
+       "end_char": 118
+     },
+     {
+       "id": 25,
+       "text": "araab-yu-berber",
+       "lemma": "araab-yu-berber",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 23,
+       "deprel": "nmod",
+       "start_char": 119,
+       "end_char": 134
+     },
+     {
+       "id": 26,
+       "text": ".",
+       "lemma": ".",
+       "upos": "PUNCT",
+       "xpos": "PERIOD",
+       "head": 4,
+       "deprel": "punct",
+       "start_char": 134,
+       "end_char": 135
+     }
+   ]
+ ],
+ [
+   [
+     {
+       "id": 1,
+       "text": "Li",
+       "lemma": "bi",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Definite=Def|Deixis=Prox|NounClass=Wol7|Number=Sing|Person=3|PronType=Rel",
+       "head": 19,
+       "deprel": "dislocated",
+       "start_char": 0,
+       "end_char": 2
+     },
+     {
+       "id": 2,
+       "text": "ëpp",
+       "lemma": "ëpp",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|VerbForm=Fin",
+       "head": 1,
+       "deprel": "acl:relcl",
+       "start_char": 3,
+       "end_char": 6
+     },
+     {
+       "id": 3,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 4,
+       "deprel": "case",
+       "start_char": 7,
+       "end_char": 9
+     },
+     {
+       "id": 4,
+       "text": "gëstu",
+       "lemma": "gëstu",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 2,
+       "deprel": "obl",
+       "start_char": 10,
+       "end_char": 15
+     },
+     {
+       "id": 5,
+       "text": "yi",
+       "lemma": "bi",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Definite=Def|Deixis=Prox|NounClass=Wol8|Number=Plur|Person=3|PronType=Rel",
+       "head": 7,
+       "deprel": "obj",
+       "start_char": 16,
+       "end_char": 18
+     },
+     {
+       "id": 6,
+       "text": "ñu",
+       "lemma": "mu",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Case=Nom|Number=Plur|Person=3|PronType=Prs",
+       "head": 7,
+       "deprel": "nsubj",
+       "start_char": 19,
+       "end_char": 21
+     },
+     {
+       "id": 7,
+       "text": "def",
+       "lemma": "def",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|VerbForm=Fin",
+       "head": 4,
+       "deprel": "acl:relcl",
+       "start_char": 22,
+       "end_char": 25
+     },
+     {
+       "id": 8,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 9,
+       "deprel": "case",
+       "start_char": 26,
+       "end_char": 28
+     },
+     {
+       "id": 9,
+       "text": "wàllug",
+       "lemma": "wàll",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "feats": "Case=Gen|Number=Sing",
+       "head": 7,
+       "deprel": "obl",
+       "start_char": 29,
+       "end_char": 35
+     },
+     {
+       "id": 10,
+       "text": "Gëstu-askan",
+       "lemma": "Gëstu-askan",
+       "upos": "PROPN",
+       "xpos": "NAME",
+       "head": 9,
+       "deprel": "nmod",
+       "start_char": 36,
+       "end_char": 47
+     },
+     {
+       "id": 11,
+       "text": "(",
+       "lemma": "(",
+       "upos": "PUNCT",
+       "xpos": "PAREN",
+       "head": 13,
+       "deprel": "punct",
+       "start_char": 48,
+       "end_char": 49
+     },
+     {
+       "id": 12,
+       "text": "walla",
+       "lemma": "walla",
+       "upos": "CCONJ",
+       "xpos": "CONJ",
+       "head": 13,
+       "deprel": "cc",
+       "start_char": 49,
+       "end_char": 54
+     },
+     {
+       "id": 13,
+       "text": "demogaraafi",
+       "lemma": "demogaraafi",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "feats": "Case=Gen|Number=Plur",
+       "head": 9,
+       "deprel": "conj",
+       "start_char": 55,
+       "end_char": 66
+     },
+     {
+       "id": 14,
+       "text": ")",
+       "lemma": ")",
+       "upos": "PUNCT",
+       "xpos": "PAREN",
+       "head": 13,
+       "deprel": "punct",
+       "start_char": 66,
+       "end_char": 67
+     },
+     {
+       "id": 15,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 16,
+       "deprel": "case",
+       "start_char": 68,
+       "end_char": 70
+     },
+     {
+       "id": 16,
+       "text": "Senegaal",
+       "lemma": "Senegaal",
+       "upos": "PROPN",
+       "xpos": "NAME",
+       "head": 13,
+       "deprel": "nmod",
+       "start_char": 71,
+       "end_char": 79
+     },
+     {
+       "id": [
+         17,
+         18
+       ],
+       "text": "dafa",
+       "start_char": 80,
+       "end_char": 84
+     },
+     {
+       "id": 17,
+       "text": "da",
+       "lemma": "da",
+       "upos": "AUX",
+       "xpos": "INFL",
+       "feats": "FocusType=Verb|Mood=Ind",
+       "head": 19,
+       "deprel": "aux"
+     },
+     {
+       "id": 18,
+       "text": "mu",
+       "lemma": "mu",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Case=Nom|Number=Sing|Person=3|PronType=Prs",
+       "head": 19,
+       "deprel": "nsubj"
+     },
+     {
+       "id": 19,
+       "text": "sukkandiku",
+       "lemma": "sukkandiku",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|VerbForm=Fin",
+       "head": 0,
+       "deprel": "root",
+       "start_char": 85,
+       "end_char": 95
+     },
+     {
+       "id": 20,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 21,
+       "deprel": "case",
+       "start_char": 96,
+       "end_char": 98
+     },
+     {
+       "id": 21,
+       "text": "Waññ",
+       "lemma": "waññ",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 19,
+       "deprel": "obl:appl",
+       "start_char": 99,
+       "end_char": 103
+     },
+     {
+       "id": 22,
+       "text": "(",
+       "lemma": "(",
+       "upos": "PUNCT",
+       "xpos": "PAREN",
+       "head": 23,
+       "deprel": "punct",
+       "start_char": 104,
+       "end_char": 105
+     },
+     {
+       "id": 23,
+       "text": "recensement",
+       "lemma": "recensement",
+       "upos": "NOUN",
+       "xpos": "NOUN",
+       "head": 21,
+       "deprel": "appos",
+       "start_char": 105,
+       "end_char": 116
+     },
+     {
+       "id": 24,
+       "text": ")",
+       "lemma": ")",
+       "upos": "PUNCT",
+       "xpos": "PAREN",
+       "head": 23,
+       "deprel": "punct",
+       "start_char": 116,
+       "end_char": 117
+     },
+     {
+       "id": 25,
+       "text": "yi",
+       "lemma": "bi",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Definite=Def|Deixis=Prox|NounClass=Wol8|Number=Plur|Person=3|PronType=Rel",
+       "head": 27,
+       "deprel": "obj",
+       "start_char": 118,
+       "end_char": 120
+     },
+     {
+       "id": 26,
+       "text": "ñu",
+       "lemma": "mu",
+       "upos": "PRON",
+       "xpos": "PRON",
+       "feats": "Case=Nom|Number=Plur|Person=3|PronType=Prs",
+       "head": 27,
+       "deprel": "nsubj",
+       "start_char": 121,
+       "end_char": 123
+     },
+     {
+       "id": 27,
+       "text": "jotoon",
+       "lemma": "jot",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|Tense=Past|VerbForm=Fin",
+       "head": 21,
+       "deprel": "acl:relcl",
+       "start_char": 124,
+       "end_char": 130
+     },
+     {
+       "id": 28,
+       "text": "a",
+       "lemma": "a",
+       "upos": "PART",
+       "xpos": "PART",
+       "head": 29,
+       "deprel": "mark",
+       "start_char": 131,
+       "end_char": 132
+     },
+     {
+       "id": 29,
+       "text": "def",
+       "lemma": "def",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "VerbForm=Inf",
+       "head": 27,
+       "deprel": "xcomp",
+       "start_char": 133,
+       "end_char": 136
+     },
+     {
+       "id": 30,
+       "text": "ci",
+       "lemma": "ci",
+       "upos": "ADP",
+       "xpos": "PREP",
+       "head": 31,
+       "deprel": "case",
+       "start_char": 137,
+       "end_char": 139
+     },
+     {
+       "id": 31,
+       "text": "1976",
+       "lemma": "1976",
+       "upos": "NUM",
+       "xpos": "NUMBER",
+       "feats": "NumType=Card",
+       "head": 29,
+       "deprel": "obl",
+       "start_char": 140,
+       "end_char": 144
+     },
+     {
+       "id": 32,
+       "text": ",",
+       "lemma": ",",
+       "upos": "PUNCT",
+       "xpos": "COMMA",
+       "head": 34,
+       "deprel": "punct",
+       "start_char": 144,
+       "end_char": 145
+     },
+     {
+       "id": 33,
+       "text": "1988",
+       "lemma": "1988",
+       "upos": "NUM",
+       "xpos": "NUMBER",
+       "feats": "NumType=Card",
+       "head": 34,
+       "deprel": "discourse",
+       "start_char": 146,
+       "end_char": 150
+     },
+     {
+       "id": 34,
+       "text": "rawati",
+       "lemma": "rawati",
+       "upos": "VERB",
+       "xpos": "VERB",
+       "feats": "Mood=Ind|VerbForm=Fin",
+       "head": 19,
+       "deprel": "parataxis",
+       "start_char": 151,
+       "end_char": 157
+     },
+     {
+       "id": 35,
+       "text": "na",
+       "lemma": "na",
+       "upos": "AUX",
+       "xpos": "INFL",
+       "feats": "Aspect=Perf|Mood=Ind|Number=Sing|Person=3",
+       "head": 34,
+       "deprel": "aux",
+       "start_char": 158,
+       "end_char": 160
+     },
+     {
+       "id": 36,
+       "text": "2002",
+       "lemma": "2002",
+       "upos": "NUM",
+       "xpos": "NUMBER",
+       "feats": "NumType=Card",
+       "head": 34,
+       "deprel": "obj",
+       "start_char": 161,
+       "end_char": 165
+     },
+     {
+       "id": 37,
+       "text": ".",
+       "lemma": ".",
+       "upos": "PUNCT",
+       "xpos": "PERIOD",
+       "head": 19,
+       "deprel": "punct",
+       "start_char": 165,
+       "end_char": 166
+     }
+   ]
+ ]]
+\end{verbatim}
+
+Como você pode ver, passar os objetos \emph{Document} para o modelo de
+linguagem os preenche com anotações linguísticas, que podem ser
+exploradas conforme introduzido acima.
+
+\hypertarget{integrando-stanza-com-o-spacy-spacy-stanza}{%
+\subsection{\texorpdfstring{3. Integrando Stanza com o spaCy
+(\texttt{spacy-stanza})}{3. Integrando Stanza com o spaCy (spacy-stanza)}}\label{integrando-stanza-com-o-spacy-spacy-stanza}}
+
+Se você estiver mais familiarizado com a biblioteca spaCy para
+processamento de linguagem natural, cujo uso foi coberto extensivamente
+na Parte II, ficará feliz em saber que também pode usar alguns dos
+modelos de linguagem do Stanza no spaCy!
+
+Isso pode ser alcançado usando uma biblioteca Python chamada
+\href{https://spacy.io/universe/project/spacy-stanza}{spacy-stanza}, que
+interliga as duas bibliotecas.
+
+Dado que o Stanza atualmente tem mais modelos de linguagem pré-treinados
+disponíveis do que o spaCy, a biblioteca spacy-stanza aumenta
+consideravelmente o número de modelos de linguagem disponíveis para o
+spaCy.
+
+Existe, no entanto, \textbf{uma grande limitação}: o idioma em questão
+deve ser suportado tanto pelo Stanza quanto pelo
+\href{https://spacy.io/usage/models\#languages}{spaCy}.
+
+Por exemplo, não podemos usar o modelo de linguagem do Stanza para o
+Wolof no spaCy, porque o spaCy não suporta o idioma Wolof.
+
+Para começar a usar modelos de linguagem do Stanza no spaCy, vamos
+começar importando a biblioteca spacy-stanza (nome do módulo:
+\texttt{spacy\_stanza}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa as bibliotecas spaCy e spacy{-}stanza}
+\ImportTok{import}\NormalTok{ spacy}
+\ImportTok{import}\NormalTok{ spacy\_stanza}
+\end{Highlighting}
+\end{Shaded}
+
+Isso importa as bibliotecas spaCy e spacy-stanza para o Python. Para
+continuar, devemos garantir que temos o modelo de linguagem do Stanza
+para o finlandês disponível também.
+
+Como mostrado acima, este modelo pode ser baixado usando o seguinte
+comando:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Baixa um modelo de linguagem do Stanza para o finlandês}
+\NormalTok{stanza.download(lang}\OperatorTok{=}\StringTok{\textquotesingle{}fi\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Como o spaCy suporta \href{https://spacy.io/usage/models\#languages}{o
+idioma finlandês}, podemos carregar modelos de linguagem do Stanza para
+o finlandês no spaCy usando a biblioteca spacy-stanza.
+
+Isso pode ser alcançado usando a função \texttt{load\_pipeline()}
+disponível no módulo \texttt{spacy\_stanza}.
+
+Para carregar o modelo de linguagem do Stanza para um determinado
+idioma, você deve fornecer o código de duas letras para o idioma em
+questão (por exemplo, \texttt{fi}) para o argumento \texttt{name}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Carrega um modelo de linguagem do Stanza para o finlandês no spaCy}
+\NormalTok{nlp\_fi }\OperatorTok{=}\NormalTok{ spacy\_stanza.load\_pipeline(name}\OperatorTok{=}\StringTok{\textquotesingle{}fi\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Se examinarmos o objeto resultante sob a variável \texttt{nlp\_fi}
+usando a função \texttt{type()} do Python, veremos que o objeto é de
+fato um objeto \emph{Language} do spaCy.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verifica o tipo do objeto sob \textquotesingle{}nlp\_fi\textquotesingle{}}
+\BuiltInTok{type}\NormalTok{(nlp\_fi)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+spacy.lang.fi.Finnish
+\end{verbatim}
+
+Geralmente, este objeto se comporta como qualquer outro objeto
+\emph{Language} do spaCy que aprendemos a usar na Parte II.
+
+Podemos explorar seu uso processando algumas sentenças de um
+\href{https://yle.fi/aihe/artikkeli/2021/03/08/yleiso-aanesti-tarja-halonen-on-inspiroivin-nainen-karkikolmikkoon-ylsivat-myos}{artigo
+de notícias} recente em finlandês escrito.
+
+Fornecemos o texto como um objeto de string para o objeto
+\emph{Language} sob \texttt{nlp\_fi} e armazenamos o resultado sob a
+variável \texttt{doc\_fi}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fornece o texto para o modelo de linguagem sob \textquotesingle{}nlp\_fi\textquotesingle{}, armazena o resultado sob \textquotesingle{}doc\_fi\textquotesingle{}}
+\NormalTok{doc\_fi }\OperatorTok{=}\NormalTok{ nlp\_fi(}\StringTok{\textquotesingle{}Tove Jansson keräsi 148 ääntä eli 18,2\% annetuista äänistä. Kirjailija, kuvataiteilija ja pilapiirtäjä tuli kansainvälisesti tunnetuksi satukirjoistaan ja sarjakuvistaan.\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Vamos continuar recuperando as sentenças do objeto \emph{Doc}, que estão
+disponíveis sob o atributo \texttt{sents}, como aprendemos na Parte II.
+
+O objeto disponível sob o atributo \texttt{sents} é um gerador Python
+que produz objetos \emph{Doc}.
+
+Para examiná-los, devemos capturar os objetos em uma estrutura de dados
+adequada. Neste caso, a estrutura de dados que melhor atende às nossas
+necessidades é uma lista Python.
+
+Portanto, convertemos a saída do objeto gerador sob \texttt{sents} em
+uma lista usando a função \texttt{list()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtém as sentenças contidas no objeto Doc \textquotesingle{}doc\_fi\textquotesingle{}.}
+\CommentTok{\# Converte o resultado em lista.}
+\NormalTok{sents\_fi }\OperatorTok{=} \BuiltInTok{list}\NormalTok{(doc\_fi.sents)}
+
+\CommentTok{\# Chama a variável para verificar a saída}
+\NormalTok{sents\_fi}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[Tove Jansson keräsi 148 ääntä eli 18,2% annetuista äänistä.,
+ Kirjailija, kuvataiteilija ja pilapiirtäjä tuli kansainvälisesti tunnetuksi satukirjoistaan ja sarjakuvistaan.]
+\end{verbatim}
+
+Também podemos usar o submódulo \texttt{displacy} do spaCy para
+visualizar as dependências sintáticas.
+
+Para fazer isso na primeira sentença sob \texttt{sents\_fi}, devemos
+primeiro acessar o primeiro item da lista usando colchetes
+\texttt{{[}0{]}} como de costume.
+
+Vamos começar verificando o tipo deste objeto.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verifica o tipo do primeiro item na lista \textquotesingle{}sents\_fi\textquotesingle{}}
+\BuiltInTok{type}\NormalTok{(sents\_fi[}\DecValTok{0}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+spacy.tokens.span.Span
+\end{verbatim}
+
+Como você pode ver, o resultado é um objeto \emph{Span} do spaCy, que é
+uma sequência de objetos \emph{Token} contidos dentro de um objeto
+\emph{Doc}.
+
+Podemos então chamar a função \texttt{render} do submódulo
+\texttt{displacy} para visualizar as dependências sintáticas para o
+objeto \emph{Span} sob \texttt{sents\_fi{[}0{]}}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importa o submódulo displacy}
+\ImportTok{from}\NormalTok{ spacy }\ImportTok{import}\NormalTok{ displacy}
+
+\CommentTok{\# Usa a função render para renderizar o primeiro item [0] na lista \textquotesingle{}sents\_fi\textquotesingle{}.}
+\CommentTok{\# Passa o argumento \textquotesingle{}style\textquotesingle{} com o valor \textquotesingle{}dep\textquotesingle{} para visualizar dependências sintáticas.}
+\NormalTok{displacy.render(sents\_fi[}\DecValTok{0}\NormalTok{], style}\OperatorTok{=}\StringTok{\textquotesingle{}dep\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{../resources/image1.png}
+\caption{Imagem1}
+\end{figure}
+
+Observe que o spaCy emitirá um aviso sobre o armazenamento de atributos
+personalizados ao gravar o objeto \emph{Doc} no disco para visualização.
+
+Também podemos examinar as anotações linguísticas criadas para objetos
+\emph{Token} individuais dentro deste objeto \emph{Span}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Faz um loop sobre cada objeto Token no Span}
+\ControlFlowTok{for}\NormalTok{ token }\KeywordTok{in}\NormalTok{ sents\_fi[}\DecValTok{0}\NormalTok{]:}
+    
+    \CommentTok{\# Imprime o token, seu lema, dependência e recursos morfológicos}
+    \BuiltInTok{print}\NormalTok{(token, token.lemma\_, token.dep\_, token.morph)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Tove Tove nsubj Case=Nom|Number=Sing
+Jansson Jansson flat:name Case=Nom|Number=Sing
+keräsi kerätä root Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act
+148 148 nummod NumType=Card
+ääntä ääni obj Case=Par|Number=Sing
+eli eli cc 
+18,2 18,2 nummod NumType=Card
+% % conj 
+annetuista antaa acl Case=Ela|Number=Plur|PartForm=Past|VerbForm=Part|Voice=Pass
+äänistä ääni nmod Case=Ela|Number=Plur
+. . punct 
+\end{verbatim}
+
+Os exemplos acima mostram como podemos acessar as anotações linguísticas
+criadas por um modelo de linguagem do Stanza por meio de objetos
+\emph{Doc}, \emph{Span} e \emph{Token} do spaCy.
+
+Esta seção deve ter lhe dado uma ideia de como começar a processar
+diversos idiomas.
+
+Na seção seguinte, vamos nos aprofundar na estrutura das Dependências
+Universais.
+
+\end{document}

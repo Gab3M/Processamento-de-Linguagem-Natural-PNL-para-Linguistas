@@ -1,0 +1,560 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 4 - Respostas dos Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{respostas-introduuxe7uxe3o-aos-word-embeddings}{%
+\section{\texorpdfstring{Respostas --- Introdução aos \emph{word
+embeddings}}{Respostas --- Introdução aos word embeddings}}\label{respostas-introduuxe7uxe3o-aos-word-embeddings}}
+
+\hypertarget{parte-a-conceitos}{%
+\subsection{Parte A --- Conceitos}\label{parte-a-conceitos}}
+
+\textbf{Resposta 1.}
+
+A hipótese distribucional afirma que \textbf{semelhança de significado
+resulta em semelhança de distribuição linguística}: palavras que ocorrem
+em contextos semelhantes tendem a ter significados semelhantes.
+
+A citação de Firth a antecipa ao deslocar o critério de identificação do
+significado da palavra isolada para sua \textbf{companhia}, isto é, para
+os elementos com que ela coocorre. Firth não formula a hipótese em
+termos distribucionais quantitativos --- isso é feito por Harris
+(\href{https://doi.org/10.1080/00437956.1954.11659520}{1954}) ---, mas
+estabelece o princípio metodológico de que o significado é contextual e,
+portanto, observável no uso.
+
+\textbf{Resposta 2.}
+
+\begin{itemize}
+\tightlist
+\item
+  O eixo \textbf{sintagmático} é o eixo da \textbf{combinação}: descreve
+  como os elementos escolhidos se encadeiam horizontalmente para formar
+  estruturas maiores (\emph{Helsinki} + \emph{is} + \emph{the capital
+  of} + \emph{Finland}).
+\item
+  O eixo \textbf{paradigmático} é o eixo da \textbf{seleção}: descreve o
+  conjunto de alternativas que poderiam ocupar uma mesma posição na
+  estrutura (\emph{Helsinki} / \emph{Tallinn} / \emph{Estocolmo}). As
+  alternativas se definem por oposição.
+\end{itemize}
+
+Na matriz da seção 2.1:
+
+\begin{itemize}
+\tightlist
+\item
+  Cada \textbf{coluna} corresponde a um lema único, isto é, a uma
+  \textbf{escolha paradigmática} disponível.
+\item
+  Cada \textbf{linha} corresponde a um \emph{Doc}, isto é, a uma
+  \textbf{estrutura sintagmática} concreta, que registra quais escolhas
+  paradigmáticas foram efetivamente combinadas.
+\end{itemize}
+
+\textbf{Resposta 3.}
+
+A representação é chamada de ``saco de palavras'' porque registra apenas
+\textbf{quais} palavras ocorrem e \textbf{quantas vezes}, descartando
+completamente a informação sobre a \textbf{ordem} em que aparecem. É
+como se as palavras fossem jogadas em um saco e agitadas.
+
+Duas limitações:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Perda da ordem e da estrutura.} As orações \emph{o cão mordeu
+  o homem} e \emph{o homem mordeu o cão} recebem exatamente o mesmo
+  vetor, embora signifiquem coisas opostas.
+\item
+  \textbf{Crescimento da dimensionalidade e esparsidade.} Cada palavra
+  nova do vocabulário exige uma dimensão adicional. Como cada documento
+  contém apenas uma fração ínfima do vocabulário, a esmagadora maioria
+  das dimensões vale zero, o que desperdiça memória e dificulta o
+  cálculo de distâncias significativas.
+\end{enumerate}
+
+\textbf{Resposta 4.}
+
+Um vetor \textbf{esparso} é aquele em que a maior parte das dimensões
+vale zero e apenas poucas carregam informação --- como o vetor one-hot,
+em que exatamente uma dimensão vale 1. Um vetor \textbf{denso} é aquele
+em que praticamente todas as dimensões têm valores não nulos, cada uma
+codificando alguma parcela de informação.
+
+Os embeddings da camada oculta são densos porque a rede é
+\textbf{forçada} a comprimir a informação de 24 dimensões esparsas em
+apenas 2 dimensões. Como não há espaço para reservar uma dimensão por
+palavra, cada dimensão precisa passar a codificar informação distribuída
+sobre a palavra e seu contexto.
+
+\textbf{Resposta 5.}
+
+O objetivo final não é dispor de um preditor de palavras vizinhas ---
+essa predição, isoladamente, tem pouca utilidade prática. O objetivo é
+obter \textbf{representações numéricas úteis} das palavras.
+
+A predição funciona como tarefa substituta porque \textbf{só é possível
+resolvê-la bem se a rede aprender boas representações}. Para prever que
+\emph{the} e \emph{capital} aparecem perto de \emph{be}, a rede precisa
+codificar, nos pesos da camada oculta, informação sobre o comportamento
+distribucional de \emph{be}. Ao fim do treinamento, descartamos o
+preditor e ficamos com os pesos --- que são os embeddings.
+
+Trata-se do princípio geral do \textbf{aprendizado auto-supervisionado}:
+o rótulo é extraído do próprio texto, sem anotação humana.
+
+\textbf{Resposta 6.}
+
+A camada oculta é um gargalo porque é muito mais estreita (2 neurônios)
+do que as camadas de entrada e de saída (24 unidades cada). Toda a
+informação necessária para a predição precisa \textbf{passar por essas
+duas dimensões}.
+
+Esse estrangulamento é justamente o que produz o aprendizado. Se a
+camada oculta tivesse 24 neurônios, a rede poderia simplesmente copiar a
+entrada, memorizando cada palavra individualmente, sem generalizar nada.
+Ao ser obrigada a comprimir, a rede é forçada a \textbf{agrupar palavras
+com comportamento distribucional semelhante} na mesma região do espaço
+--- que é exatamente o que a hipótese distribucional prevê.
+
+\hypertarget{parte-b-programauxe7uxe3o}{%
+\subsection{Parte B --- Programação}\label{parte-b-programauxe7uxe3o}}
+
+\textbf{Resposta 7.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ sklearn.metrics.pairwise }\ImportTok{import}\NormalTok{ cosine\_similarity}
+
+\CommentTok{\# Compara os vetores dos Docs nos índices 3 e 4}
+\NormalTok{cosine\_similarity([df.values[}\DecValTok{3}\NormalTok{]], [df.values[}\DecValTok{4}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[0.37796447]])
+\end{verbatim}
+
+O valor é coerente. As orações são:
+
+\begin{verbatim}
+Travelling between Helsinki and Tallinn takes about two hours
+Ferries depart from downtown Helsinki and Tallinn
+\end{verbatim}
+
+Elas compartilham três lemas --- \texttt{Helsinki}, \texttt{and} e
+\texttt{Tallinn} ---, o que produz uma similaridade moderada (0,38).
+Esse valor é claramente inferior ao dos \emph{Docs} 0 e 1 (0,67), que
+compartilham quatro lemas em uma estrutura sintagmática idêntica
+(\emph{is the capital of}), mas superior ao dos pares que quase nada
+compartilham.
+
+\textbf{Resposta 8.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Acrescenta a nova oração à lista}
+\NormalTok{examples.append(}\StringTok{"Stockholm is the capital of Sweden"}\NormalTok{)}
+
+\CommentTok{\# Reprocessa toda a lista}
+\NormalTok{docs }\OperatorTok{=} \BuiltInTok{list}\NormalTok{(nlp.pipe(examples))}
+
+\CommentTok{\# Reconta os lemas}
+\NormalTok{lemma\_counts }\OperatorTok{=}\NormalTok{ \{i: doc.count\_by(LEMMA) }\ControlFlowTok{for}\NormalTok{ i, doc }\KeywordTok{in} \BuiltInTok{enumerate}\NormalTok{(docs)\}}
+\NormalTok{lemma\_counts }\OperatorTok{=}\NormalTok{ \{i: \{docs[i].vocab[k].text: v }\ControlFlowTok{for}\NormalTok{ k, v }\KeywordTok{in}\NormalTok{ counter.items()\}}
+                \ControlFlowTok{for}\NormalTok{ i, counter }\KeywordTok{in}\NormalTok{ lemma\_counts.items()\}}
+
+\CommentTok{\# Reconstrói o DataFrame}
+\NormalTok{df }\OperatorTok{=}\NormalTok{ pd.DataFrame.from\_dict(lemma\_counts).sort\_index(ascending}\OperatorTok{=}\VariableTok{True}\NormalTok{).fillna(}\DecValTok{0}\NormalTok{).T}
+
+\CommentTok{\# Verifica o formato}
+\BuiltInTok{print}\NormalTok{(df.shape)}
+
+\CommentTok{\# Recalcula a matriz de similaridade}
+\NormalTok{sim }\OperatorTok{=}\NormalTok{ cosine\_similarity(df.values)}
+\BuiltInTok{print}\NormalTok{(sim[}\DecValTok{5}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(6, 26)
+[0.66666667 0.66666667 0.40824829 0.         0.         1.        ]
+\end{verbatim}
+
+O \emph{DataFrame} passa a ter \textbf{26 colunas}: as 24 originais mais
+os dois lemas novos, \texttt{Stockholm} e \texttt{Sweden}.
+
+Os \emph{Docs} 0 e 1 tornam-se \textbf{igualmente} os mais similares ao
+novo \emph{Doc} 5, ambos com 0,67. Isso faz sentido: as três orações
+compartilham exatamente a mesma estrutura sintagmática (\emph{X is the
+capital of Y}), diferindo apenas nos dois nomes próprios. É precisamente
+a previsão da hipótese distribucional: \texttt{Helsinki},
+\texttt{Tallinn} e \texttt{Stockholm} são alternativas paradigmáticas de
+uma mesma posição.
+
+\textbf{Resposta 9.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Similaridade entre \textquotesingle{}capital\textquotesingle{} e \textquotesingle{}the\textquotesingle{}}
+\BuiltInTok{print}\NormalTok{(cosine\_similarity([lemma\_df[}\StringTok{\textquotesingle{}capital\textquotesingle{}}\NormalTok{].values], [lemma\_df[}\StringTok{\textquotesingle{}the\textquotesingle{}}\NormalTok{].values]))}
+
+\CommentTok{\# Similaridade entre \textquotesingle{}Helsinki\textquotesingle{} e \textquotesingle{}ferry\textquotesingle{}}
+\BuiltInTok{print}\NormalTok{(cosine\_similarity([lemma\_df[}\StringTok{\textquotesingle{}Helsinki\textquotesingle{}}\NormalTok{].values], [lemma\_df[}\StringTok{\textquotesingle{}ferry\textquotesingle{}}\NormalTok{].values]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[0.53846154]])
+array([[0.13363062]])
+\end{verbatim}
+
+\textbf{Comentário.} O par \texttt{capital} / \texttt{the} apresenta
+similaridade alta (0,54) porque ambos ocorrem repetidamente nos mesmos
+contextos locais (\emph{the capital of}), compartilhando vizinhos como
+\texttt{be}, \texttt{of} e um ao outro. Isso ilustra um ponto
+importante: a hipótese distribucional captura \textbf{similaridade de
+distribuição}, que nem sempre corresponde a similaridade de significado
+--- um determinante e um substantivo não são sinônimos.
+
+O par \texttt{Helsinki} / \texttt{ferry} apresenta similaridade baixa
+(0,13): as duas palavras ocorrem em vizinhanças bastante distintas no
+nosso pequeno corpus.
+
+\textbf{Resposta 10.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Recria o DataFrame vazio}
+\NormalTok{lemma\_df\_3 }\OperatorTok{=}\NormalTok{ pd.DataFrame(index}\OperatorTok{=}\NormalTok{unique\_lemmas, columns}\OperatorTok{=}\NormalTok{unique\_lemmas).fillna(}\DecValTok{0}\NormalTok{)}
+
+\CommentTok{\# Percorre os Tokens, agora com janela de três palavras de cada lado}
+\ControlFlowTok{for}\NormalTok{ token }\KeywordTok{in}\NormalTok{ combined\_docs:}
+
+    \CommentTok{\# Note o intervalo ampliado de posições}
+    \ControlFlowTok{for}\NormalTok{ position }\KeywordTok{in}\NormalTok{ [}\OperatorTok{{-}}\DecValTok{3}\NormalTok{, }\OperatorTok{{-}}\DecValTok{2}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{]:}
+
+        \ControlFlowTok{try}\NormalTok{:}
+\NormalTok{            nbor\_lemma }\OperatorTok{=}\NormalTok{ token.nbor(position).lemma\_}
+\NormalTok{            lemma\_df\_3.at[token.lemma\_, nbor\_lemma] }\OperatorTok{+=} \DecValTok{1}
+
+        \ControlFlowTok{except} \PreprocessorTok{IndexError}\NormalTok{:}
+            \ControlFlowTok{continue}
+
+\CommentTok{\# Recalcula a similaridade}
+\NormalTok{cosine\_similarity([lemma\_df\_3[}\StringTok{\textquotesingle{}Tallinn\textquotesingle{}}\NormalTok{].values], [lemma\_df\_3[}\StringTok{\textquotesingle{}Helsinki\textquotesingle{}}\NormalTok{].values])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[0.56577895]])
+\end{verbatim}
+
+\textbf{Comparação.} Com janela 2, a similaridade era de \textbf{0,43};
+com janela 3, sobe para \textbf{0,57}. Ampliar a janela aumenta o número
+de vizinhos compartilhados registrados e, portanto, o número de
+dimensões não nulas em comum, elevando a similaridade.
+
+De modo geral, janelas menores tendem a capturar relações mais
+\textbf{sintáticas} (colocações imediatas), enquanto janelas maiores
+capturam relações mais \textbf{temáticas} ou tópicas. A escolha da
+janela é, portanto, uma decisão analítica, não um detalhe técnico.
+
+\textbf{Resposta 11.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+
+\KeywordTok{def}\NormalTok{ one\_hot(lemma, vocabulary):}
+    \CommentTok{"""Devolve o vetor one{-}hot de um lema em relação a um vocabulário.}
+
+\CommentTok{    Parâmetros:}
+\CommentTok{        lemma: string com o lema a ser codificado}
+\CommentTok{        vocabulary: lista de lemas únicos}
+
+\CommentTok{    Devolve:}
+\CommentTok{        Um array NumPy do tamanho do vocabulário.}
+\CommentTok{    """}
+
+    \CommentTok{\# Verifica se o lema pertence ao vocabulário}
+    \ControlFlowTok{if}\NormalTok{ lemma }\KeywordTok{not} \KeywordTok{in}\NormalTok{ vocabulary:}
+
+        \CommentTok{\# Levanta um erro informativo caso contrário}
+        \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\SpecialStringTok{f"O lema \textquotesingle{}}\SpecialCharTok{\{}\NormalTok{lemma}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{} não está no vocabulário."}\NormalTok{)}
+
+    \CommentTok{\# Cria um vetor de zeros com o tamanho do vocabulário}
+\NormalTok{    vector }\OperatorTok{=}\NormalTok{ np.zeros(shape}\OperatorTok{=}\BuiltInTok{len}\NormalTok{(vocabulary))}
+
+    \CommentTok{\# Define como 1 a posição correspondente ao lema}
+\NormalTok{    vector[vocabulary.index(lemma)] }\OperatorTok{=} \DecValTok{1}
+
+    \ControlFlowTok{return}\NormalTok{ vector}
+
+
+\CommentTok{\# Testes}
+\BuiltInTok{print}\NormalTok{(one\_hot(}\StringTok{\textquotesingle{}Helsinki\textquotesingle{}}\NormalTok{, unique\_lemmas))}
+\BuiltInTok{print}\NormalTok{(one\_hot(}\StringTok{\textquotesingle{}Curitiba\textquotesingle{}}\NormalTok{, unique\_lemmas))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ValueError: O lema 'Curitiba' não está no vocabulário.
+\end{verbatim}
+
+\textbf{Resposta 12.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Reconstrói a rede com quatro neurônios na camada oculta}
+\NormalTok{network\_input }\OperatorTok{=}\NormalTok{ keras.Input(shape}\OperatorTok{=}\NormalTok{targets.shape[}\DecValTok{1}\NormalTok{], name}\OperatorTok{=}\StringTok{\textquotesingle{}input\_layer\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# Apenas o argumento \textquotesingle{}units\textquotesingle{} muda}
+\NormalTok{hidden\_layer }\OperatorTok{=}\NormalTok{ Dense(units}\OperatorTok{=}\DecValTok{4}\NormalTok{, activation}\OperatorTok{=}\VariableTok{None}\NormalTok{, name}\OperatorTok{=}\StringTok{\textquotesingle{}hidden\_layer\textquotesingle{}}\NormalTok{)(network\_input)}
+
+\NormalTok{output\_layer }\OperatorTok{=}\NormalTok{ Dense(units}\OperatorTok{=}\NormalTok{context.shape[}\DecValTok{1}\NormalTok{], activation}\OperatorTok{=}\StringTok{\textquotesingle{}softmax\textquotesingle{}}\NormalTok{,}
+\NormalTok{                     name}\OperatorTok{=}\StringTok{\textquotesingle{}output\_layer\textquotesingle{}}\NormalTok{)(hidden\_layer)}
+
+\NormalTok{model\_4d }\OperatorTok{=}\NormalTok{ keras.Model(inputs}\OperatorTok{=}\NormalTok{network\_input, outputs}\OperatorTok{=}\NormalTok{output\_layer)}
+\NormalTok{model\_4d.}\BuiltInTok{compile}\NormalTok{(loss}\OperatorTok{=}\StringTok{\textquotesingle{}categorical\_crossentropy\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{model\_4d.fit(x}\OperatorTok{=}\NormalTok{targets, y}\OperatorTok{=}\NormalTok{context, batch\_size}\OperatorTok{=}\DecValTok{64}\NormalTok{, epochs}\OperatorTok{=}\DecValTok{1500}\NormalTok{, verbose}\OperatorTok{=}\DecValTok{0}\NormalTok{)}
+
+\CommentTok{\# Verifica o formato dos pesos da camada oculta}
+\NormalTok{weights\_4d }\OperatorTok{=}\NormalTok{ model\_4d.get\_weights()[}\DecValTok{0}\NormalTok{]}
+\BuiltInTok{print}\NormalTok{(weights\_4d.shape)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(24, 4)
+\end{verbatim}
+
+A matriz de pesos passa a ter formato \texttt{(24,\ 4)}: cada um dos 24
+lemas é agora representado por um vetor de \textbf{quatro} dimensões.
+
+Já não é possível plotar o espaço diretamente porque um gráfico de
+dispersão só dispõe de dois eixos, e teríamos quatro coordenadas por
+ponto. Para visualizar, seria necessário aplicar uma técnica de
+\textbf{redução de dimensionalidade} --- como PCA ou t-SNE --- que
+projeta os vetores de quatro dimensões em duas, preservando
+aproximadamente as distâncias relativas. Essa é exatamente a abordagem
+adotada na próxima unidade, ao visualizar os embeddings do spaCy, que
+têm centenas de dimensões.
+
+\textbf{Resposta 13.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Localiza os índices dos dois lemas}
+\NormalTok{i\_hel }\OperatorTok{=}\NormalTok{ unique\_lemmas.index(}\StringTok{\textquotesingle{}Helsinki\textquotesingle{}}\NormalTok{)}
+\NormalTok{i\_tal }\OperatorTok{=}\NormalTok{ unique\_lemmas.index(}\StringTok{\textquotesingle{}Tallinn\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# Compara os embeddings aprendidos}
+\NormalTok{cosine\_similarity([hidden\_layer\_weights[i\_hel]], [hidden\_layer\_weights[i\_tal]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[0.60469307]])
+\end{verbatim}
+
+\textbf{Comparação.} A similaridade calculada a partir da matriz de
+coocorrência era de \textbf{0,43}; a partir dos embeddings aprendidos,
+obtemos aproximadamente \textbf{0,60}.
+
+Duas ressalvas importantes:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  O valor exato \textbf{varia entre execuções}, pois os pesos são
+  inicializados aleatoriamente. O que se deve observar é a tendência,
+  não o número.
+\item
+  Em apenas duas dimensões, quaisquer dois vetores tendem a apresentar
+  similaridade de cossenos relativamente alta, simplesmente porque há
+  pouco espaço para que fiquem distantes. Comparar valores absolutos
+  entre espaços de dimensionalidades diferentes é, portanto, enganoso.
+\end{enumerate}
+
+\textbf{Resposta 14.}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Vocabulário insuficiente para generalizar.} Com 24 lemas e 118
+  pares, quase todas as palavras ocorrem uma ou duas vezes. A rede não
+  tem evidência estatística suficiente para distinguir regularidade de
+  acaso: uma única coocorrência tem o mesmo peso que um padrão
+  sistemático.
+\item
+  \textbf{Sobreajuste ao exemplo específico.} O modelo aprende as cinco
+  orações particulares, não a língua inglesa. \texttt{Helsinki} e
+  \texttt{Tallinn} ficam próximos porque aparecem literalmente lado a
+  lado nos dados, e não porque o modelo tenha inferido que ambos são
+  capitais bálticas.
+\item
+  \textbf{Ausência de palavras funcionais em contexto variado.} Palavras
+  como \texttt{the} e \texttt{of} ocorrem em pouquíssimos contextos
+  distintos, quando na realidade sua característica definidora é ocorrer
+  em uma enorme variedade deles. Suas representações ficam, portanto,
+  distorcidas --- e, como são frequentes, distorcem também as
+  representações das palavras vizinhas.
+\end{enumerate}
+
+Uma quarta consequência, mais sutil: as próprias métricas de avaliação
+tornam-se pouco informativas, já que não há dados retidos para teste.
+
+\textbf{Resposta 15.}
+
+O modelo é incapaz de fazer a distinção porque atribui
+\textbf{exatamente um vetor a cada forma lexical}. O dicionário
+\texttt{lemma\_vectors} mapeia a \emph{string}
+\texttt{\textquotesingle{}banco\textquotesingle{}} a um único vetor
+one-hot, e a camada oculta produz um único embedding correspondente. As
+duas acepções de ``banco'' são, para o modelo, literalmente a mesma
+entrada --- e o vetor resultante acaba sendo uma média confusa dos dois
+contextos de uso.
+
+Esse é o limite dos chamados embeddings \textbf{estáticos} (Word2vec,
+GloVe, fastText): um tipo lexical, um vetor.
+
+Para superá-lo é necessário produzir embeddings \textbf{contextuais}, em
+que a representação de uma palavra depende da sentença em que ela
+ocorre. Isso exige:
+
+\begin{itemize}
+\tightlist
+\item
+  Uma arquitetura capaz de \textbf{ler a sentença inteira} ao codificar
+  cada palavra --- tipicamente um \emph{Transformer} com mecanismo de
+  atenção, em vez de uma rede que recebe uma única palavra isolada como
+  entrada.
+\item
+  Uma tarefa de treinamento que \textbf{force o uso do contexto}, como
+  prever uma palavra mascarada a partir de toda a sentença (o objetivo
+  de \emph{masked language modelling} usado pelo BERT).
+\item
+  Volume muito maior de dados e de parâmetros, para que os diferentes
+  contextos de uso de cada forma sejam efetivamente observados.
+\end{itemize}
+
+Nesses modelos, as ocorrências de ``banco'' em \emph{sentei no banco} e
+em \emph{fui ao banco} recebem vetores distintos, pois cada
+representação é computada em função das palavras que a cercam. Os
+embeddings contextuais obtidos de \emph{Transformers} são o tema da
+próxima unidade.
+
+\end{document}

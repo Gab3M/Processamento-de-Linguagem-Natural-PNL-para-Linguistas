@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia" />
+  <title>Parte III: Processamento de Linguagem Natural para Linguistas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    /* centralização de figuras e tabelas */
+    figure {
+      margin: 1.5em 0;
+      text-align: center;
+    }
+    figure img {
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.85em;
+      color: #606060;
+      margin-top: 0.4em;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Parte III: Processamento de Linguagem Natural para Linguistas</h1>
+<p class="subtitle">Unidade 2 - Dependências Universais</p>
+<p class="author">CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia</p>
+<p class="date">Agosto de 2026</p>
+</header>
+<h1 id="dependências-universais">Dependências Universais</h1>
+<p>Nesta seção, nos aprofundaremos nas Dependências Universais, um framework que já encontramos em conexão com a análise sintática e a análise morfológica na Parte II e na Parte III.</p>
+<h2 id="objetivos-de-aprendizagem">Objetivos de Aprendizagem</h2>
+<p>Neste módulo, você será capaz de:</p>
+<ul>
+<li><strong>Compreender os objetivos do projeto:</strong> Entender as metas e o propósito das Dependências Universais como um projeto colaborativo.</li>
+<li><strong>Entender o framework:</strong> Compreender as Dependências Universais como uma estrutura padronizada para descrever a gramática e a estrutura da linguagem.</li>
+<li><strong>Conhecer o esquema de anotação:</strong> Dominar os fundamentos de como as anotações das Dependências Universais são estruturadas e aplicadas.</li>
+<li><strong>Explorar anotações práticas:</strong> Saber como acessar e manipular as anotações das Dependências Universais utilizando a biblioteca spaCy.</li>
+</ul>
+<h2 id="uma-breve-introdução-às-dependências-universais">1. Uma breve introdução às Dependências Universais</h2>
+<p>Dependências Universais (ou UD, do inglês <em>Universal Dependencies</em>), é um projeto colaborativo que tem dois objetivos sobrepostos:</p>
+<ol type="1">
+<li>desenvolver um framework comum para descrever a estrutura gramatical de diversos idiomas (de Marneffe et al. <a href="https://doi.org/10.1162/coli_a_00402">2021</a>)</li>
+<li>criar corpora anotados – ou <em>treebanks</em> – para diversos idiomas que aplicam este framework (Nivre et al. <a href="https://aclanthology.org/2020.lrec-1.497/">2020</a>)</li>
+</ol>
+<p>Desta forma, o projeto busca possibilitar a descrição sistemática de estruturas sintáticas e características morfológicas em vários idiomas, o que naturalmente também permite traçar comparações entre os idiomas.</p>
+<p>O objetivo de alcançar ampla aplicabilidade em diversos idiomas confere ao projeto o epíteto “Universal”, enquanto o termo “Dependências” refere-se à maneira como o framework descreve as estruturas sintáticas, que será detalhada mais adiante.</p>
+<p>Corpora linguísticos que contêm anotações para relações sintáticas são frequentemente chamados de <em>treebanks</em> (bancos de árvores), porque as estruturas sintáticas são geralmente representadas usando estruturas de árvore. Neste contexto, então, um <em>treebank</em> é simplesmente uma coleção de árvores sintáticas, que foram consistentemente anotadas usando UD ou algum outro framework.</p>
+<p>O número de <em>treebanks</em> anotados usando UD tem crescido constantemente ao longo dos anos (para uma visão geral recente de 90 <em>treebanks</em>, veja Nivre et al. <a href="https://aclanthology.org/2020.lrec-1.497/">2020</a>). O design e a criação de tais <em>treebanks</em> foram documentados em detalhes para vários idiomas, como finlandês (Haverinen et al. <a href="https://dx.doi.org/10.1007/s10579-013-9244-1">2014</a>), Wolof (Dione <a href="https://aclanthology.org/W19-8003/">2019</a>), Hindi/Urdu (Bhat et al. <a href="https:///dx.doi.org/10.1007/978-94-024-0881-2_24">2017</a>) e chinês mandarim (Poiret et al. <a href="https:///dx.doi.org/10.1007/s10579-021-09564-2">2021</a>).</p>
+<p>Para entender melhor o esforço envolvido na UD como um projeto, deve-se reconhecer que desenvolver um esquema de anotação consistente que pode ser usado para descrever a estrutura gramatical de diversos idiomas, como finlandês, Wolof e Hindi/Urdu, está longe de ser trivial.</p>
+<p>Desafios adicionais surgem do uso pretendido dos <em>treebanks</em> da UD: eles se destinam a servir tanto às comunidades de pesquisa computacional quanto linguística. Como de Marneffe et al. (<a href="https://doi.org/10.1162/coli_a_00402">2021: 302–303</a>) apontam, o framework UD é um compromisso entre vários critérios concorrentes, que são fornecidos em formato ligeiramente abreviado abaixo:</p>
+<ol type="1">
+<li>A UD precisa ser razoavelmente satisfatória para a análise linguística de idiomas individuais</li>
+<li>A UD precisa ser boa para realçar semelhanças estruturais em idiomas relacionados</li>
+<li>A UD deve ser adequada para anotação rápida e consistente por um anotador humano</li>
+<li>A UD deve ser facilmente compreendida e usada por usuários não linguistas</li>
+<li>A UD deve ser adequada para análise computacional (<em>parsing</em>) com alta precisão</li>
+<li>A UD deve oferecer um bom suporte a tarefas de processamento de linguagem natural a jusante (<em>downstream</em>)</li>
+</ol>
+<p>A necessidade de equilibrar esses critérios também se reflete no design do framework UD, que é introduzido em mais detalhes a seguir.</p>
+<h2 id="premissas-básicas-por-trás-das-dependências-universais">2. Premissas básicas por trás das Dependências Universais</h2>
+<p>O framework das Dependências Universais é fortemente influenciado por teorias gramaticais de orientação tipológica. Essas teorias buscam descrever e classificar os idiomas com base em suas características estruturais (para uma discussão extensa sobre os fundamentos teóricos da UD, veja de Marneffe et al. <a href="https://doi.org/10.1162/coli_a_00402">2021</a>).</p>
+<p>A unidade básica de análise na UD é a palavra. A representação das relações sintáticas, por sua vez, é baseada em <strong>dependências</strong>, ou seja, relações que se mantêm entre as palavras. Em alguns aspectos, no entanto, a UD diverge das gramáticas de dependência tradicionais, principalmente devido à sua necessidade de atender à gama de propósitos descritos acima (veja Osborne &amp; Gerdes <a href="https://doi.org/10.5334/gjgl.537">2019</a>).</p>
+<p>A descrição de estruturas linguísticas na UD é baseada em três tipos de unidades frasais: <strong>nominais</strong> (<em>nominals</em>), <strong>orações</strong> (<em>clauses</em>) e <strong>modificadores</strong> (<em>modifiers</em>) (de Marneffe et al. <a href="https://doi.org/10.1162/coli_a_00402">2021: 257</a>). Essas unidades frasais podem consistir em uma ou mais palavras.</p>
+<p>Neste contexto, a noção de unidades frasais refere-se a estruturas linguísticas que são construídas em torno de palavras que pertencem a classes de palavras particulares. Enquanto os nominais são usados para representar coisas – frequentemente realizados usando substantivos –, as orações são usadas para representar eventos, que são construídos em torno de verbos. Os modificadores, por sua vez, dependem de adjetivos e advérbios para expandir o significado tanto de nominais quanto de orações.</p>
+<p>As seções a seguir examinam cada unidade frasal em maiores detalhes.</p>
+<h3 id="nominais">2.1. Nominais</h3>
+<p>Vamos começar focando na primeira unidade frasal, os nominais.</p>
+<p>O que a UD define como nominais tem sido descrito extensivamente em várias teorias linguísticas, nas quais eles têm sido tratados, por exemplo, como sintagmas nominais (<em>noun phrases</em>) (Keizer <a href="https://doi.org/10.1017/CBO9780511627699">2007</a>) e grupos nominais (<em>nominal groups</em>) (Martin et al. <a href="https://doi.org/10.1080/00437956.2021.1957545">2021</a>). O que essas definições têm em comum é que os nominais são geralmente construídos em torno de substantivos.</p>
+<p>Para explorar os nominais na UD, começaremos importando três bibliotecas: spaCy, Stanza e spacy-stanza, que foram introduzidas no capítulo anterior.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co"># Importa as bibliotecas spaCy, Stanza e spacy-stanza</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="im">import</span> spacy</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="im">import</span> stanza</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="im">import</span> spacy_stanza</span></code></pre></div>
+<p>Em seguida, usamos a função <code>load_pipeline()</code> do spacy-stanza para carregar um modelo de linguagem do Stanza para o inglês, que armazenamos na variável <code>nlp</code>.</p>
+<p>Também passamos o código de idioma para o inglês (<code>'en'</code>) para o argumento <code>name</code> e a string <code>'tokenize, pos, lemma, depparse'</code> para o argumento <code>processors</code> para carregar apenas os componentes de que precisamos.</p>
+<p>O modelo de linguagem já deve ter sido pré-instalado no seu servidor. Se você ainda não baixou um modelo de linguagem para o inglês, siga as instruções na seção anterior.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Chama a variável para examinar o modelo de linguagem</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>nlp</span></code></pre></div>
+<pre class="text"><code>&lt;spacy.lang.en.English at 0x286733610&gt;</code></pre>
+<p>Isso nos dá um modelo de linguagem do Stanza encapsulado em um objeto <em>Language</em> do spaCy!</p>
+<p>Se você se pergunta por que usamos um modelo de linguagem do Stanza em vez de um modelo nativo do spaCy, a razão é que o analisador de dependências (<em>dependency parser</em>) no spaCy não é treinado usando um corpus anotado com a UD.</p>
+<p>Na Parte II, aprendemos que os modelos de linguagem do spaCy para o inglês são treinados usando o corpus OntoNotes 5.0. Este corpus usa um esquema diferente para descrever as relações sintáticas, que foi originalmente desenvolvido para o Penn Treebank (PTB; Marcus et al. <a href="https://aclanthology.org/J93-2004/">1993</a>). O spaCy usa outra ferramenta para mapear as relações do Penn Treebank para aquelas definidas na UD, mas as relações definidas no PTB cobrem apenas um subconjunto das relações definidas na UD.</p>
+<p>Por esse motivo, usamos o modelo de linguagem em inglês do Stanza, que foi treinado em <a href="https://github.com/UniversalDependencies/UD_English-EWT">um corpus de textos</a> anotados usando a UD.</p>
+<p>No entanto, também queremos usar alguns recursos fornecidos pelo spaCy, como o módulo <em>displacy</em> para visualizar dependências sintáticas, como aprendemos na Parte II, razão pela qual usamos o modelo de linguagem do Stanza por meio da biblioteca spacy-stanza.</p>
+<p>Vamos continuar importando o módulo displacy para visualizar as dependências sintáticas.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Importa o módulo displacy do spaCy</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span></code></pre></div>
+<p>Em seguida, definimos uma string – “A large green bird” (Um grande pássaro verde) – que fornecemos ao modelo de linguagem sob <code>nlp</code> e atribuímos o objeto <em>Doc</em> resultante à variável <code>nominal</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Fornece uma string ao modelo de linguagem; armazena o resultado na variável &#39;nominal&#39;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>nominal <span class="op">=</span> nlp(<span class="st">&#39;A large green bird&#39;</span>)</span></code></pre></div>
+<p>A seguir, usamos a função <code>render()</code> para desenhar as dependências sintáticas entre os <em>Tokens</em> no objeto <em>Doc</em> <code>nominal_group</code>.</p>
+<p>Ao passar a string <code>dep</code> para o argumento <code>style</code>, nós instruímos explicitamente o <em>displacy</em> a visualizar as dependências sintáticas (porque o <em>displacy</em> também pode visualizar entidades nomeadas, como aprendemos na Parte II).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># Renderiza as dependências sintáticas usando a função render() do displacy</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>displacy.render(nominal, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image2.png" alt="" /><figcaption>imagem2</figcaption>
+</figure>
+<p>Isso nos dá uma visualização das dependências sintáticas entre os quatro <em>Tokens</em> que compõem o objeto <em>Doc</em> <code>nominal</code>.</p>
+<p>Três arcos partem do <em>Token</em> “bird” e apontam para os <em>Tokens</em> “A”, “large” e “green”. Isso significa que o substantivo “bird” atua como a <strong>cabeça</strong> (<em>head</em>), enquanto os outros três <em>Tokens</em> são <strong>dependentes</strong> (<em>dependents</em>) dessa cabeça.</p>
+<p>Essas dependências são especificadas posteriormente por relações sintáticas definidas no framework da UD, que são dadas pelo rótulo abaixo de cada arco. Neste caso, o substantivo principal “bird” (pássaro) tem dois modificadores adjetivais (<code>amod</code>), “large” (grande) e “green” (verde), e um determinante (<code>det</code>), “a” (um).</p>
+<p>Se iterarmos sobre os <em>Tokens</em> no objeto <em>Doc</em> sob a variável <code>nominal</code> e imprimirmos as dependências sintáticas para cada Token, que estão disponíveis sob o atributo <code>dep_</code>, podemos ver que o substantivo principal “bird” tem a etiqueta de dependência <code>root</code> (raiz).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co"># Itera sobre cada Token no objeto Doc &#39;nominal&#39;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> nominal:</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>    <span class="co"># Imprime cada Token e sua etiqueta de dependência</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>    <span class="bu">print</span>(token, token.dep_)</span></code></pre></div>
+<pre class="text"><code>A det
+large amod
+green amod
+bird root</code></pre>
+<p>Em outras palavras, toda a estrutura sintática deste nominal é construída em torno de um substantivo, que é então elaborado por modificadores, que serão discutidos brevemente a seguir.</p>
+<p>Primeiro, no entanto, voltamos nossa atenção para outra unidade frasal, a saber, as orações (<em>clauses</em>).</p>
+<h3 id="orações">2.2. Orações</h3>
+<p>A oração desempenha um papel fundamental na linguagem natural. Em <em>Introduction to Functional Grammar</em> (Introdução à Gramática Funcional), Halliday e Matthiessen (<a href="https://doi.org/10.4324/9780203431269">2013: 10</a>) observam que:</p>
+<blockquote>
+<p>A oração é a unidade central de processamento na lexicogramática — no sentido específico de que é na oração que significados de diferentes tipos são mapeados em uma estrutura gramatical integrada.</p>
+</blockquote>
+<p>Esses três tipos distintos de significados – a oração como mensagem, a oração como troca e a oração como representação – são codificados em cada oração. Como mensagens, as orações têm uma estrutura temática, o que permite destacar informações-chave. Como forma de troca, as orações permitem a encenação de relações sociais, pois são usadas para dar e exigir informações ou coisas. Finalmente, como forma de representação, as orações permitem representar todos os aspectos da experiência humana: que tipos de entidades participam de que tipos de processos, e sob quais circunstâncias (Halliday e Matthiessen <a href="https://doi.org/10.4324/9780203431269">2013: 83–85</a>).</p>
+<p>Para entender melhor o que permite às orações desempenhar todas essas funções, vamos considerar sua <em>classificação</em> (rank) entre as diferentes unidades linguísticas, conforme definido por Halliday e Matthiessen (<a href="https://doi.org/10.4324/9780203431269">2013: 9–10</a>):</p>
+<ol type="1">
+<li>oração (clause)</li>
+<li>sintagma / grupo (phrase / group)</li>
+<li>palavra (word)</li>
+<li>morfema (morpheme)</li>
+</ol>
+<p>As unidades linguísticas em cada classificação consistem em uma ou mais unidades da classificação inferior. As orações consistem em sintagmas ou grupos (ou nominais), que por sua vez consistem em palavras que são formadas por morfemas.</p>
+<p>Se aplicarmos essa ideia à UD, podemos pensar que as orações estão acima dos nominais, o que permite que as orações combinem os nominais em unidades maiores (cf. de Marneffe et al. <a href="https://doi.org/10.1162/coli_a_00402">2021: 258</a>).</p>
+<p>Para explorar mais essa ideia, vamos definir uma string com a oração “I saw a large green bird” (Eu vi um grande pássaro verde) e fornecer a string como entrada para o modelo de linguagem na variável <code>nlp</code>. Em seguida, armazenamos o resultado na variável <code>clause</code>.</p>
+<p>Assim como acima, usamos então a função <code>render()</code> do módulo <em>displacy</em> para visualizar as dependências sintáticas.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co"># Define um objeto de string, fornece-o ao modelo de linguagem sob &#39;nlp&#39; e</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="co"># armazena o resultado na variável &#39;clause&#39;.</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>clause <span class="op">=</span> nlp(<span class="st">&#39;I saw a large green bird.&#39;</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>displacy.render(clause, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image3.png" alt="" /><figcaption>Imagem3</figcaption>
+</figure>
+<p>Isso nos dá as relações sintáticas que se mantêm entre os <em>Tokens</em> na oração.</p>
+<p>Antes de prosseguirmos, vamos imprimir as etiquetas de dependência para cada <em>Token</em>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="co"># Itera sobre cada Token no objeto Doc &#39;clause&#39;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> clause:</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>    </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>    <span class="co"># Imprime cada token e sua etiqueta de dependência</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>    <span class="bu">print</span>(token, token.dep_)</span></code></pre></div>
+<pre class="text"><code>I nsubj
+saw root
+a det
+large amod
+green amod
+bird obj
+. punct</code></pre>
+<p>A saída mostra que a raiz (<code>root</code>) ou a cabeça da oração é o verbo “saw”. Como mostra a visualização, dois arcos partem da raiz em direção aos <em>Tokens</em> “I” e “bird”.</p>
+<p>Tanto “I” quanto “a large green bird” são nominais e dependentes do verbo “saw”, que é a cabeça da oração. O pronome “I” atua como o sujeito nominal da oração, conforme identificado pelo rótulo (<code>nsubj</code>), enquanto o nominal “a large green bird” é o objeto (<code>obj</code>).</p>
+<p>Observe que as dependências sintáticas são sempre desenhadas entre as cabeças: os arcos partem do verbo principal da oração e terminam nas cabeças dos nominais. Essas cabeças podem então ter suas próprias dependências, conforme ilustrado pelo nominal “a large green bird”, que foi discutido abaixo.</p>
+<p>Assim como os nominais, as orações podem ser expandidas em unidades maiores, conforme exemplificado abaixo.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Define outro exemplo e fornece-o ao modelo de linguagem sob &#39;nlp&#39;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>clause_2 <span class="op">=</span> nlp(<span class="st">&#39;I saw a large green bird outside and headed out immediately.&#39;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>displacy.render(clause_2, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image4.png" alt="" /><figcaption>Image4</figcaption>
+</figure>
+<p>Isso adiciona outro arco, que vai do verbo principal “saw” ao verbo “headed”, e tem a relação <code>conj</code> ou adjunto (conjunct). O <code>conj</code> é usado para unir duas orações:</p>
+<ol type="1">
+<li>I saw a large green bird outside</li>
+<li>and headed out immediately.</li>
+</ol>
+<p>Isso ilustra como as orações também podem ser expandidas em unidades maiores que consistem em múltiplas orações. Neste caso, as orações que participam de uma unidade maior podem ser identificadas pela relação de dependência <code>conj</code> desenhada entre os verbos.</p>
+<p>Note, no entanto, que a relação <code>conj</code> também pode ser usada dentro de nominais para unir substantivos, conforme exemplificado abaixo.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="co"># Define outro exemplo e usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>displacy.render(nlp(<span class="st">&#39;cats, dogs and birds&#39;</span>), style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image5.png" alt="" /><figcaption>Image5</figcaption>
+</figure>
+<p>Isso ilustra como a UD usa a mesma relação para descrever relações sintáticas entre palavras em diferentes unidades frasais.</p>
+<p>Por esse motivo, é preciso prestar atenção tanto às etiquetas de classes gramaticais (<em>part-of-speech tags</em>) quanto às dependências sintáticas ao consultar anotações da UD para identificar a unidade frasal em questão.</p>
+<p>Para exemplificar, quando a relação <code>conj</code> é desenhada entre substantivos, pode-se presumir que a unidade frasal é um nominal. Alternativamente, se a relação <code>conj</code> existir entre verbos, a unidade em questão é uma oração.</p>
+<h3 id="modificadores">2.3. Modificadores</h3>
+<p>O tipo final de unidade frasal a ser discutido são os modificadores, que permitem refinar o significado de orações e nominais.</p>
+<p>Vamos começar com um exemplo simples de modificadores em um nominal.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="co"># Define um objeto de string, fornece-o ao modelo de linguagem sob &#39;nlp&#39; e</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="co"># armazena o resultado na variável &#39;modifier_n&#39;.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>modifier_n <span class="op">=</span> nlp(<span class="st">&#39;A very nasty comment&#39;</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>displacy.render(modifier_n, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image6.png" alt="" /><figcaption>Image6</figcaption>
+</figure>
+<p>O arco que vai do substantivo principal “comment” para o adjetivo “nasty” tem a relação <code>amod</code>, que significa modificador adjetival (<em>adjectival modifier</em>).</p>
+<p>Além disso, o adjetivo “nasty” tem um dependente adicional, o advérbio “very”, que atua como seu modificador adverbial (<code>advmod</code>).</p>
+<p>Ambos os modificadores servem para refinar o significado do substantivo principal “comment”.</p>
+<p>Assim como vimos com a relação de conjunção (<code>conj</code>) acima, essas relações podem ser aplicadas tanto a orações quanto a nominais.</p>
+<p>Considere o exemplo abaixo, no qual o advérbio “slowly” é um dependente do verbo principal “opened”.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="co"># Define um objeto de string, fornece-o ao modelo de linguagem sob &#39;nlp&#39; e</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="co"># armazena o resultado na variável &#39;modifier_c&#39;.</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>modifier_c <span class="op">=</span> nlp(<span class="st">&#39;The door opened slowly.&#39;</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>displacy.render(modifier_c, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image7.png" alt="" /><figcaption>Image7</figcaption>
+</figure>
+<p>As orações também podem ser modificadas por orações, conforme mostrado pelo modificador de oração adverbial (<code>advcl</code>) no exemplo abaixo.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="co"># Define um objeto de string, fornece-o ao modelo de linguagem sob &#39;nlp&#39; e</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="co"># armazena o resultado na variável &#39;modifier_c2&#39;.</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>modifier_c2 <span class="op">=</span> nlp(<span class="st">&#39;The door opened slowly, without making a sound.&#39;</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>displacy.render(modifier_c2, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image8.png" alt="" /><figcaption>Image8</figcaption>
+</figure>
+<h2 id="entendendo-o-esquema-de-anotação">3. Entendendo o esquema de anotação</h2>
+<p>Até agora, discutimos principalmente a descrição de relações sintáticas dentro do framework de Dependências Universais (UD).</p>
+<p>Além das <a href="https://universaldependencies.org/u/dep/">37 relações sintáticas</a> definidas na UD, o framework fornece um esquema rico para descrever a morfologia, ou seja, a <em>forma</em> das palavras.</p>
+<p>O esquema da UD para morfologia contém três níveis de representação:</p>
+<ol type="1">
+<li>Um lema, ou a forma base da palavra</li>
+<li>Uma etiqueta de classe gramatical (<em>part-of-speech tag</em>) que determina a classe de palavras à qual a palavra pertence</li>
+<li>Um conjunto de recursos que definem as propriedades lexicais e gramaticais da palavra</li>
+</ol>
+<p>A UD define 17 classes de palavras ou partes do discurso, que podem ser divididas em três grupos:</p>
+<ol type="1">
+<li>Palavras de classe aberta ou lexicais: <code>ADJ ADV INTJ NOUN PROPN VERB</code></li>
+<li>Palavras de classe fechada ou gramaticais: <code>ADP, AUX, CCONJ, DET, NUM, PART, PRON, SCONJ</code></li>
+<li>Outros: <code>PUNCT, SYM, X</code></li>
+</ol>
+<p>A UD também define um grande número de recursos lexicais e flexionais para descrever características morfológicas, ou seja, as formas das palavras.</p>
+<p>A UD define recursos morfológicos usando dois componentes, <em>nomes</em> (<em>names</em>) e <em>valores</em> (<em>values</em>). Como aprendemos na Parte II, o spaCy armazena os recursos morfológicos sob o atributo <code>morph</code> de um objeto <em>Token</em>.</p>
+<p>Vamos definir um exemplo rápido, fornecê-lo ao modelo de linguagem na variável <code>nlp</code> e imprimir cada <em>Token</em> e suas características morfológicas.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="co"># Define uma frase de exemplo; fornece-a ao modelo</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a><span class="co"># de linguagem e armazena o resultado na variável &#39;books&#39;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>books <span class="op">=</span> nlp(<span class="st">&#39;I like those books.&#39;</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a><span class="co"># Itera sobre cada Token no objeto Doc</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> books:</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a>    </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>    <span class="co"># Imprime cada Token, sua etiqueta de classe gramatical e</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a>    <span class="co"># características morfológicas. Separa-os usando strings</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a>    <span class="co"># contendo caracteres de tabulação &#39;\t&#39; para uma</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a>    <span class="co"># saída mais limpa.</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a>    <span class="bu">print</span>(token, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, token.pos_, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, token.morph)</span></code></pre></div>
+<pre class="text"><code>I        PRON    Case=Nom|Number=Sing|Person=1|PronType=Prs
+like     VERB    Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin
+those    DET     Number=Plur|PronType=Dem
+books    NOUN    Number=Plur
+.        PUNCT   </code></pre>
+<p>No resultado, cada <em>Token</em> no lado esquerdo é acompanhado por sua etiqueta de classe gramatical e características morfológicas à direita.</p>
+<p>Observe como os recursos morfológicos diferem de acordo com a etiqueta de classe gramatical do <em>Token</em>.</p>
+<p>Para o pronome (<code>PRON</code>) “I”, o modelo de linguagem prediz quatro tipos de recursos morfológicos: <code>Case</code>, <code>Number</code>, <code>Person</code> e <code>PronType</code> (tipo de pronome). Os verbos como “like”, por sua vez, recebem recursos para <code>Mood</code>, <code>Tense</code> e <code>VerbForm</code>.</p>
+<p>Como aprenderemos mais adiante na Parte III, os recursos morfológicos podem ser usados para realizar consultas muito específicas para estruturas linguísticas particulares.</p>
+<h2 id="explorando-dependências-sintáticas-usando-o-spacy">4. Explorando dependências sintáticas usando o spaCy</h2>
+<p>O spaCy oferece meios poderosos para explorar dependências sintáticas por meio do objeto <em>Token</em>.</p>
+<p>Vamos começar definindo outro exemplo, fornecendo-o ao modelo de linguagem e visualizando suas dependências sintáticas.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="co"># Define uma string de exemplo e fornece-a ao modelo de linguagem sob &#39;nlp&#39;,</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="co"># armazena o resultado na variável &#39;tree&#39;.</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>tree <span class="op">=</span> nlp(<span class="st">&#39;I never saw the bird, because it had flown away.&#39;</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a>displacy.render(tree, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image9.png" alt="" /><figcaption>Imagem9</figcaption>
+</figure>
+<p>Neste exemplo, o verbo principal “saw” (vi) tem um dependente, “flown” (voado), que estão conectados pela relação de dependência <code>advcl</code> – um modificador de oração adverbial.</p>
+<p>Se quisermos recuperar tudo o que modifica a oração principal “I never saw the bird”, podemos usar o atributo <code>subtree</code> de um objeto <em>Token</em>.</p>
+<p>Vamos explorar isso iterando sobre cada <em>Token</em> no objeto <em>Doc</em> <code>tree</code>.</p>
+<p>Se o <em>Token</em> tiver a dependência <code>advcl</code> sob o atributo <code>dep_</code>, imprimimos o <em>Token</em>, seu índice no objeto <em>Doc</em> e o que quer que esteja armazenado sob o atributo <code>subtree</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a><span class="co"># Itera sobre cada Token no objeto Doc &#39;tree&#39;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> tree:</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>    </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a>    <span class="co"># Verifica se o Token tem a relação de dependência &#39;acl:relcl&#39;,</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>    <span class="co"># que significa uma oração relativa (nota no código original: busca por &#39;advcl&#39;)</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a>    <span class="cf">if</span> token.dep_ <span class="op">==</span> <span class="st">&#39;advcl&#39;</span>:</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true"></a>        </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true"></a>        <span class="co"># Se o Token tiver essa dependência, usa o atributo subtree</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true"></a>        <span class="co"># para buscar todos os dependentes abaixo deste Token. O atributo subtree</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true"></a>        <span class="co"># retorna um gerador, então converte o resultado em uma lista e imprime.</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true"></a>        <span class="bu">print</span>(token, token.i, <span class="bu">list</span>(token.subtree))</span></code></pre></div>
+<pre class="text"><code>flown 9 [because, it, had, flown, away]</code></pre>
+<p>Se você comparar essa saída com as dependências sintáticas visualizadas acima, verá que o atributo <code>subtree</code> retorna cada dependente do <em>Token</em> e o próprio <em>Token</em>.</p>
+<p>Se quisermos recuperar apenas os <em>Tokens</em> que dependem do <em>Token</em> atual, podemos usar o atributo <code>children</code>.</p>
+<p>Vamos usar o índice do <em>Token</em> para recuperar seus filhos e imprimir o resultado.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="co"># Recupera o Token no índice 9 no objeto Doc e busca seus filhos.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="co"># Isso retorna um gerador, então converte a saída em uma lista antes de imprimir.</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="bu">print</span>(<span class="bu">list</span>(tree[<span class="dv">9</span>].children))</span></code></pre></div>
+<pre class="text"><code>[because, it, had, away]</code></pre>
+<p>Como você pode ver, o atributo <code>children</code> não retorna o próprio <em>Token</em>, mas inclui apenas os dependentes.</p>
+<p>O spaCy também permite recuperar os dependentes imediatos de um <em>Token</em> usando os atributos <code>lefts</code> e <code>rights</code>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="co"># Recupera os dependentes sintáticos à esquerda e à direita do Token no</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="co"># índice 9 no objeto Doc &#39;tree&#39;. Converte os resultados em listas e</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="co"># imprime.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="bu">print</span>(<span class="bu">list</span>(tree[<span class="dv">9</span>].lefts), <span class="bu">list</span>(tree[<span class="dv">9</span>].rights))</span></code></pre></div>
+<pre class="text"><code>[because, it, had] [away]</code></pre>
+<p>Também podemos nos mover para o outro lado – subindo na árvore de análise sintática (<em>parse tree</em>) – usando os atributos <code>head</code> e <code>ancestors</code>.</p>
+<p>Vamos começar examinando o verbo auxiliar “have” (tinha) imediatamente à esquerda do verbo “flown” no índice 8 do objeto <em>Doc</em>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="co"># Recupera o Token</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>tree[<span class="dv">8</span>]</span></code></pre></div>
+<pre class="text"><code>had</code></pre>
+<p>Para recuperar o <em>Token</em> que atua como a cabeça do verbo auxiliar, podemos usar o atributo <code>head</code>, como aprendemos na Parte II.</p>
+<p>Vamos recuperar a cabeça para o verbo auxiliar “had” no índice 8 do objeto <em>Doc</em> <code>tree</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="co"># Recupera o atributo &#39;head&#39; do Token</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>tree[<span class="dv">8</span>].head</span></code></pre></div>
+<pre class="text"><code>flown</code></pre>
+<p>Isso, no entanto, nos dá apenas a cabeça imediata, ou seja, o verbo “flown”.</p>
+<p>Para recuperar a cabeça e todas as suas cabeças (ancestrais), podemos usar o atributo <code>ancestors</code>. Este atributo retorna um objeto gerador, que deve ser convertido em uma lista para exame.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="co"># Recupera os ancestrais para o Token no índice 8. Converte o resultado em uma lista.</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a><span class="bu">list</span>(tree[<span class="dv">8</span>].ancestors)</span></code></pre></div>
+<pre class="text"><code>[flown, saw]</code></pre>
+<p>Você pode pensar neste atributo como traçar um caminho de volta pelas dependências até a raiz da árvore de análise sintática.</p>
+<p>Vamos iterar sobre os ancestrais e imprimir cada <em>Token</em> junto com seu índice, cabeça e dependência sintática.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="co"># Itera sobre cada Token na lista de ancestrais para o Token no índice 8.</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="cf">for</span> token <span class="kw">in</span> <span class="bu">list</span>(tree[<span class="dv">8</span>].ancestors):</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>    </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>    <span class="co"># Imprime cada Token, seu índice, cabeça e dependência.</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>    <span class="bu">print</span>(token, token.i, token.head, token.dep_)</span></code></pre></div>
+<pre class="text"><code>flown 9 saw advcl
+saw 2 saw root</code></pre>
+<p>Como você pode ver, a primeira cabeça do verbo auxiliar “had” é o verbo “flown” no índice 9 do objeto <em>Doc</em>, que por sua vez é um dependente do verbo “saw” no índice 2. O verbo “saw” também é a raiz da árvore de análise sintática.</p>
+<h2 id="uma-palavra-final-sobre-avaliação">5. Uma palavra final sobre avaliação</h2>
+<p>Modelos de linguagem treinados em <em>treebanks</em> de Dependências Universais geralmente são acompanhados por informações sobre o quão bem os modelos podem prever os recursos linguísticos definidos no esquema de anotação da UD.</p>
+<p>Como aprendemos na Parte II, o desempenho dos modelos é avaliado em relação a dados anotados por humanos, o chamado padrão ouro (<em>gold standard</em>) ou verdade absoluta (<em>ground truth</em>).</p>
+<p>Para a análise de dependências (<em>dependency parsing</em>), o quão bem um modelo atua é tradicionalmente medido usando duas métricas:</p>
+<ul>
+<li>UAS, ou <em>unlabeled attachment score</em> (pontuação de anexo não rotulada), é simplesmente a porcentagem de palavras às quais é atribuída a cabeça correta.</li>
+<li>LAS, ou <em>labeled attachment score</em> (pontuação de anexo rotulada), é a porcentagem de palavras às quais é atribuída a cabeça correta <em>e</em> a etiqueta de dependência (ou “rótulo”) correta.</li>
+</ul>
+<p>Vamos definir um exemplo rápido para examinar essas métricas.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a><span class="co"># Define uma string de exemplo e fornece-a ao modelo de linguagem sob &#39;nlp&#39;,</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a><span class="co"># armazena o resultado na variável &#39;las&#39;.</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a>las <span class="op">=</span> nlp(<span class="st">&#39;I went to the cinema.&#39;</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a><span class="co"># Usa o displacy para renderizar as dependências sintáticas. Define o argumento</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a><span class="co"># &#39;collapse_punct&#39; como False.</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a>displacy.render(las, style<span class="op">=</span><span class="st">&#39;dep&#39;</span>, options<span class="op">=</span>{<span class="st">&#39;collapse_punct&#39;</span>: <span class="va">False</span>})</span></code></pre></div>
+<figure>
+<img src="../resources/image10.png" alt="" /><figcaption>Imagem10</figcaption>
+</figure>
+<p>Se a árvore de análise sintática acima fosse anotada por um humano, poderíamos então fornecer o mesmo texto a um modelo de linguagem e comparar a saída do modelo com a árvore de análise sintática anotada pelo humano.</p>
+<p>Para calcular a pontuação de anexo não rotulada (UAS), nós simplesmente calcularíamos a quantas palavras a cabeça correta foi atribuída pelo modelo.</p>
+<p>Ao calcular a pontuação de anexo rotulada (LAS), uma previsão só é considerada correta se o modelo atribuir a cabeça correta à palavra <em>e</em> prever corretamente a relação sintática entre essas palavras.</p>
+<p>No entanto, UAS e LAS tornam-se problemáticas ao considerar os objetivos multilíngues da UD como um projeto: deve-se também ser capaz de comparar o desempenho de modelos <em>entre idiomas</em>.</p>
+<p>Considere, por exemplo, o equivalente em finlandês do exemplo acima: “<em>Minä menin elokuviin.</em>” (“Eu fui ao cinema.”).</p>
+<p>Se o modelo de linguagem em inglês previsse a cabeça errada para uma única palavra, o modelo ainda assim alcançaria uma pontuação UAS ou LAS de <span class="math inline">5/6 ≈ 0.83</span>.</p>
+<p>Se o analisador finlandês, por sua vez, cometesse um único erro, a pontuação correspondente seria de <span class="math inline">2/3 ≈ 0.66</span>.</p>
+<p>Zeman et al. <a href="https://aclanthology.org/K18-2001.pdf">2018: 5</a> resumem o problema de forma sucinta:</p>
+<blockquote>
+<p>… palavras de função (ou palavras gramaticais) frequentemente correspondem a recursos morfológicos em outros idiomas. Além disso, idiomas com muitas palavras de função (por exemplo, inglês) têm sentenças mais longas do que idiomas morfologicamente ricos (por exemplo, finlandês), portanto, um único erro em finlandês custa ao analisador significativamente mais do que um erro em inglês de acordo com a métrica LAS.</p>
+</blockquote>
+<p>Por esse motivo, várias métricas alternativas foram propostas para medir o desempenho de modelos de linguagem para análise de dependências.</p>
+<p>CLAS, ou <em>content-labeled attachment score</em>, é como a LAS, mas ignora palavras de função (por exemplo, palavras com as relações <code>aux</code> <code>case</code> <code>cc</code> <code>clf</code> <code>cop</code> <code>det</code> <code>mark</code>) e pontuação (<code>punct</code>) ao calcular a pontuação. Apenas palavras de conteúdo são contadas (Nivre &amp; Fang <a href="https://aclanthology.org/W17-0411.pdf">2017</a>).</p>
+<p>MLAS, ou <em>morphologically-aware labeled attachment score</em>, é em grande parte semelhante à CLAS, mas também avalia se a etiqueta de classe gramatical e recursos morfológicos selecionados foram previstos corretamente (Zeman et al. <a href="https://aclanthology.org/K18-2001.pdf">2018: 5</a>).</p>
+<p>BLEX, ou <em>bilexical dependency score</em>, é como a MLAS, mas a informação morfológica é substituída por lemas (Zeman et al. <a href="https://aclanthology.org/K18-2001.pdf">2018: 5</a>).</p>
+<p>Esta seção deve ter lhe dado uma ideia das Dependências Universais como um projeto e um esquema de anotação.</p>
+<p>Na próxima seção, aprenderemos a pesquisar padrões em anotações linguísticas.</p>
+</body>
+</html>

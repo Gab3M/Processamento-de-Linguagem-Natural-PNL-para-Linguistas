@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia" />
+  <title>Parte III: Processamento de Linguagem Natural para Linguistas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    /* centralização de figuras e tabelas */
+    figure {
+      margin: 1.5em 0;
+      text-align: center;
+    }
+    figure img {
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.85em;
+      color: #606060;
+      margin-top: 0.4em;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Parte III: Processamento de Linguagem Natural para Linguistas</h1>
+<p class="subtitle">Unidade 3 - Encontrando padrões linguísticos com o spaCy</p>
+<p class="author">CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia</p>
+<p class="date">Agosto de 2026</p>
+</header>
+<h1 id="encontrando-padrões-linguísticos-com-o-spacy">Encontrando padrões linguísticos com o spaCy</h1>
+<p>Esta seção ensina você a encontrar padrões linguísticos usando o spaCy, uma biblioteca de processamento de linguagem natural para Python.</p>
+<p>Se você não estiver familiarizado com as anotações linguísticas produzidas pelo spaCy, ou precisar refrescar a memória, revisite a Parte II antes de trabalhar nesta seção.</p>
+<h2 id="objetivos-de-aprendizagem">Objetivos de Aprendizagem</h2>
+<p>Ao final deste módulo, você será capaz de:</p>
+<ul>
+<li><strong>Buscar por etiquetas e traços:</strong> Saber como procurar padrões com base em etiquetas de classe gramatical (<em>part-of-speech tags</em>) e traços morfológicos.</li>
+<li><strong>Buscar por dependências:</strong> Saber como procurar padrões com base em dependências sintáticas.</li>
+<li><strong>Examinar o contexto:</strong> Saber como examinar os padrões encontrados em seu contexto de ocorrência.</li>
+</ul>
+<h2 id="encontrando-padrões-usando-os-matchers-do-spacy">1. Encontrando padrões usando os <em>Matchers</em> do spaCy</h2>
+<p>Anotações linguísticas, tais como etiquetas de classe gramatical, dependências sintáticas e traços morfológicos, ajudam a impor estrutura à linguagem escrita. De maneira crucial, as anotações linguísticas permitem buscar por <strong>padrões estruturais</strong> em vez de palavras ou expressões individuais. Isso permite definir padrões de busca de forma flexível.</p>
+<p>Na biblioteca spaCy, a capacidade de busca por padrões é fornecida por diversos componentes chamados <em>Matchers</em> (algo como “casadores de padrões”).</p>
+<p>O spaCy oferece três tipos de <em>Matchers</em>:</p>
+<ol type="1">
+<li>O <a href="https://spacy.io/api/matcher"><em>Matcher</em></a>, que permite definir regras que buscam por <strong>palavras ou expressões</strong> específicas examinando os atributos de objetos <em>Token</em>.</li>
+<li>O <a href="https://spacy.io/api/dependencymatcher"><em>DependencyMatcher</em></a>, que permite buscar <strong>padrões sintáticos</strong> nas árvores de análise.</li>
+<li>O <a href="https://spacy.io/api/phrasematcher"><em>PhraseMatcher</em></a>, um método rápido para casar objetos <em>Doc</em> do spaCy com outros objetos <em>Doc</em>.</li>
+</ol>
+<p>As seções a seguir mostram como usar o <em>Matcher</em> para casar objetos <em>Token</em> e suas sequências com base em etiquetas de classe gramatical e traços morfológicos, e como usar o <em>DependencyMatcher</em> para casar dependências sintáticas.</p>
+<h3 id="casando-palavras-ou-expressões">1.1. Casando palavras ou expressões</h3>
+<p>Para começar a trabalhar com o <em>Matcher</em>, vamos importar a biblioteca spaCy e carregar um modelo de linguagem pequeno para o inglês.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co"># Importa a biblioteca spaCy para o Python</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="im">import</span> spacy</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="co"># Carrega um modelo de linguagem pequeno para o inglês; atribui o resultado a &#39;nlp&#39;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>nlp <span class="op">=</span> spacy.load(<span class="st">&#39;en_core_web_sm&#39;</span>)</span></code></pre></div>
+<p>Para termos algum dado com que trabalhar, vamos carregar um texto extraído de um artigo da Wikipédia.</p>
+<p>Para isso, usamos a função <code>open()</code> do Python em combinação com a instrução <code>with</code> para abrir o arquivo em modo de leitura, fornecendo os argumentos <code>file</code>, <code>mode</code> e <code>encoding</code>, conforme instruído na Parte II.</p>
+<p>Em seguida, chamamos o método <code>read()</code> para ler o conteúdo do arquivo e armazenamos o resultado na variável <code>text</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Usa a função open() com a instrução &#39;with&#39; para abrir o arquivo em modo de leitura</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="bu">file</span><span class="op">=</span><span class="st">&#39;data/occupy.txt&#39;</span>, mode<span class="op">=</span><span class="st">&#39;r&#39;</span>, encoding<span class="op">=</span><span class="st">&#39;utf-8&#39;</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>    <span class="co"># Usa o método read() para ler o conteúdo do arquivo; atribui o resultado à</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>    <span class="co"># variável &#39;text&#39;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>    text <span class="op">=</span> <span class="bu">file</span>.read()</span></code></pre></div>
+<p>Isso devolve um objeto <em>string</em> do Python que contém o artigo em texto puro, agora disponível na variável <code>text</code>.</p>
+<p>Em seguida, fornecemos esse objeto ao modelo de linguagem armazenado na variável <code>nlp</code>, conforme instruído na Parte II.</p>
+<p>Também usamos a função <code>len()</code> do Python para contar o número de palavras no texto.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co"># Fornece o objeto string ao modelo de linguagem</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>doc <span class="op">=</span> nlp(text)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co"># Usa a função len() para verificar o tamanho do objeto Doc e contar</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co"># quantos Tokens estão contidos nele.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="bu">len</span>(doc)</span></code></pre></div>
+<pre><code>14867</code></pre>
+<p>Agora que temos um objeto <em>Doc</em> do spaCy com quase 15 000 <em>Tokens</em>, podemos prosseguir e importar a classe <em>Matcher</em> do submódulo <code>matcher</code> do spaCy.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Importa a classe Matcher</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="im">from</span> spacy.matcher <span class="im">import</span> Matcher</span></code></pre></div>
+<p>Importar a classe <em>Matcher</em> do submódulo <code>matcher</code> do spaCy nos permite criar objetos <em>Matcher</em>.</p>
+<p>Ao criar um objeto <em>Matcher</em>, você precisa fornecer a ele o vocabulário do modelo de linguagem usado para encontrar as correspondências.</p>
+<p>A razão para isso é bastante simples: se você quer buscar padrões em algum idioma, primeiro precisa conhecer o vocabulário desse idioma.</p>
+<p>O spaCy armazena o vocabulário de um modelo em um objeto <a href="https://spacy.io/api/vocab"><em>Vocab</em></a>. O objeto <em>Vocab</em> pode ser encontrado no atributo <code>vocab</code> de um objeto <em>Language</em> do spaCy, apresentado na Parte II.</p>
+<p>Neste caso, temos o objeto <em>Language</em> que contém um modelo de linguagem pequeno para o inglês armazenado na variável <code>nlp</code>, o que significa que podemos acessar seu objeto <em>Vocab</em> pelo atributo <code>nlp.vocab</code>.</p>
+<p>Chamamos então a <strong>classe</strong> <em>Matcher</em> e fornecemos o vocabulário disponível em <code>nlp.vocab</code> ao argumento <code>vocab</code> para criar um objeto <em>Matcher</em>. Armazenamos o objeto resultante na variável <code>matcher</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># Cria um Matcher e fornece o vocabulário do modelo; atribui o resultado à variável &#39;matcher&#39;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>matcher <span class="op">=</span> Matcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="co"># Chama a variável para examinar o objeto</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>matcher</span></code></pre></div>
+<pre><code>&lt;spacy.matcher.matcher.Matcher at 0x295de8140&gt;</code></pre>
+<p>O objeto <em>Matcher</em> está agora pronto para armazenar os padrões que queremos buscar.</p>
+<p>Esses padrões – ou, mais especificamente, essas <em>regras de padrão</em> – são criados usando um <a href="https://spacy.io/api/matcher#patterns">formato específico</a> definido pelo spaCy.</p>
+<p>Cada padrão consiste em uma lista Python, que é preenchida por dicionários Python.</p>
+<p>Cada dicionário nessa lista descreve o padrão para casar um único <em>Token</em> do spaCy.</p>
+<p>Se você deseja casar uma sequência de <em>Tokens</em>, precisa definir múltiplos dicionários dentro de uma única lista, cuja ordem acompanha a do padrão a ser casado.</p>
+<p>Vamos começar definindo um padrão simples para casar sequências de pronomes e verbos, e armazenar esse padrão na variável <code>pronoun_verb</code>.</p>
+<p>Esse padrão consiste em uma lista, marcada pelos colchetes <code>[]</code>, que contém dois dicionários, marcados por chaves <code>{}</code> e separados por vírgula. Os pares de chave e valor em um dicionário são separados por dois-pontos.</p>
+<ul>
+<li>A <strong>chave</strong> do dicionário determina qual atributo do <em>Token</em> deve ser buscado. Os atributos suportados pelo <em>Matcher</em> podem ser encontrados <a href="https://spacy.io/api/matcher#patterns">aqui</a>.</li>
+<li>O <strong>valor</strong> associado à chave determina o valor específico daquele atributo.</li>
+</ul>
+<p>Neste caso, definimos um padrão que busca uma sequência de duas etiquetas gerais de classe gramatical (<code>POS</code>), apresentadas na Parte II: pronomes (<code>PRON</code>) e verbos (<code>VERB</code>).</p>
+<p>Observe que tanto as chaves quanto os valores devem ser fornecidos em letras maiúsculas.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co"># Define uma lista com dicionários aninhados que contém o padrão a ser casado</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>pronoun_verb <span class="op">=</span> [{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;PRON&#39;</span>}, {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}]</span></code></pre></div>
+<p>Agora que definimos o padrão usando uma lista e dicionários, podemos adicioná-lo ao objeto <em>Matcher</em> armazenado na variável <code>matcher</code>.</p>
+<p>Isso pode ser feito com o método <code>add()</code>, que exige duas entradas:</p>
+<ol type="1">
+<li>Um objeto <em>string</em> do Python que define um nome para o padrão. Isso é necessário para fins de identificação.</li>
+<li>Uma lista contendo o(s) padrão(ões) a ser(em) buscado(s). Como uma única regra de casamento de padrões pode conter múltiplos padrões, a entrada deve ser uma <em>lista de listas</em>. Por isso envolvemos as listas de entrada em colchetes, por exemplo <code>[pattern_1]</code>.</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher sob o nome &#39;pronoun+verb&#39;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>matcher.add(<span class="st">&quot;pronoun+verb&quot;</span>, patterns<span class="op">=</span>[pronoun_verb])</span></code></pre></div>
+<p>Para buscar correspondências no objeto <em>Doc</em> armazenado na variável <code>doc</code>, fornecemos o objeto <em>Doc</em> ao <em>Matcher</em> e armazenamos o resultado na variável <code>result</code>.</p>
+<p>Também definimos o argumento opcional <code>as_spans</code> como <code>True</code>, o que instrui o spaCy a devolver os resultados como objetos <em>Span</em>.</p>
+<p>Como você deve lembrar da Parte II, objetos <em>Span</em> correspondem a “fatias” contínuas de objetos <em>Doc</em>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="co"># Aplica o Matcher ao objeto Doc armazenado em &#39;doc&#39;; fornece o argumento</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="co"># &#39;as_spans&#39; com o valor True para obter Spans como saída</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>result <span class="op">=</span> matcher(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="co"># Chama a variável para examinar a saída</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>result</span></code></pre></div>
+<pre><code>[that expressed,
+ It aimed,
+ It formed,
+ this began,
+ it organizes,
+ that read,
+ who designed,
+ He wrote,
+ there were,
+ They promoted,
+ It refers,
+ which started,
+ that indicate,
+ that allowed,
+ they saw,
+ they argued,
+ they called,
+ it takes,
+ ...
+ that deals,
+ that believe]</code></pre>
+<p>A saída é uma lista de objetos <em>Span</em> do spaCy que casam com o padrão solicitado. Vamos examinar o primeiro objeto da lista de correspondências em maior detalhe.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>result[<span class="dv">0</span>]</span></code></pre></div>
+<pre><code>that expressed</code></pre>
+<p>O objeto <em>Span</em> possui vários <a href="https://spacy.io/api/span">atributos</a> úteis, entre eles <code>start</code> e <code>end</code>. Esses atributos contêm os índices que indicam onde, no objeto <em>Doc</em>, o <em>Span</em> começa e termina.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>result[<span class="dv">0</span>].start, result[<span class="dv">0</span>].end</span></code></pre></div>
+<pre><code>(14, 16)</code></pre>
+<p>Outro atributo útil é o <code>label</code>, que contém o nome que demos ao padrão. Vamos observá-lo mais de perto.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>result[<span class="dv">0</span>].label</span></code></pre></div>
+<pre><code>12298179334642351811</code></pre>
+<p>O número armazenado no atributo <code>label</code> é, na verdade, um objeto <a href="https://spacy.io/api/lexeme"><em>Lexeme</em></a> do spaCy, que corresponde a uma entrada no vocabulário do modelo de linguagem.</p>
+<p>Esse <em>Lexeme</em> contém o nome que demos ao padrão de busca acima, ou seja, <code>pronoun+verb</code>.</p>
+<p>Podemos verificar isso facilmente usando o valor de <code>result[0].label</code> para buscar o <em>Lexeme</em> no objeto <em>Vocab</em> disponível em <code>nlp.vocab</code> e examinando seu atributo <code>text</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="co"># Acessa o vocabulário do modelo usando colchetes; fornece o valor de &#39;result[0].label&#39;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="co"># como chave. Em seguida, obtém o atributo &#39;text&#39; do objeto Lexeme, que contém o</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="co"># lexema em forma legível para humanos.</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a>nlp.vocab[result[<span class="dv">0</span>].label].text</span></code></pre></div>
+<pre><code>&#39;pronoun+verb&#39;</code></pre>
+<p>A informação disponível no atributo <code>label</code> é útil para desambiguar entre padrões, especialmente se o mesmo objeto <em>Matcher</em> contiver vários padrões diferentes, como veremos logo adiante.</p>
+<p>Olhando para as correspondências acima, o padrão que definimos é bastante restritivo, pois o pronome e o verbo precisam vir imediatamente um após o outro.</p>
+<p>Não conseguimos, por exemplo, casar padrões em que o verbo é precedido por verbos auxiliares.</p>
+<p>O spaCy permite aumentar a flexibilidade das regras de padrão por meio de <strong>operadores</strong>.</p>
+<p>Esses operadores são definidos adicionando a chave <code>OP</code> ao dicionário que define o padrão de um único <em>Token</em>. O spaCy suporta os seguintes operadores:</p>
+<ul>
+<li><code>!</code>: Nega o padrão; o padrão pode ocorrer exatamente zero vezes.</li>
+<li><code>?</code>: Torna o padrão opcional; o padrão pode ocorrer zero ou uma vez.</li>
+<li><code>+</code>: Exige que o padrão ocorra uma ou mais vezes.</li>
+<li><code>*</code>: Permite que o padrão ocorra zero ou mais vezes.</li>
+</ul>
+<p>Vamos explorar o uso de operadores definindo outra regra de padrão, que amplia o alcance do nosso <em>Matcher</em>.</p>
+<p>Para tanto, definimos um padrão adicional para um <em>Token</em> entre o pronome e o verbo. Esse <em>Token</em> deve ter a etiqueta geral de classe gramatical <code>AUX</code>, que indica um verbo auxiliar:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;AUX&#39;</span>, <span class="st">&#39;OP&#39;</span>: <span class="st">&#39;+&#39;</span>}</span></code></pre></div>
+<p>Além disso, acrescentamos outro par de chave e valor ao dicionário desse <em>Token</em>, contendo a chave <code>OP</code> com o valor <code>+</code>. Isso significa que o <em>Token</em> correspondente a um verbo auxiliar deve ocorrer <em>uma ou mais vezes</em>.</p>
+<p>Armazenamos a lista resultante com dicionários aninhados na variável <code>pronoun_aux_verb</code> e adicionamos o padrão ao objeto <em>Matcher</em> já existente, armazenado na variável <code>matcher</code>.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="co"># Define uma lista com dicionários aninhados que contém o padrão a ser casado</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a>pronoun_aux_verb <span class="op">=</span> [{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;PRON&#39;</span>}, {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;AUX&#39;</span>, <span class="st">&#39;OP&#39;</span>: <span class="st">&#39;+&#39;</span>}, {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher sob o nome &#39;pronoun+aux+verb&#39;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>matcher.add(<span class="st">&#39;pronoun+aux+verb&#39;</span>, patterns<span class="op">=</span>[pronoun_aux_verb])</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a><span class="co"># Aplica o Matcher ao objeto Doc armazenado em &#39;doc&#39;; fornece o argumento &#39;as_spans&#39;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a><span class="co"># com o valor True para obter Spans como saída. Sobrescreve as correspondências</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a><span class="co"># anteriores armazenando o resultado na variável &#39;results&#39;.</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true"></a>results <span class="op">=</span> matcher(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>Assim como antes, o <em>Matcher</em> devolve uma lista de objetos <em>Span</em> do spaCy.</p>
+<p>Vamos percorrer cada item da lista <code>results</code>. Usamos a variável <code>result</code> para nos referirmos aos objetos <em>Span</em> individuais da lista, que contêm nossas correspondências.</p>
+<p>Primeiro recuperamos o objeto <em>Lexeme</em> armazenado em <code>result.label</code>, que mapeamos para o <em>Vocabulário</em> do modelo de linguagem disponível em <code>nlp.vocab</code>.</p>
+<p>Como aprendemos acima, esse <em>Lexeme</em> corresponde ao nome que demos à regra de padrão, cuja forma legível para humanos pode ser encontrada no atributo <code>text</code>.</p>
+<p>Em seguida, imprimimos um caractere de tabulação para inserir algum espaço entre o nome do padrão e o objeto <em>Span</em> que contém a correspondência.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="co"># Percorre cada objeto Span na lista &#39;results&#39;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a>    <span class="co"># Imprime o nome da regra de padrão, um caractere de tabulação e o Span correspondente</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>    <span class="bu">print</span>(nlp.vocab[result.label].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, result)</span></code></pre></div>
+<pre><code>pronoun+verb     that expressed
+pronoun+verb     It aimed
+pronoun+verb     It formed
+pronoun+verb     this began
+pronoun+verb     it organizes
+pronoun+aux+verb     that had resulted
+pronoun+verb     that read
+pronoun+verb     who designed
+pronoun+verb     He wrote
+pronoun+verb     there were
+pronoun+aux+verb     they did have
+pronoun+verb     they saw
+pronoun+aux+verb     they were working
+pronoun+aux+verb     which has been gathered
+pronoun+aux+verb     who had lost
+pronoun+aux+verb     that can be traced
+...
+pronoun+aux+verb     they have been protesting
+pronoun+aux+verb     they will have made
+pronoun+aux+verb     which would overturn
+pronoun+verb     that believe</code></pre>
+<p>A saída mostra que o padrão que adicionamos ao <em>Matcher</em> casa com padrões que contêm um (por exemplo, “we <em>can</em> build”) ou mais (por exemplo, “they <em>have been</em> protesting”) auxiliares!</p>
+<h3 id="casando-traços-morfológicos">1.2. Casando traços morfológicos</h3>
+<p>Como apresentado na Parte II, o spaCy também pode realizar análise morfológica, cujos resultados são armazenados no atributo <code>morph</code> de um objeto <em>Token</em>.</p>
+<p>O atributo <code>morph</code> contém um objeto <em>string</em>, no qual cada traço morfológico é separado por uma barra vertical <code>|</code>, como ilustrado abaixo.</p>
+<pre><code>We   Case=Nom|Number=Plur|Person=1|PronType=Prs</code></pre>
+<p>Como você pode ver, os tipos específicos de traços morfológicos – por exemplo, <em>Case</em> (caso) – e seu valor – por exemplo, <em>Nom</em> (para o caso nominativo) – são separados por sinais de igual <code>=</code>.</p>
+<p>Vamos começar a explorar como podemos definir regras de padrão que casam traços morfológicos.</p>
+<p>Para começar, criamos um novo objeto <em>Matcher</em> chamado <code>morph_matcher</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="co"># Cria um Matcher e fornece o vocabulário do modelo; atribui o resultado à variável &#39;morph_matcher&#39;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a>morph_matcher <span class="op">=</span> Matcher(vocab<span class="op">=</span>nlp.vocab)</span></code></pre></div>
+<p>Definimos então um novo padrão com regras para dois <em>Tokens</em>:</p>
+<ol type="1">
+<li><em>Tokens</em> que possuem a etiqueta refinada de classe gramatical <code>NNP</code> (nome próprio), que pode ocorrer uma ou mais vezes (operador: <code>+</code>).</li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>{<span class="st">&#39;TAG&#39;</span>: <span class="st">&#39;NNP&#39;</span>, <span class="st">&#39;OP&#39;</span>: <span class="st">&#39;+&#39;</span>}</span></code></pre></div>
+<ol start="2" type="1">
+<li><em>Tokens</em> que possuem a etiqueta geral de classe gramatical <code>VERB</code> e que apresentam <em>todos</em> os seguintes traços morfológicos (<code>MORPH</code>): <code>Number=Sing|Person=Three|Tense=Pres|VerbForm=Fin</code>.</li>
+</ol>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>, <span class="st">&#39;MORPH&#39;</span>: <span class="st">&#39;Number=Sing|Person=Three|Tense=Pres|VerbForm=Fin&#39;</span>}</span></code></pre></div>
+<p>Definimos o padrão usando dois dicionários em uma lista, que atribuímos à variável <code>propn_3rd_finite</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="co"># Define uma lista com dicionários aninhados que contém o padrão a ser casado</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>propn_3rd_finite <span class="op">=</span> [{<span class="st">&#39;TAG&#39;</span>: <span class="st">&#39;NNP&#39;</span>, <span class="st">&#39;OP&#39;</span>: <span class="st">&#39;+&#39;</span>},</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>                    {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>, <span class="st">&#39;MORPH&#39;</span>: <span class="st">&#39;Number=Sing|Person=Three|Tense=Pres|VerbForm=Fin&#39;</span>}]</span></code></pre></div>
+<p>Em seguida, adicionamos o padrão ao <em>Matcher</em> recém-criado, armazenado na variável <code>morph_matcher</code>, usando o método <code>add()</code>.</p>
+<p>Também fornecemos o valor <code>LONGEST</code> ao argumento opcional <code>greedy</code> do método <code>add()</code>.</p>
+<p>O argumento <code>greedy</code> filtra as correspondências para <em>Tokens</em> que incluem operadores como o <code>+</code>, que buscam de forma <em>gulosa</em> mais de uma correspondência.</p>
+<p>Ao definir o valor como <code>LONGEST</code>, o spaCy devolve a sequência mais longa de correspondências, em vez de devolver uma correspondência a cada vez que encontra uma. Em outras palavras, o spaCy coletará todos os <em>Tokens</em> correspondentes antes de devolvê-los.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher sob o nome &#39;sing_3rd_pres_fin&#39;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>morph_matcher.add(<span class="st">&#39;sing_3rd_pres_fin&#39;</span>, patterns<span class="op">=</span>[propn_3rd_finite], greedy<span class="op">=</span><span class="st">&#39;LONGEST&#39;</span>)</span></code></pre></div>
+<p>Aplicamos então o <em>Matcher</em> aos dados armazenados na variável <code>doc</code>.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="co"># Aplica o Matcher ao objeto Doc armazenado em &#39;doc&#39;; fornece o argumento &#39;as_spans&#39;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a><span class="co"># com o valor True para obter Spans como saída. Sobrescreve as correspondências</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a><span class="co"># anteriores armazenando o resultado na variável &#39;morph_results&#39;.</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>morph_results <span class="op">=</span> morph_matcher(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a><span class="co"># Percorre cada objeto Span na lista &#39;morph_results&#39;</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a><span class="cf">for</span> result <span class="kw">in</span> morph_results:</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true"></a>    <span class="co"># Imprime o resultado</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true"></a>    <span class="bu">print</span>(result)</span></code></pre></div>
+<p>Como você pode ver, as correspondências são relativamente poucas, porque definimos que o verbo deveria ter traços morfológicos bastante específicos.</p>
+<p>A questão, então, é: como podemos casar apenas <em>alguns</em> traços morfológicos?</p>
+<p>Para afrouxar os critérios relativos aos traços morfológicos, concentrando-nos apenas no <a href="https://pt.wikipedia.org/wiki/Tempo_(gram%C3%A1tica)">tempo verbal</a>, precisamos usar um dicionário com a chave <code>MORPH</code>, mas, em vez de um objeto <em>string</em>, fornecemos um dicionário como valor.</p>
+<p>Para esse dicionário, usamos a <em>string</em> <code>IS_SUPERSET</code> como chave. <code>IS_SUPERSET</code> é um dos atributos definidos no <a href="https://spacy.io/api/matcher#patterns">formato de padrões</a> do spaCy, por exemplo:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>{<span class="st">&#39;MORPH&#39;</span>: {<span class="st">&#39;IS_SUPERSET&#39;</span>: [...]}}</span></code></pre></div>
+<p>Antes de prosseguirmos, vamos desempacotar um pouco a lógica por trás do <code>IS_SUPERSET</code>.</p>
+<p>Podemos pensar nos traços morfológicos associados a um dado <em>Token</em> como um <a href="https://pt.wikipedia.org/wiki/Conjunto">conjunto</a>. Para exemplificar, um conjunto poderia consistir nos seguintes quatro itens:</p>
+<pre><code>Number=Sing, Person=Three, Tense=Pres, VerbForm=Fin</code></pre>
+<p>Se tivéssemos <em>outro conjunto</em> com apenas um item, <code>Tense=Pres</code>, poderíamos descrever a relação entre os dois conjuntos afirmando que o primeiro conjunto (com quatro itens) é um <strong>superconjunto</strong> do segundo (com um item).</p>
+<p>Em outras palavras, o conjunto maior (superconjunto) contém o conjunto menor (subconjunto).</p>
+<p>É assim também que funciona o casamento por meio de <code>IS_SUPERSET</code>: o spaCy recupera os traços morfológicos de cada <em>Token</em> e verifica se esses traços formam um superconjunto dos traços definidos no padrão de busca.</p>
+<p>Os traços morfológicos a serem buscados são fornecidos como uma lista de <em>strings</em> do Python.</p>
+<p>Essas <em>strings</em>, por sua vez, definem traços morfológicos específicos, como <code>Tense=Past</code>, conforme definido no esquema de <a href="https://universaldependencies.org/u/overview/morphology.html">Dependências Universais</a> para a descrição da morfologia, apresentado na unidade anterior.</p>
+<p>Essa lista é então usada como valor da chave <code>IS_SUPERSET</code>.</p>
+<p>Vamos agora buscar verbos no passado e adicioná-los ao objeto <em>Matcher</em> armazenado em <code>morph_matcher</code>.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a><span class="co"># Define uma lista com dicionários aninhados que contém o padrão a ser casado</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a>past_tense <span class="op">=</span> [{<span class="st">&#39;TAG&#39;</span>: <span class="st">&#39;NNP&#39;</span>, <span class="st">&#39;OP&#39;</span>: <span class="st">&#39;+&#39;</span>},</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true"></a>              {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>, <span class="st">&#39;MORPH&#39;</span>: {<span class="st">&#39;IS_SUPERSET&#39;</span>: [<span class="st">&#39;Tense=Past&#39;</span>]}}]</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher sob o nome &#39;past_tense&#39;</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true"></a>morph_matcher.add(<span class="st">&#39;past_tense&#39;</span>, patterns<span class="op">=</span>[past_tense], greedy<span class="op">=</span><span class="st">&#39;LONGEST&#39;</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true"></a><span class="co"># Aplica o Matcher ao objeto Doc armazenado em &#39;doc&#39;; fornece o argumento &#39;as_spans&#39;</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true"></a><span class="co"># com o valor True para obter Spans como saída. Sobrescreve as correspondências</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true"></a><span class="co"># anteriores armazenando o resultado na variável &#39;morph_results&#39;.</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true"></a>morph_results <span class="op">=</span> morph_matcher(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>Vamos percorrer os resultados e imprimir o nome do padrão, o objeto <em>Span</em> que contém a correspondência e os traços morfológicos do último <em>Token</em> da correspondência, que corresponde ao verbo.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a><span class="co"># Percorre cada objeto Span na lista &#39;morph_results&#39;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a><span class="cf">for</span> result <span class="kw">in</span> morph_results:</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a>    <span class="co"># Imprime o nome da regra de padrão, um caractere de tabulação e o Span</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true"></a>    <span class="co"># correspondente. Por fim, imprime outro caractere de tabulação, seguido dos</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true"></a>    <span class="co"># traços morfológicos do último Token da correspondência (um verbo).</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true"></a>    <span class="bu">print</span>(nlp.vocab[result.label].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, result, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, result[<span class="op">-</span><span class="dv">1</span>].morph)</span></code></pre></div>
+<pre><code>past_tense   Community Environmental Legal Defense Fund released     Tense=Past|VerbForm=Fin
+past_tense   Oakland Police Chief Howard Jordan expressed    Tense=Past|VerbForm=Fin
+past_tense   U.S. Vice President Al Gore called      Tense=Past|VerbForm=Fin
+past_tense   Los Angeles City Council became     Tense=Past|VerbForm=Fin
+past_tense   Judge Jed S. Rakoff sided   Tense=Past|VerbForm=Fin
+past_tense   Prime Minister Manmohan Singh described     Tense=Past|VerbForm=Fin
+past_tense   New York Times reported     Tense=Past|VerbForm=Fin
+...
+past_tense   United Nations controlled   Aspect=Perf|Tense=Past|VerbForm=Part
+past_tense   Occupy Glasgow set      Aspect=Perf|Tense=Past|VerbForm=Part
+past_tense   Shapiro filed   Tense=Past|VerbForm=Fin</code></pre>
+<p>Como você pode ver, o padrão <code>past_tense</code> consegue casar objetos com base em um único traço morfológico, embora a maioria das correspondências compartilhe também outro traço morfológico, a saber, a forma finita.</p>
+<h3 id="casando-dependências-sintáticas">1.3. Casando dependências sintáticas</h3>
+<p>Se você quiser casar padrões com base em dependências sintáticas, precisa usar a classe <em>DependencyMatcher</em> do spaCy.</p>
+<p>Como aprendemos na Parte II, dependências sintáticas descrevem as relações que se mantêm entre objetos <em>Token</em>.</p>
+<p>Para começar, vamos importar a classe <em>DependencyMatcher</em> do submódulo <code>matcher</code>.</p>
+<p>Como você pode ver, o <em>DependencyMatcher</em> é inicializado exatamente como o <em>Matcher</em> acima.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a><span class="co"># Importa a classe DependencyMatcher</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a><span class="im">from</span> spacy.matcher <span class="im">import</span> DependencyMatcher</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true"></a><span class="co"># Cria um DependencyMatcher e fornece o vocabulário do modelo;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true"></a><span class="co"># atribui o resultado à variável &#39;dep_matcher&#39;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true"></a>dep_matcher <span class="op">=</span> DependencyMatcher(vocab<span class="op">=</span>nlp.vocab)</span></code></pre></div>
+<p>Isso nos fornece um <em>DependencyMatcher</em> armazenado na variável <code>dep_matcher</code>, que está agora pronto para armazenar padrões de dependência.</p>
+<p>Ao desenvolver regras de padrão para casar dependências sintáticas, o primeiro passo é determinar uma <strong>“âncora”</strong> em torno da qual o padrão é construído.</p>
+<p>Visualizar as dependências sintáticas, como instruído na Parte II, pode ajudar a formular os padrões.</p>
+<p>Vamos importar o submódulo <code>displacy</code> para desenhar as dependências sintáticas de uma sentença do objeto <em>Doc</em> armazenado na variável <code>doc</code>.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a><span class="co"># Importa o submódulo displacy do spaCy</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a><span class="im">from</span> spacy <span class="im">import</span> displacy</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a><span class="co"># Converte as sentenças contidas no objeto Doc em uma lista; toma a sentença</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true"></a><span class="co"># no índice 420. Define o atributo &#39;style&#39; como &#39;dep&#39; para desenhar as</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true"></a><span class="co"># dependências sintáticas.</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true"></a>displacy.render(<span class="bu">list</span>(doc.sents)[<span class="dv">420</span>], style<span class="op">=</span><span class="st">&#39;dep&#39;</span>)</span></code></pre></div>
+<figure>
+<img src="../resources/image11.png" alt="" /><figcaption>Imagem11</figcaption>
+</figure>
+<p>Como apresentado na unidade anterior, as dependências sintáticas são visualizadas por meio de arcos que partem do <em>Token</em> <strong>cabeça</strong> em direção ao <em>Token</em> <strong>dependente</strong>. O rótulo do arco indica a dependência sintática.</p>
+<p>Vamos definir um padrão que busque verbos e seus sujeitos nominais (<code>nsubj</code>).</p>
+<p>Assim como no caso da classe <em>Matcher</em>, as regras de padrão do <em>DependencyMatcher</em> são definidas usando uma lista de dicionários.</p>
+<p>O primeiro dicionário da lista define o padrão “âncora” e seus atributos.</p>
+<p>Você pode pensar na regra de padrão como uma corrente que avança da esquerda para a direita, na qual o primeiro padrão à esquerda funciona como âncora para os padrões subsequentes à sua direita.</p>
+<p>Assim, definimos o seguinte padrão para a âncora:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>{<span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}}</span></code></pre></div>
+<p>Usamos a chave obrigatória <code>RIGHT_ID</code> para fornecer um nome a esse padrão, que poderá então ser usado para referenciá-lo a partir de padrões posicionados à sua <strong>direita</strong>.</p>
+<p>Em outras palavras, quando você vir a chave <code>RIGHT_ID</code>, pense em um nome para o <em>padrão atual</em>.</p>
+<p>Criamos então um dicionário sob a chave <code>RIGHT_ATTRS</code> que guarda os traços linguísticos da âncora. Neste caso, determinamos que a âncora deve ter <code>VERB</code> como etiqueta de classe gramatical.</p>
+<p>Em seguida, determinamos um padrão para o próximo “elo” da corrente, à direita da âncora:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>{<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;subject&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;nsubj&#39;</span>}}</span></code></pre></div>
+<p>Começamos fornecendo a chave <code>LEFT_ID</code>, cujo valor é um objeto <em>string</em> que se refere ao nome de um padrão à <strong>esquerda</strong> do padrão atual. Esse é o nome que demos à âncora usando a chave <code>RIGHT_ID</code>.</p>
+<p>Em seguida, usamos a chave <code>REL_OP</code> para definir um <a href="https://spacy.io/api/dependencymatcher#patterns">operador relacional</a>, que determina a relação entre este padrão e aquele referenciado por <code>LEFT_ID</code>.</p>
+<p>O operador relacional <code>&gt;</code> define que o padrão em <code>LEFT_ID</code> – a âncora – deve ser a cabeça do padrão atual.</p>
+<p>Depois, nomeamos o padrão atual com a chave <code>RIGHT_ID</code>, o que permite referenciá-lo à direita, se necessário. Damos a esse padrão o nome <code>subject</code>.</p>
+<p>Por fim, usamos <code>RIGHT_ATTRS</code> para determinar os atributos do padrão atual. Definimos que a relação sintática que se mantém entre este padrão e o padrão à sua esquerda deve ser <code>nsubj</code>, ou seja, sujeito nominal.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a><span class="co"># Define uma lista com dicionários aninhados que contém o padrão a ser casado</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a>dep_pattern <span class="op">=</span> [{<span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}},</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true"></a>               {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;subject&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;nsubj&#39;</span>}}</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true"></a>              ]</span></code></pre></div>
+<p>Compilamos então esses dois dicionários em uma lista, adicionamos o padrão ao <em>DependencyMatcher</em> armazenado em <code>dep_matcher</code> e buscamos correspondências no objeto <em>Doc</em> <code>doc</code>.</p>
+<p>Armazenamos as correspondências resultantes na variável <code>dep_matches</code> e chamamos essa variável para examinar a saída.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher sob o nome &#39;nsubj_verb&#39;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>dep_matcher.add(<span class="st">&#39;nsubj_verb&#39;</span>, patterns<span class="op">=</span>[dep_pattern])</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a><span class="co"># Aplica o DependencyMatcher ao objeto Doc armazenado em &#39;doc&#39;; armazena o</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a><span class="co"># resultado na variável &#39;dep_matches&#39;.</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a>dep_matches <span class="op">=</span> dep_matcher(doc)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true"></a><span class="co"># Chama a variável para examinar a saída</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true"></a>dep_matches</span></code></pre></div>
+<pre><code>[(5549296207297668001, [15, 14]),
+ (5549296207297668001, [37, 36]),
+ (5549296207297668001, [53, 52]),
+ (5549296207297668001, [62, 60]),
+ (5549296207297668001, [70, 69]),
+ ...
+ (5549296207297668001, [8004, 8002])]</code></pre>
+<p>Diferentemente do <em>Matcher</em>, o <em>DependencyMatcher</em> não consegue devolver as correspondências como objetos <em>Span</em>, porque as correspondências não formam necessariamente uma sequência contínua de <em>Tokens</em>, que é o que um objeto <em>Span</em> exige.</p>
+<p>Assim, o <em>DependencyMatcher</em> devolve uma lista de tuplas.</p>
+<p>Cada tupla contém dois itens:</p>
+<ol type="1">
+<li>Um objeto <em>Lexeme</em> que informa o nome do padrão.</li>
+<li>Uma lista de índices dos <em>Tokens</em> que casam com o padrão de busca no objeto <em>Doc</em>.</li>
+</ol>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a><span class="co"># Percorre cada tupla na lista &#39;dep_matches&#39;</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a><span class="cf">for</span> match <span class="kw">in</span> dep_matches:</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a>    <span class="co"># Toma o primeiro item da tupla, no índice [0], e o atribui à</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true"></a>    <span class="co"># variável &#39;pattern_name&#39;. Esse item é um objeto Lexeme do spaCy.</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true"></a>    pattern_name <span class="op">=</span> match[<span class="dv">0</span>]</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true"></a>    <span class="co"># Toma o segundo item da tupla, no índice [1], e o atribui à</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true"></a>    <span class="co"># variável &#39;matches&#39;. Trata-se de uma lista de índices que se referem ao</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true"></a>    <span class="co"># objeto Doc armazenado em &#39;doc&#39; que acabamos de casar.</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true"></a>    matches <span class="op">=</span> match[<span class="dv">1</span>]</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true"></a></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true"></a>    <span class="co"># Vamos desempacotar a lista &#39;matches&#39; em variáveis, por clareza</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true"></a>    verb, subject <span class="op">=</span> matches[<span class="dv">0</span>], matches[<span class="dv">1</span>]</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true"></a></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true"></a>    <span class="co"># Imprime as correspondências buscando primeiro o nome do padrão no objeto</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true"></a>    <span class="co"># Vocabulary. Em seguida, usa as variáveis &#39;subject&#39; e &#39;verb&#39; para indexar o</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true"></a>    <span class="co"># objeto Doc. Isso nos dá os Tokens efetivamente casados. Usa um caractere de</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true"></a>    <span class="co"># tabulação (&#39;\t&#39;) e reticências (&#39;...&#39;) para separar a saída.</span></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true"></a>    <span class="bu">print</span>(nlp.vocab[pattern_name].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, doc[subject], <span class="st">&#39;...&#39;</span>, doc[verb])</span></code></pre></div>
+<pre><code>nsubj_verb   that ... expressed
+nsubj_verb   It ... aimed
+nsubj_verb   movement ... had
+nsubj_verb   groups ... had
+nsubj_verb   concerns ... included
+nsubj_verb   corporations ... control
+nsubj_verb   that ... benefited
+nsubj_verb   It ... formed
+nsubj_verb   Steger ... called
+nsubj_verb   Occupy ... began
+...
+nsubj_verb   protests ... began
+nsubj_verb   protest ... started
+nsubj_verb   they ... call
+nsubj_verb   police ... moved</code></pre>
+<p>Isso nos devolve os verbos e seus sujeitos nominais.</p>
+<p>Note que, ao definir regras de padrão para casamento de dependências, você também pode criar novas “correntes” que partem do padrão-âncora.</p>
+<p>Por exemplo, para encontrar os objetos diretos (<code>dobj</code>) dos verbos casados acima, <strong>não</strong> devemos adicionar isso como um elo da corrente já existente, cujo item mais à direita se chama atualmente <code>subject</code>.</p>
+<p>Em vez disso, precisamos iniciar uma nova corrente que começa a partir do padrão-âncora <code>verb</code>.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a>{<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;d_object&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;dobj&#39;</span>}}</span></code></pre></div>
+<p>Assim como acima, definimos que esse padrão deve estar à direita do padrão <code>verb</code>, iniciando essencialmente uma nova corrente.</p>
+<p>Além disso, o padrão <code>verb</code> deve governar esse nó (<code>&gt;</code>) e a relação deve ser <code>dobj</code>. Também nomeamos esse padrão como <code>d_object</code> usando o atributo <code>RIGHT_ID</code>.</p>
+<p>Vamos definir um novo padrão e adicioná-lo ao objeto <em>DependencyMatcher</em>.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a><span class="co"># Define uma lista com dicionários aninhados que contém o padrão a ser casado</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a>dep_pattern_2 <span class="op">=</span> [{<span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}},</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true"></a>                 {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;subject&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;nsubj&#39;</span>}},</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true"></a>                 {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;d_object&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;dobj&#39;</span>}}</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true"></a>                ]</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher sob o nome &#39;nsubj_verb_dobj&#39;</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true"></a>dep_matcher.add(<span class="st">&#39;nsubj_verb_dobj&#39;</span>, patterns<span class="op">=</span>[dep_pattern_2])</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true"></a><span class="co"># Aplica o DependencyMatcher ao objeto Doc armazenado em &#39;doc&#39;; armazena o</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true"></a><span class="co"># resultado na variável &#39;dep_matches&#39;.</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true"></a>dep_matches <span class="op">=</span> dep_matcher(doc)</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true"></a></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true"></a><span class="co"># Percorre cada tupla na lista &#39;dep_matches&#39;</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true"></a><span class="cf">for</span> match <span class="kw">in</span> dep_matches:</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true"></a></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true"></a>    <span class="co"># Toma o primeiro item da tupla, no índice [0], e o atribui à</span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true"></a>    <span class="co"># variável &#39;pattern_name&#39;. Esse item é um objeto Lexeme do spaCy.</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true"></a>    pattern_name <span class="op">=</span> match[<span class="dv">0</span>]</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true"></a></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true"></a>    <span class="co"># Toma o segundo item da tupla, no índice [1], e o atribui à</span></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true"></a>    <span class="co"># variável &#39;matches&#39;. Trata-se de uma lista de índices que se referem ao</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true"></a>    <span class="co"># objeto Doc armazenado em &#39;doc&#39; que acabamos de casar.</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true"></a>    matches <span class="op">=</span> match[<span class="dv">1</span>]</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true"></a></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true"></a>    <span class="co"># Como agora temos dois padrões de casamento que devolvem listas de</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true"></a>    <span class="co"># tamanhos diferentes – por exemplo, listas com dois índices para</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true"></a>    <span class="co"># &#39;nsubj_verb&#39; e listas com três índices para &#39;nsubj_verb_dobj&#39; –,</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true"></a>    <span class="co"># precisamos definir critérios condicionais para tratar essas listas.</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true"></a>    <span class="cf">if</span> <span class="bu">len</span>(matches) <span class="op">&gt;</span> <span class="dv">2</span>:</span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true"></a></span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true"></a>        <span class="co"># Vamos desempacotar a lista &#39;matches&#39; em variáveis, por clareza</span></span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true"></a>        verb, subject, dobject <span class="op">=</span> matches[<span class="dv">0</span>], matches[<span class="dv">1</span>], matches[<span class="dv">2</span>]</span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true"></a></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true"></a>        <span class="co"># Imprime as correspondências buscando primeiro o nome do padrão no objeto</span></span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true"></a>        <span class="co"># Vocabulary. Em seguida, usa as variáveis &#39;subject&#39; e &#39;verb&#39; para indexar</span></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true"></a>        <span class="co"># o objeto Doc. Isso nos dá os Tokens efetivamente casados. Usa um caractere</span></span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true"></a>        <span class="co"># de tabulação (&#39;\t&#39;) e reticências (&#39;...&#39;) para separar a saída.</span></span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true"></a>        <span class="bu">print</span>(nlp.vocab[pattern_name].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, doc[subject], <span class="st">&#39;...&#39;</span>, doc[verb], <span class="st">&#39;...&#39;</span>, doc[dobject])</span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true"></a></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true"></a>    <span class="co"># Condição alternativa, com apenas dois itens na lista.</span></span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true"></a>    <span class="cf">else</span>:</span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true"></a></span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true"></a>        <span class="co"># Vamos desempacotar a lista &#39;matches&#39; em variáveis, por clareza</span></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true"></a>        verb, subject <span class="op">=</span> matches[<span class="dv">0</span>], matches[<span class="dv">1</span>]</span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true"></a></span>
+<span id="cb46-47"><a href="#cb46-47" aria-hidden="true"></a>        <span class="co"># Imprime as correspondências buscando primeiro o nome do padrão no objeto</span></span>
+<span id="cb46-48"><a href="#cb46-48" aria-hidden="true"></a>        <span class="co"># Vocabulary. Em seguida, usa as variáveis &#39;subject&#39; e &#39;verb&#39; para indexar</span></span>
+<span id="cb46-49"><a href="#cb46-49" aria-hidden="true"></a>        <span class="co"># o objeto Doc. Isso nos dá os Tokens efetivamente casados.</span></span>
+<span id="cb46-50"><a href="#cb46-50" aria-hidden="true"></a>        <span class="bu">print</span>(nlp.vocab[pattern_name].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, doc[subject], <span class="st">&#39;...&#39;</span>, doc[verb])</span></code></pre></div>
+<p>Como a saída mostra, o padrão <code>nsubj_verb_dobj</code> devolve tanto os sujeitos nominais quanto os objetos diretos dos verbos, que definimos usando diferentes “correntes” do padrão.</p>
+<p>Poderíamos facilmente acrescentar outra corrente ao padrão-âncora – por exemplo, para buscar sintagmas preposicionais – ou adicionar mais elos a qualquer uma das correntes existentes para buscar traços mais refinados.</p>
+<h2 id="examinando-as-correspondências-em-contexto-com-concordâncias">2. Examinando as correspondências em contexto com concordâncias</h2>
+<p>Podemos examinar as correspondências em seu contexto de ocorrência usando <strong>concordâncias</strong>. Na linguística de corpus, concordâncias são frequentemente entendidas como linhas de texto que exibem uma correspondência em seu contexto de ocorrência.</p>
+<p>Essas linhas de concordância podem ajudar a compreender por que e como um determinado <em>token</em> ou estrutura é usado em um dado contexto.</p>
+<p>Para criar linhas de concordância com o spaCy, vamos começar importando a classe <em>Printer</em> da wasabi, uma pequena <a href="https://pypi.org/project/wasabi/">biblioteca Python</a> que o spaCy usa para colorir e formatar mensagens. Usaremos a wasabi para destacar as correspondências nas linhas de concordância.</p>
+<p>Primeiro inicializamos um objeto <em>Printer</em>, que atribuímos à variável <code>match</code>. Em seguida, testamos o objeto <em>Printer</em> imprimindo algum texto na cor vermelha.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a><span class="co"># Importa a classe Printer da wasabi</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a><span class="im">from</span> wasabi <span class="im">import</span> Printer</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true"></a><span class="co"># Inicializa um objeto Printer; atribui o objeto à variável &#39;match&#39;</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true"></a>match <span class="op">=</span> Printer()</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true"></a></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true"></a><span class="co"># Usa o Printer para imprimir um texto na cor vermelha</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true"></a>match.text(<span class="st">&#39;Hello world!&#39;</span>, color<span class="op">=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
+<p>Prosseguimos então percorrendo os resultados devolvidos pelo objeto <em>Matcher</em> <code>morph_matcher</code>. Como aprendemos acima, os resultados consistem em objetos <em>Span</em> dentro de uma lista, armazenados na variável <code>morph_results</code>.</p>
+<p>Percorremos os itens dessa lista e usamos a função <code>enumerate()</code> para manter a contagem. Também fornecemos o argumento <code>start</code> com o valor 1 à função <code>enumerate()</code>, para que a contagem comece no número 1.</p>
+<p>Durante o laço, nos referimos a essa contagem pela variável <code>i</code> e ao objeto <em>Span</em> como <code>result</code>. O número em <code>i</code> é incrementado a cada objeto <em>Span</em>.</p>
+<p>Imprimimos então a seguinte saída para cada objeto <em>Span</em> da lista <code>morph_results</code>:</p>
+<ol type="1">
+<li><code>i</code>: o número do item na lista.</li>
+<li><code>doc[result.start - 7: result.start]</code>: uma fatia do objeto <em>Doc</em> armazenado na variável <code>doc</code>, no qual buscamos as correspondências. Como de costume, definimos uma fatia usando colchetes e separamos o início e o fim da fatia por dois-pontos. Tomamos uma fatia que começa 7 <em>Tokens</em> antes do início da correspondência (<code>result.start - 7</code>) e termina no início da correspondência (<code>result.start</code>).</li>
+<li><code>match.text(result, color="red", no_print=True)</code>: o objeto <em>Span</em> correspondente, renderizado em vermelho pelo objeto <em>Printer</em> da wasabi armazenado em <code>match</code>. Também definimos o argumento <code>no_print</code> como <code>True</code>, para impedir que a wasabi imprima a saída em uma nova linha.</li>
+<li><code>doc[result.end: result.end + 7]</code>: outra fatia do objeto <em>Doc</em> armazenado na variável <code>doc</code>. Aqui tomamos uma fatia que começa no fim da correspondência (<code>result.end</code>) e termina 7 <em>Tokens</em> após o fim da correspondência (<code>result.end + 7</code>).</li>
+</ol>
+<p>Em essência, usamos os índices disponíveis nos atributos <code>start</code> e <code>end</code> de cada <em>Span</em> para recuperar o contexto linguístico em que o <em>Span</em> ocorre.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a><span class="co"># Percorre as correspondências em &#39;morph_results&#39; e mantém a contagem dos itens</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true"></a><span class="cf">for</span> i, result <span class="kw">in</span> <span class="bu">enumerate</span>(morph_results, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true"></a>    <span class="co"># Imprime as seguintes informações para cada correspondência</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true"></a>    <span class="bu">print</span>(i,  <span class="co"># Número do item sendo percorrido</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true"></a>          doc[result.start <span class="op">-</span> <span class="dv">7</span>: result.start],  <span class="co"># A fatia do Doc que precede a correspondência</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true"></a>          match.text(result, color<span class="op">=</span><span class="st">&#39;red&#39;</span>, no_print<span class="op">=</span><span class="va">True</span>),  <span class="co"># A correspondência, em vermelho, via wasabi</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true"></a>          doc[result.end: result.end <span class="op">+</span> <span class="dv">7</span>]  <span class="co"># A fatia do Doc que sucede a correspondência</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true"></a>         )</span></code></pre></div>
+<p>Isso devolve um conjunto de linhas de concordância que destacam as correspondências em seu contexto de ocorrência.</p>
+<p>Note que, em alguns casos, os <em>Tokens</em> precedentes ou seguintes consistem em quebras de linha que indicam mudança de parágrafo, o que faz a saída pular uma ou duas linhas.</p>
+<p>Esta seção deve ter lhe dado uma ideia de como buscar estruturas correspondentes nas anotações linguísticas usando o spaCy.</p>
+<p>Na próxima seção, você será apresentado aos <em>word embeddings</em>, uma técnica para aproximar o significado das palavras.</p>
+</body>
+</html>

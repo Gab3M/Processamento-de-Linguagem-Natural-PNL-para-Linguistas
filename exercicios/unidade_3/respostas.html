@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia" />
+  <title>Parte III: Processamento de Linguagem Natural para Linguistas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    /* centralização de figuras e tabelas */
+    figure {
+      margin: 1.5em 0;
+      text-align: center;
+    }
+    figure img {
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.85em;
+      color: #606060;
+      margin-top: 0.4em;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Parte III: Processamento de Linguagem Natural para Linguistas</h1>
+<p class="subtitle">Unidade 3 - Respostas dos Exercícios</p>
+<p class="author">CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia</p>
+<p class="date">Agosto de 2026</p>
+</header>
+<h1 id="respostas-encontrando-padrões-linguísticos-com-o-spacy">Respostas — Encontrando padrões linguísticos com o spaCy</h1>
+<h2 id="parte-a-conceitos">Parte A — Conceitos</h2>
+<p><strong>Resposta 1.</strong></p>
+<ul>
+<li>O <em>Matcher</em> casa <strong>sequências lineares de <em>Tokens</em></strong> com base em seus atributos (classe gramatical, traços morfológicos, forma, lema etc.). É adequado, por exemplo, para localizar sequências “pronome + verbo”.</li>
+<li>O <em>DependencyMatcher</em> casa <strong>padrões na árvore de dependências</strong>, isto é, relações de cabeça e dependente. É adequado para localizar, por exemplo, todos os sujeitos nominais de verbos, independentemente da ordem linear das palavras.</li>
+<li>O <em>PhraseMatcher</em> casa <strong>objetos <em>Doc</em> contra objetos <em>Doc</em></strong> e é otimizado para listas grandes de termos fixos. É adequado, por exemplo, para localizar milhares de nomes de medicamentos ou de topônimos em um corpus.</li>
+</ul>
+<p><strong>Resposta 2.</strong></p>
+<p>A chave <code>OP</code> define a <strong>quantificação</strong> de um padrão de <em>Token</em>:</p>
+<ul>
+<li><code>!</code> — nega o padrão; ele deve ocorrer exatamente zero vezes.</li>
+<li><code>?</code> — torna o padrão opcional; pode ocorrer zero ou uma vez.</li>
+<li><code>+</code> — exige uma ou mais ocorrências.</li>
+<li><code>*</code> — permite zero ou mais ocorrências.</li>
+</ul>
+<p>O operador <code>?</code> é preferível ao <code>+</code> quando o elemento é <strong>facultativo, mas não repetível</strong>, como o determinante em um sintagma nominal do inglês: <code>[{'POS': 'DET', 'OP': '?'}, {'POS': 'NOUN'}]</code> casa tanto <em>the capital</em> quanto <em>capitals</em>, mas não permitiria uma sequência de determinantes.</p>
+<p><strong>Resposta 3.</strong></p>
+<p><code>POS</code> refere-se à etiqueta <strong>geral</strong> (<em>coarse-grained</em>) de classe gramatical, definida pelo conjunto universal das Dependências Universais (<code>NOUN</code>, <code>VERB</code>, <code>ADJ</code>, <code>PROPN</code> etc.). <code>TAG</code> refere-se à etiqueta <strong>refinada</strong> (<em>fine-grained</em>), específica do corpus de treinamento do modelo — no caso do inglês, o conjunto do Penn Treebank (<code>NN</code>, <code>NNS</code>, <code>NNP</code>, <code>VBD</code> etc.).</p>
+<p><code>NNP</code> é uma etiqueta do Penn Treebank e, portanto, só é válida como valor de <code>TAG</code>. O equivalente geral seria <code>PROPN</code> em <code>POS</code>, mas <code>NNP</code> é mais específico, pois distingue nome próprio singular de plural (<code>NNPS</code>).</p>
+<p><strong>Resposta 4.</strong></p>
+<p>Quando o valor de <code>MORPH</code> é uma <em>string</em>, o spaCy exige uma correspondência <strong>exata</strong> de todo o conjunto de traços morfológicos. Com <code>IS_SUPERSET</code>, o spaCy verifica se o conjunto de traços do <em>Token</em> <strong>contém</strong> o conjunto fornecido no padrão, ou seja, se é um superconjunto dele.</p>
+<p>Isso é necessário porque quase nunca conhecemos de antemão a combinação completa de traços de um <em>Token</em>. Ao buscar apenas verbos no passado, por exemplo, queremos casar tanto <code>Tense=Past|VerbForm=Fin</code> quanto <code>Aspect=Perf|Tense=Past|VerbForm=Part</code>; um único traço, <code>Tense=Past</code>, basta como critério.</p>
+<p><strong>Resposta 5.</strong></p>
+<p><code>RIGHT_ID</code> é o <strong>nome do padrão atual</strong>, usado para que padrões posteriores possam referenciá-lo. <code>LEFT_ID</code> é a <strong>referência a um padrão já definido</strong>, ao qual o padrão atual se conecta por meio do operador relacional em <code>REL_OP</code>.</p>
+<p>O primeiro dicionário não possui <code>LEFT_ID</code> porque é a <strong>âncora</strong>: não há nenhum padrão anterior ao qual ele possa se ligar. A âncora é o ponto de partida da corrente.</p>
+<p><strong>Resposta 6.</strong></p>
+<p>Um objeto <em>Span</em> representa uma <strong>fatia contígua</strong> de um objeto <em>Doc</em>, definida por um índice inicial e um final. Correspondências de dependência, porém, ligam <em>Tokens</em> que podem estar arbitrariamente distantes na ordem linear e com material interveniente que não faz parte da correspondência (por exemplo, em <em>the movement in New York began</em>, o sujeito <code>movement</code> e o verbo <code>began</code> não são adjacentes). Como não formam uma fatia contígua, não podem ser representados por um <em>Span</em>; por isso o spaCy devolve os índices individuais dos <em>Tokens</em>.</p>
+<h2 id="parte-b-programação">Parte B — Programação</h2>
+<p><strong>Resposta 7.</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="im">from</span> spacy.matcher <span class="im">import</span> Matcher</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="co"># Cria um novo Matcher com o vocabulário do modelo</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>adj_matcher <span class="op">=</span> Matcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="co"># Define o padrão: um adjetivo seguido de um substantivo</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>adj_noun <span class="op">=</span> [{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;ADJ&#39;</span>}, {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;NOUN&#39;</span>}]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao Matcher</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>adj_matcher.add(<span class="st">&#39;adj+noun&#39;</span>, patterns<span class="op">=</span>[adj_noun])</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="co"># Aplica o Matcher ao Doc e obtém os resultados como Spans</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>adj_results <span class="op">=</span> adj_matcher(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="co"># Imprime as 20 primeiras correspondências</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a><span class="cf">for</span> result <span class="kw">in</span> adj_results[:<span class="dv">20</span>]:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>    <span class="bu">print</span>(result)</span></code></pre></div>
+<p><strong>Resposta 8.</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Permite um ou mais adjetivos antes do substantivo</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>adj_noun_plus <span class="op">=</span> [{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;ADJ&#39;</span>, <span class="st">&#39;OP&#39;</span>: <span class="st">&#39;+&#39;</span>}, {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;NOUN&#39;</span>}]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="co"># Versão sem &#39;greedy&#39;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>matcher_a <span class="op">=</span> Matcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>matcher_a.add(<span class="st">&#39;adj+noun&#39;</span>, patterns<span class="op">=</span>[adj_noun_plus])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>results_a <span class="op">=</span> matcher_a(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="co"># Versão com &#39;greedy&#39;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>matcher_b <span class="op">=</span> Matcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>matcher_b.add(<span class="st">&#39;adj+noun&#39;</span>, patterns<span class="op">=</span>[adj_noun_plus], greedy<span class="op">=</span><span class="st">&#39;LONGEST&#39;</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>results_b <span class="op">=</span> matcher_b(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;Sem greedy:&#39;</span>, <span class="bu">len</span>(results_a))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;Com greedy:&#39;</span>, <span class="bu">len</span>(results_b))</span></code></pre></div>
+<p><strong>Explicação.</strong> Sem <code>greedy</code>, o operador <code>+</code> devolve uma correspondência a <em>cada</em> posição em que o padrão pode ser satisfeito: para a sequência <em>large public space</em>, o spaCy devolve tanto <code>public space</code> quanto <code>large public space</code>. Com <code>greedy='LONGEST'</code>, o spaCy filtra as correspondências sobrepostas e mantém apenas a mais longa de cada grupo, reduzindo o total de resultados.</p>
+<p><strong>Resposta 9.</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co"># Cria um Matcher para traços morfológicos</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>plural_matcher <span class="op">=</span> Matcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co"># Define o padrão: substantivos cujos traços contenham Number=Plur</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>plural_noun <span class="op">=</span> [{<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;NOUN&#39;</span>, <span class="st">&#39;MORPH&#39;</span>: {<span class="st">&#39;IS_SUPERSET&#39;</span>: [<span class="st">&#39;Number=Plur&#39;</span>]}}]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao Matcher</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>plural_matcher.add(<span class="st">&#39;plural_noun&#39;</span>, patterns<span class="op">=</span>[plural_noun])</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="co"># Aplica o Matcher ao Doc</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>plural_results <span class="op">=</span> plural_matcher(doc, as_spans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a><span class="co"># Imprime as 15 primeiras correspondências e seus traços morfológicos</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="cf">for</span> result <span class="kw">in</span> plural_results[:<span class="dv">15</span>]:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>    <span class="bu">print</span>(result, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, result[<span class="dv">0</span>].morph)</span></code></pre></div>
+<p><strong>Resposta 10.</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="im">from</span> spacy.matcher <span class="im">import</span> DependencyMatcher</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="co"># Cria um novo DependencyMatcher</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>obj_matcher <span class="op">=</span> DependencyMatcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co"># Define a corrente: âncora (verbo) e seu objeto direto</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>verb_dobj <span class="op">=</span> [{<span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}},</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>             {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;d_object&#39;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>              <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;dobj&#39;</span>}}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>            ]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co"># Adiciona o padrão ao matcher</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a>obj_matcher.add(<span class="st">&#39;verb_dobj&#39;</span>, patterns<span class="op">=</span>[verb_dobj])</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="co"># Aplica o matcher ao Doc</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>obj_matches <span class="op">=</span> obj_matcher(doc)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a><span class="co"># Imprime as 20 primeiras correspondências</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a><span class="cf">for</span> match <span class="kw">in</span> obj_matches[:<span class="dv">20</span>]:</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a>    <span class="co"># Desempacota a tupla em nome do padrão e lista de índices</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a>    pattern_name, matches <span class="op">=</span> match[<span class="dv">0</span>], match[<span class="dv">1</span>]</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true"></a>    <span class="co"># Os índices seguem a ordem em que os padrões foram definidos</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a>    verb, dobject <span class="op">=</span> matches[<span class="dv">0</span>], matches[<span class="dv">1</span>]</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true"></a>    <span class="bu">print</span>(nlp.vocab[pattern_name].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, doc[verb], <span class="st">&#39;...&#39;</span>, doc[dobject])</span></code></pre></div>
+<p><strong>Resposta 11.</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># O terceiro elo parte de &#39;d_object&#39;, e não da âncora &#39;verb&#39;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>verb_dobj_det <span class="op">=</span> [{<span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}},</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>                 {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;d_object&#39;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>                  <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;dobj&#39;</span>}},</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>                 {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;d_object&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;determiner&#39;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>                  <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;det&#39;</span>}}</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>                ]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co"># Cria um matcher novo para evitar misturar com padrões anteriores</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>det_matcher <span class="op">=</span> DependencyMatcher(vocab<span class="op">=</span>nlp.vocab)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>det_matcher.add(<span class="st">&#39;verb_dobj_det&#39;</span>, patterns<span class="op">=</span>[verb_dobj_det])</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>det_matches <span class="op">=</span> det_matcher(doc)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="cf">for</span> match <span class="kw">in</span> det_matches[:<span class="dv">20</span>]:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a>    pattern_name, matches <span class="op">=</span> match[<span class="dv">0</span>], match[<span class="dv">1</span>]</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a>    <span class="co"># A ordem dos índices segue a ordem de definição dos padrões</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>    verb, dobject, determiner <span class="op">=</span> matches[<span class="dv">0</span>], matches[<span class="dv">1</span>], matches[<span class="dv">2</span>]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a>    <span class="bu">print</span>(nlp.vocab[pattern_name].text, <span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>          doc[verb], <span class="st">&#39;...&#39;</span>, doc[determiner], doc[dobject])</span></code></pre></div>
+<p><strong>Explicação.</strong> O determinante é dependente do <strong>substantivo</strong>, não do verbo. Por isso <code>LEFT_ID</code> deve ser <code>d_object</code>: estamos prolongando a corrente para a direita a partir do objeto direto, e não abrindo uma nova corrente a partir da âncora.</p>
+<p><strong>Resposta 12.</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="im">from</span> wasabi <span class="im">import</span> Printer</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="co"># Inicializa o Printer</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>match <span class="op">=</span> Printer()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co"># Percorre as correspondências mantendo a contagem</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="cf">for</span> i, result <span class="kw">in</span> <span class="bu">enumerate</span>(adj_results, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>    <span class="bu">print</span>(i,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>          doc[result.start <span class="op">-</span> <span class="dv">5</span>: result.start],   <span class="co"># contexto à esquerda</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>          match.text(result, color<span class="op">=</span><span class="st">&#39;blue&#39;</span>, no_print<span class="op">=</span><span class="va">True</span>),  <span class="co"># correspondência em azul</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>          doc[result.end: result.end <span class="op">+</span> <span class="dv">5</span>]        <span class="co"># contexto à direita</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>         )</span></code></pre></div>
+<h2 id="parte-c-reflexão">Parte C — Reflexão</h2>
+<p><strong>Resposta 13.</strong></p>
+<p>O texto de origem contém quebras de linha (<code>\n</code>) que o spaCy preserva como <em>Tokens</em>. Quando uma dessas quebras cai na janela de contexto, ela é impressa literalmente e desloca a saída para outra linha.</p>
+<p>Uma solução é substituir os caracteres de espaçamento pelo caractere de espaço antes de imprimir:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="cf">for</span> i, result <span class="kw">in</span> <span class="bu">enumerate</span>(adj_results, start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    <span class="co"># Converte as fatias em texto e normaliza os espaços em branco</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>    left <span class="op">=</span> <span class="st">&#39; &#39;</span>.join(doc[result.start <span class="op">-</span> <span class="dv">5</span>: result.start].text.split())</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>    right <span class="op">=</span> <span class="st">&#39; &#39;</span>.join(doc[result.end: result.end <span class="op">+</span> <span class="dv">5</span>].text.split())</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>    <span class="bu">print</span>(i, left, match.text(result, color<span class="op">=</span><span class="st">&#39;blue&#39;</span>, no_print<span class="op">=</span><span class="va">True</span>), right)</span></code></pre></div>
+<p>O método <code>split()</code> sem argumentos divide a <em>string</em> em qualquer sequência de espaços em branco — incluindo <code>\n</code> e <code>\t</code> — e <code>join()</code> a reconstitui com espaços simples.</p>
+<p>Alternativamente, poderíamos limpar o texto antes de fornecê-lo ao modelo de linguagem, ou filtrar os <em>Tokens</em> cujo atributo <code>is_space</code> seja <code>True</code>.</p>
+<p><strong>Resposta 14.</strong></p>
+<p>A construção envolve uma relação <strong>sintática</strong>, e não meramente linear: o sintagma nominal é o objeto da preposição, que por sua vez é dependente do verbo. Palavras podem intervir entre os elementos (<em>depend heavily on the government</em>), o que torna o <em>Matcher</em> linear frágil. Portanto, a escolha adequada é o <strong>DependencyMatcher</strong>.</p>
+<p>A regra teria três elos:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>verb_prep_np <span class="op">=</span> [</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>    <span class="co"># Âncora: o verbo</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>    {<span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;POS&#39;</span>: <span class="st">&#39;VERB&#39;</span>}},</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>    <span class="co"># A preposição é dependente do verbo, com a relação &#39;prep&#39;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>    {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;verb&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;preposition&#39;</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>     <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;prep&#39;</span>}},</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>    <span class="co"># O objeto da preposição é dependente da preposição, com a relação &#39;pobj&#39;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a>    {<span class="st">&#39;LEFT_ID&#39;</span>: <span class="st">&#39;preposition&#39;</span>, <span class="st">&#39;REL_OP&#39;</span>: <span class="st">&#39;&gt;&#39;</span>, <span class="st">&#39;RIGHT_ID&#39;</span>: <span class="st">&#39;prep_object&#39;</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a>     <span class="st">&#39;RIGHT_ATTRS&#39;</span>: {<span class="st">&#39;DEP&#39;</span>: <span class="st">&#39;pobj&#39;</span>}}</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a>]</span></code></pre></div>
+<p><strong>Justificativa das escolhas:</strong></p>
+<ul>
+<li>A âncora é o verbo, porque é o elemento em torno do qual a construção se organiza.</li>
+<li>O segundo elo parte do verbo (<code>LEFT_ID: 'verb'</code>), pois a preposição é dependente dele.</li>
+<li>O terceiro elo parte da preposição (<code>LEFT_ID: 'preposition'</code>), e <strong>não</strong> do verbo, porque o sintagma nominal é dependente da preposição — trata-se de um prolongamento da mesma corrente.</li>
+<li>Se quiséssemos restringir o verbo a um lema específico, bastaria acrescentar <code>'LEMMA': 'depend'</code> ao dicionário <code>RIGHT_ATTRS</code> da âncora.</li>
+</ul>
+</body>
+</html>

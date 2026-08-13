@@ -1,0 +1,114 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  brazilian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Parte III: Processamento de Linguagem Natural para Linguistas},
+  pdfauthor={CiberExt 26-29 · FEELT38103 · Universidade Federal de Uberlândia},
+  pdflang={pt-BR},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{brazilian}
+\else
+  \usepackage[shorthands=off,main=brazilian]{babel}
+\fi
+
+\title{Parte III: Processamento de Linguagem Natural para Linguistas}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Unidade 2 - Exercícios}
+\author{CiberExt 26-29 · FEELT38103 · Universidade Federal de
+Uberlândia}
+\date{Agosto de 2026}
+
+\begin{document}
+\maketitle
+
+\hypertarget{exercuxedcios-pruxe1ticos-processamento-de-linguagem-natural-para-linguistas}{%
+\section{Exercícios Práticos: Processamento de Linguagem Natural para
+Linguistas}\label{exercuxedcios-pruxe1ticos-processamento-de-linguagem-natural-para-linguistas}}
+
+Este documento contém exercícios práticos baseados na unidade
+``Dependências Universais''.
+
+\hypertarget{muxf3dulo-2-dependuxeancias-universais}{%
+\subsection{Módulo 2: Dependências
+Universais}\label{muxf3dulo-2-dependuxeancias-universais}}
+
+\textbf{Exercício 1:} O projeto \emph{Universal Dependencies} (UD) é
+descrito como um esforço colaborativo que possui dois objetivos
+principais e sobrepostos. Quais são esses dois objetivos?
+
+\textbf{Exercício 2:} A descrição de estruturas linguísticas dentro do
+framework UD baseia-se em três tipos principais de unidades frasais.
+Liste quais são essas três unidades e descreva brevemente o propósito ou
+o núcleo (a que classe de palavras estão associadas) de cada uma.
+
+\textbf{Exercício 3:} Na árvore de análise sintática (parse tree) gerada
+pelo framework UD para uma oração completa, o que significa a etiqueta
+de dependência \texttt{root} e como as relações de dependência sintática
+fluem a partir dela em relação aos nominais da frase?
+
+\textbf{Exercício 4:} Ao explorar as dependências sintáticas utilizando
+os objetos \emph{Token} da biblioteca spaCy, você pode navegar na árvore
+de análise de várias formas. Qual é a diferença exata entre os
+resultados retornados pelos atributos \texttt{token.subtree} e
+\texttt{token.children}?
+
+\textbf{Exercício 5:} Por que as métricas tradicionais de avaliação,
+como UAS (\emph{Unlabeled Attachment Score}) e LAS (\emph{Labeled
+Attachment Score}), tornam-se problemáticas e desiguais ao comparar o
+desempenho de modelos analíticos entre diferentes idiomas,
+especificamente comparando o inglês com um idioma morfologicamente rico
+como o finlandês? Cite ao menos uma métrica alternativa sugerida para
+resolver esse problema.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\end{document}
