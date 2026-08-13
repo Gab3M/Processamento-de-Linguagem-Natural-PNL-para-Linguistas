@@ -72,6 +72,21 @@ stanza.download('en')
 * Execute os exemplos em Python para experimentar os conceitos em prática.
 * Caso algum modelo ou biblioteca precise de download inicial, aguarde a instalação e repita a execução.
 
+#### Visualizar o site (index.html)
+
+Se quiser visualizar a versão estática do material no navegador, abra o arquivo `index.html` diretamente ou sirva a pasta localmente. Exemplo (recomendado):
+
+```bash
+# a partir da raiz do repositório ou dentro
+python3 -m http.server 8000
+
+# então abra no navegador:
+http://localhost:8000/
+```
+
+Abrir via servidor local evita problemas de carregamento de recursos e permite navegar pelas páginas relativas corretamente.
+
+
 ## 📚 Roteiro de Aprendizado
 
 A sequência recomendada de estudo é a seguinte:
