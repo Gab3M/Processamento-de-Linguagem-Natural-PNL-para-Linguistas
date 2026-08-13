@@ -2,7 +2,7 @@
 
 Bem-vindo ao repositório do curso de Processamento de Linguagem Natural (PNL)! Este projeto reúne materiais didáticos, anotações e exemplos práticos traduzidos e adaptados para o português, com foco em ferramentas modernas de PNL no ecossistema Python.
 
-Este material é uma adaptação do curso open-source [Applied Language Technology](https://applied-language-technology.mooc.fi/en/), originalmente desenvolvido por Tuomo Hiippala, com objetivo de tornar o conteúdo acessível a estudantes e pesquisadores de linguística, letras e áreas afins.
+Este material é uma adaptação do curso open-source [Applied Language Technology](https://applied-language-technology.mooc.fi/), originalmente desenvolvido por Tuomo Hiippala, com objetivo de tornar o conteúdo acessível a estudantes e pesquisadores de linguística, letras e áreas afins.
 
 ## 🎯 Público-alvo e Objetivos
 
